@@ -149,6 +149,11 @@ h1 {
     border-color: #2196F3;
 }
 
+.controls {
+    display: flex;
+    gap: 10px;
+}
+
 .option-label.correct {
     background-color: #E8F5E9 !important; /* Verde muy claro */
     color: #2E7D32 !important; /* Texto verde oscuro para legibilidad */
@@ -308,17 +313,20 @@ select {
     transform: rotate(90deg);
 }
 
-.question-area-wrapper {
-    position: relative;
-    margin-bottom: 20px;
-}
-
 .review-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
+    background-color: #f0f0f0;
+    color: #333;
+    flex-shrink: 0; /* Evita que el botón se encoja */
 }
 
+.review-btn.active {
+    background-color: #FFD700; /* Dorado para indicar que está activa */
+    color: #333;
+}
+
+.review-btn:hover {
+    background-color: #FFC107;
+}
 #start-quiz-button {
     width: auto;
     min-width: 220px;
