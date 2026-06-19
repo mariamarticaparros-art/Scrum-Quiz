@@ -304,12 +304,6 @@ select {
 }
 
 .top-restart-button:hover {
-    background-color: #D32F2F; /* Rojo más oscuro al pasar el ratón */
-    transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-}
-
-.top-restart-button:hover {
     color: #37474F;
     transform: rotate(90deg);
 }

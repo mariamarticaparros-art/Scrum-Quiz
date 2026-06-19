@@ -91,22 +91,8 @@ function updateReviewButtonUI() {
 
 // Función para cargar Excel
 async function loadQuestionsFromExcel() {
-    // Check if running on file:// protocol to avoid CORS errors
-    if (window.location.protocol === 'file:') {
-        console.warn("La carga automática de Excel no funciona a través del protocolo file:// debido a restricciones de seguridad (CORS).");
-        startButton.disabled = questions.length === 0; // Enable if defaultQuestions exists
-        return;
-    }
-
-    try {
-        const response = await fetch('questions.xlsx');
-        if (!response.ok) throw new Error("No se pudo cargar automáticamente");
-        const data = await response.arrayBuffer();
-        processWorkbookData(data);
-    } catch (error) {
-        console.error("Error cargando el Excel:", error);
-        // No lanzamos alert aquí para no molestar, esperamos a que el usuario use el input
-    }
+    // Ya no se carga el excel externo, se usan las defaultQuestions.
+    // Esta función se mantiene vacía para no romper la llamada inicial.
 }
 
 function processWorkbookData(data) {
