@@ -48,7 +48,7 @@ body {
 
 h1 {
     color: #212121; /* Gris muy oscuro para títulos */
-    font-size: 3em; /* Tamaño de fuente más moderado */
+    font-size: 2.5em; /* Tamaño de fuente más moderado */
     margin: 30px 0;
     letter-spacing: normal; /* Eliminar espaciado de letras */
     text-align: center;
@@ -70,7 +70,7 @@ h1 {
     grid-template-columns: 1fr 1fr; /* Dos columnas */
     gap: 15px;
     margin: 40px 0; /* Mayor espacio para evitar solapamientos */
-    font-weight: 600; /* Peso de fuente más ligero */
+    font-weight: 500; /* Peso de fuente más ligero */
     color: #555; /* Gris medio para el texto */
     text-shadow: none; /* Eliminar sombra de texto */
     background-color: #F8F9FA; /* Fondo gris muy claro */
@@ -88,6 +88,20 @@ h1 {
     background: none; /* Eliminar fondo negro */
     padding: 5px 0; /* Añadir un poco de padding vertical para que respire */
     border-radius: 0; /* Eliminar border-radius */
+}
+
+.stat.highlight-correct {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+    transform: scale(1.05);
+    transition: all 0.3s ease-out;
+}
+
+.stat.highlight-incorrect {
+    background-color: #FFEBEE;
+    color: #C62828;
+    transform: scale(1.05);
+    transition: all 0.3s ease-out;
 }
 
 /* BOTONES DE RESPUESTA CON LÍNEA AL BORDE */
@@ -130,6 +144,11 @@ h1 {
 
 .option-label input { display: none; }
 
+.option-label.selected {
+    background-color: #E3F2FD; /* Azul muy claro para indicar selección */
+    border-color: #2196F3;
+}
+
 .option-label.correct {
     background-color: #E8F5E9 !important; /* Verde muy claro */
     color: #2E7D32 !important; /* Texto verde oscuro para legibilidad */
@@ -144,7 +163,7 @@ h1 {
 
 /* BOTONES PRINCIPALES */
 button {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Montserrat', sans-serif; /* Se mantiene Montserrat, pero el peso se ajusta abajo */
     font-weight: 700; /* Peso de fuente más ligero */
     border: none; /* Sin borde grueso */
     padding: 12px 25px;
@@ -154,6 +173,10 @@ button {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
     transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease; /* Transiciones suaves */
     margin: 20px 0px;
+}
+
+h1, h2, h3, label {
+    font-weight: 700; /* Un peso más definido para títulos */
 }
 
 .btn-main, #answer-button, #next-button {
@@ -265,16 +288,19 @@ select {
 }
 
 .top-restart-button {
-    background-color: #FF5252; /* Rojo más suave */
-    position: relative; /* Cambiado a relativo para evitar colisiones estáticas con el título */
-    margin: 0 auto 25px auto;
-    padding: 8px 15px;
-    font-size: 0.9em;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: transparent;
+    border: none;
+    font-size: 1.8em;
+    color: #90A4AE;
+    cursor: pointer;
     z-index: 100;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: block;
-    width: fit-content;
+    padding: 5px;
+    line-height: 1;
+    box-shadow: none;
+    transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .top-restart-button:hover {
@@ -282,6 +308,23 @@ select {
     transform: translateY(-1px);
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
+
+.top-restart-button:hover {
+    color: #37474F;
+    transform: rotate(90deg);
+}
+
+.question-area-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.review-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
 #start-quiz-button {
     width: auto;
     min-width: 220px;
