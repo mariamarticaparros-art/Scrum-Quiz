@@ -3272,7 +3272,7 @@ const defaultQuestions = [
             "Se reestiman artículos incompletos"
         ],
         correctAnswer: [0, 3, 4],
-        explanation: "Se revisan los elementos \"Hecho\", el PO acepta trabajo potencialmente liberable y los incompletos se reestiman y vuelven al Backlog[cite: 10]."
+        explanation: "Se revisan los elementos \"Hecho\", el PO acepta trabajo potencialmente liberable y los incompletos se reestiman y vuelven al Backlog."
     },
     {
         question: "¿Qué incluye la gestión del Product Backlog? Selecciona los tres elementos más aplicables.",
@@ -3285,7 +3285,7 @@ const defaultQuestions = [
             "Optimizar el valor del trabajo"
         ],
         correctAnswer: [0, 1, 4],
-        explanation: "Incluye ordenar para lograr objetivos, asegurar visibilidad y optimizar el valor del trabajo[cite: 10]."
+        explanation: "Incluye ordenar para lograr objetivos, asegurar visibilidad y optimizar el valor del trabajo."
     },
     {
         question: "¿Qué categorías de KVA debería considerar el Product Owner para medir y rastrear la creación y entrega de valor?",
@@ -3299,7 +3299,7 @@ const defaultQuestions = [
             "Capacidad para innovar"
         ],
         correctAnswer: [0, 3, 5],
-        explanation: "Las categorías son: Valor actual, Tiempo de salida al mercado y Capacidad para innovar[cite: 10]."
+        explanation: "Las categorías son: Valor actual, Tiempo de salida al mercado y Capacidad para innovar."
     },
     {
         question: "¿Quién es responsable del retraso de productos?",
@@ -3313,7 +3313,7 @@ const defaultQuestions = [
             "Equipo de desarrollo"
         ],
         correctAnswer: 4,
-        explanation: "El Product Owner es responsable del Backlog de Producto (contenido, disponibilidad y orden)[cite: 10]."
+        explanation: "El Product Owner es responsable del Backlog de Producto (contenido, disponibilidad y orden)."
     },
     {
         question: "¿En qué reuniones se permite la participación de los Actores Clave?",
@@ -3325,7 +3325,7 @@ const defaultQuestions = [
             "Planificación de sprints"
         ],
         correctAnswer: 2,
-        explanation: "Los actores clave solo participan oficialmente en la Revisión de Sprint[cite: 10]."
+        explanation: "Los actores clave solo participan oficialmente en la Revisión de Sprint."
     },
     {
         question: "Cada artículo de Product Backlog debe ser creado personalmente por el Product Owner. ¿Cierto o Falso?",
@@ -3335,7 +3335,7 @@ const defaultQuestions = [
             "Falso"
         ],
         correctAnswer: 1,
-        explanation: "Falso; el PO es responsable pero puede delegar la gestión al equipo[cite: 10]."
+        explanation: "Falso; el PO es responsable pero puede delegar la gestión al equipo."
     },
     {
         question: "¿Quién hace seguimiento del trabajo total restante en el Sprint Backlog?",
@@ -3348,7 +3348,7 @@ const defaultQuestions = [
             "Product Owner"
         ],
         correctAnswer: 0,
-        explanation: "El equipo de desarrollo registra este trabajo para gestionar su progreso[cite: 10]."
+        explanation: "El equipo de desarrollo registra este trabajo para gestionar su progreso."
     },
     {
         question: "¿Quién puede participar en el Daily Scrum?",
@@ -3360,7 +3360,7 @@ const defaultQuestions = [
             "Actores clave"
         ],
         correctAnswer: 0,
-        explanation: "Es una reunión interna exclusiva del equipo de desarrollo[cite: 10]."
+        explanation: "Es una reunión interna exclusiva del equipo de desarrollo."
     },
     {
         question: "Refinamiento del catálogo de productos... Selecciona los tres finales más apropiados.",
@@ -3374,7 +3374,7 @@ const defaultQuestions = [
             "Es un proceso continuo"
         ],
         correctAnswer: [1, 2, 5],
-        explanation: "Es un proceso continuo de añadir detalles/estimaciones que ocupa máximo el 10% de capacidad[cite: 10]."
+        explanation: "Es un proceso continuo de añadir detalles/estimaciones que ocupa máximo el 10% de capacidad."
     },
     {
         question: "¿Cuál podría ser la fuente de los requisitos para cambios en el producto?",
@@ -3385,7 +3385,7 @@ const defaultQuestions = [
             "CEO"
         ],
         correctAnswer: 0,
-        explanation: "El Product Backlog es la única fuente de requisitos para cambios en el producto[cite: 10]."
+        explanation: "El Product Backlog es la única fuente de requisitos para cambios en el producto."
     },
     {
         question: "El Product Owner quiere aplicar requisitos no funcionales. ¿Cuál es la mejor manera?",
@@ -3397,7 +3397,7 @@ const defaultQuestions = [
             "No se pueden gestionar"
         ],
         correctAnswer: 2,
-        explanation: "La única forma es añadirlos al DoD y comprobar cada incremento[cite: 10]."
+        explanation: "La única forma es añadirlos al DoD y comprobar cada incremento."
     },
     {
         question: "¿Quién es responsable de supervisar el progreso hacia objetivos de alto nivel?",
@@ -3411,7 +3411,7 @@ const defaultQuestions = [
             "Equipo de desarrollo"
         ],
         correctAnswer: 1,
-        explanation: "El Product Owner registra el trabajo y compara el progreso hacia el objetivo[cite: 10]."
+        explanation: "El Product Owner registra el trabajo y compara el progreso hacia el objetivo."
     },
     {
         question: "Cuando algo frustra al Product Owner, este puede delegar responsabilidades al Scrum Master.",
@@ -3421,7 +3421,7 @@ const defaultQuestions = [
             "Cierto"
         ],
         correctAnswer: 0,
-        explanation: "No es aceptable delegar funciones; el PO debe consultar al SM para implementar Scrum bien[cite: 10]."
+        explanation: "No es aceptable delegar funciones; el PO debe consultar al SM para implementar Scrum bien."
     },
     {
         question: "¿Quién es responsable de todas las estimaciones en el Product Backlog?",
@@ -3436,7 +3436,7 @@ const defaultQuestions = [
             "Product Owner"
         ],
         correctAnswer: 2,
-        explanation: "El equipo de desarrollo realiza la estimación final[cite: 10]."
+        explanation: "El equipo de desarrollo realiza la estimación final."
     },
     {
         question: "¿Cuáles son actividades típicas para un Product Owner en un Sprint? (elige dos)",
@@ -3449,7 +3449,7 @@ const defaultQuestions = [
             "Informes financieros"
         ],
         correctAnswer: [0, 3],
-        explanation: "El PO debe interactuar con interesados y colaborar en el refinamiento[cite: 10]."
+        explanation: "El PO debe interactuar con interesados y colaborar en el refinamiento."
     },
     {
         question: "El equipo Scrum debe incluir una mejora de procesos de la retrospectiva en el Sprint Backlog.",
@@ -3459,7 +3459,7 @@ const defaultQuestions = [
             "Falso"
         ],
         correctAnswer: 1,
-        explanation: "Falso; es una práctica opcional desde la actualización de 2020[cite: 10]."
+        explanation: "Falso; es una práctica opcional desde la actualización de 2020."
     },
     {
         question: "¿Cómo sirve el Scrum Master para habilitar equipos efectivos? (elige dos)",
@@ -3471,7 +3471,7 @@ const defaultQuestions = [
             "Empezar reuniones a tiempo"
         ],
         correctAnswer: [0, 2],
-        explanation: "Sirve mediante la facilitación y la eliminación de impedimentos[cite: 10]."
+        explanation: "Sirve mediante la facilitación y la eliminación de impedimentos."
     },
     {
         question: "¿Quién crea la definición de Hecho?",
@@ -3483,7 +3483,7 @@ const defaultQuestions = [
             "Product Owner"
         ],
         correctAnswer: 0,
-        explanation: "El equipo Scrum debe crear la Definición de Hecho si no hay un estándar organizativo[cite: 10]."
+        explanation: "El equipo Scrum debe crear la Definición de Hecho si no hay un estándar organizativo."
     },
     {
         question: "Durante un Sprint, si no se puede completar la previsión, ¿quién ajusta los elementos?",
@@ -3495,7 +3495,7 @@ const defaultQuestions = [
             "Desarrolladores"
         ],
         correctAnswer: 0,
-        explanation: "El alcance se renegocia entre el PO y los desarrolladores[cite: 10]."
+        explanation: "El alcance se renegocia entre el PO y los desarrolladores."
     },
     {
         question: "¿Quién es responsable de hacer el seguimiento del trabajo restante hacia el Sprint Goal?",
@@ -3507,7 +3507,7 @@ const defaultQuestions = [
             "El Scrum Master"
         ],
         correctAnswer: 0,
-        explanation: "Los desarrolladores son responsables de gestionar su progreso hacia el objetivo del Sprint[cite: 4]."
+        explanation: "Los desarrolladores son responsables de gestionar su progreso hacia el objetivo del Sprint."
     },
     {
         question: "¿Cuál es el intervalo de tiempo para el evento de Planificación de Sprints?",
@@ -3519,7 +3519,7 @@ const defaultQuestions = [
             "4 horas para un Sprint de un mes"
         ],
         correctAnswer: 2,
-        explanation: "El timebox es de 8 horas para un Sprint de un mes, proporcional a la duración del mismo[cite: 4]."
+        explanation: "El timebox es de 8 horas para un Sprint de un mes, proporcional a la duración del mismo."
     },
     {
         question: "¿Cómo minimizar el desperdicio en el Product Backlog? (Selecciona dos)",
@@ -3531,7 +3531,7 @@ const defaultQuestions = [
             "Describir solo cuando sea probable la implementación"
         ],
         correctAnswer: [2, 3],
-        explanation: "Se recomienda eliminar lo antiguo y detallar solo lo próximo a implementar[cite: 4]."
+        explanation: "Se recomienda eliminar lo antiguo y detallar solo lo próximo a implementar."
     },
     {
         question: "¿Por qué necesitan los desarrolladores un objetivo de sprint?",
@@ -3543,7 +3543,7 @@ const defaultQuestions = [
             "Centrarse en un objetivo común y específico"
         ],
         correctAnswer: 3,
-        explanation: "Proporciona enfoque y alineación para colaborar eficazmente como equipo[cite: 4]."
+        explanation: "Proporciona enfoque y alineación para colaborar eficazmente como equipo."
     },
     {
         question: "Verdadero o falso: Un Scrum Master cumple el mismo papel que un Project Manager tradicional.",
@@ -3553,7 +3553,7 @@ const defaultQuestions = [
             "Falso"
         ],
         correctAnswer: 1,
-        explanation: "El Scrum Master es un líder servidor, no gestiona el proyecto ni el alcance como un PM[cite: 4]."
+        explanation: "El Scrum Master es un líder servidor, no gestiona el proyecto ni el alcance como un PM."
     },
     {
         question: "¿Debe el Product Owner escribir todos los elementos del Backlog antes de entregarlos?",
@@ -3563,7 +3563,7 @@ const defaultQuestions = [
             "Falso"
         ],
         correctAnswer: 1,
-        explanation: "Es una lista emergente; el PO puede involucrar a otros en su creación[cite: 4]."
+        explanation: "Es una lista emergente; el PO puede involucrar a otros en su creación."
     },
     {
         question: "Durante la retrospectiva, ¿qué hacer con las mejoras de proceso?",
@@ -3575,7 +3575,7 @@ const defaultQuestions = [
             "Que el SM las elija"
         ],
         correctAnswer: 0,
-        explanation: "El equipo Scrum debe implementar mejoras identificadas en el próximo Sprint[cite: 4]."
+        explanation: "El equipo Scrum debe implementar mejoras identificadas en el próximo Sprint."
     },
     {
         question: "¿De qué es responsable el Product Owner durante un Sprint? (Selecciona dos)",
@@ -3588,7 +3588,7 @@ const defaultQuestions = [
             "Nada"
         ],
         correctAnswer: [2, 3],
-        explanation: "El PO colabora con interesados y trabaja en el refinamiento del Product Backlog[cite: 4]."
+        explanation: "El PO colabora con interesados y trabaja en el refinamiento del Product Backlog."
     },
     {
         question: "Verdadero o falso: El PO invita a interesados a la Retrospectiva.",
@@ -3598,7 +3598,7 @@ const defaultQuestions = [
             "Falso"
         ],
         correctAnswer: 1,
-        explanation: "La Retrospectiva es un evento interno exclusivo para el Equipo Scrum[cite: 4]."
+        explanation: "La Retrospectiva es un evento interno exclusivo para el Equipo Scrum."
     },
     {
         question: "¿Qué hacer si un stakeholder está descontento con la calidad? (Selecciona dos)",
@@ -3611,7 +3611,7 @@ const defaultQuestions = [
             "Llevar preocupación a testers"
         ],
         correctAnswer: [0, 3],
-        explanation: "El SM entrena al PO y este incluye especificaciones en el Backlog[cite: 4]."
+        explanation: "El SM entrena al PO y este incluye especificaciones en el Backlog."
     },
     {
         question: "¿Es el equipo Scrum responsable de crear un incremento valioso en cada Sprint?",
@@ -3621,7 +3621,7 @@ const defaultQuestions = [
             "Falso"
         ],
         correctAnswer: 0,
-        explanation: "Todo el equipo Scrum es responsable de entregar un incremento valioso y útil[cite: 4]."
+        explanation: "Todo el equipo Scrum es responsable de entregar un incremento valioso y útil."
     },
     {
         question: "¿Cuáles son ciertos sobre el Product Owner? (Selecciona dos)",
@@ -3633,7 +3633,7 @@ const defaultQuestions = [
             "Es responsable de pedir el Product Backlog"
         ],
         correctAnswer: [0, 3],
-        explanation: "El PO es una sola persona y responsable de ordenar el Backlog[cite: 4]."
+        explanation: "El PO es una sola persona y responsable de ordenar el Backlog."
     },
     {
         question: "¿Quién es responsable de crear un incremento valioso en cada Sprint?",
@@ -3646,7 +3646,7 @@ const defaultQuestions = [
             "El CEO"
         ],
         correctAnswer: 1,
-        explanation: "Todo el Equipo Scrum es responsable de crear un incremento valioso[cite: 4]."
+        explanation: "Todo el Equipo Scrum es responsable de crear un incremento valioso."
     },
     {
         question: "¿Qué debe conocer un PO para maximizar el valor?",
@@ -3659,7 +3659,7 @@ const defaultQuestions = [
             "Todo lo anterior"
         ],
         correctAnswer: 4,
-        explanation: "El PO debe conocer el panorama completo para maximizar el valor[cite: 4]."
+        explanation: "El PO debe conocer el panorama completo para maximizar el valor."
     },
     {
         question: "¿Todo equipo Scrum debe tener un Product Owner y un Scrum Master?",
@@ -3669,7 +3669,7 @@ const defaultQuestions = [
             "Falso"
         ],
         correctAnswer: 0,
-        explanation: "Ambos roles son esenciales y deben estar involucrados durante todo el Sprint[cite: 4]."
+        explanation: "Ambos roles son esenciales y deben estar involucrados durante todo el Sprint."
     },
     {
         question: "¿Quién es el dueño del Sprint Backlog?",
@@ -3681,7 +3681,7 @@ const defaultQuestions = [
             "Los desarrolladores"
         ],
         correctAnswer: 3,
-        explanation: "Los desarrolladores son los dueños y quienes actualizan el Sprint Backlog[cite: 4]."
+        explanation: "Los desarrolladores son los dueños y quienes actualizan el Sprint Backlog."
     },
     {
         question: "¿Qué temas se tratan en la Revisión Sprint?",
@@ -3693,7 +3693,7 @@ const defaultQuestions = [
             "Todo lo anterior"
         ],
         correctAnswer: 2,
-        explanation: "El tema central es la inspección del Incremento del producto[cite: 4]."
+        explanation: "El tema central es la inspección del Incremento del producto."
     },
     {
         question: "¿Quién decide cuándo actualizar el Sprint Backlog?",
@@ -3705,7 +3705,7 @@ const defaultQuestions = [
             "El Product Owner"
         ],
         correctAnswer: 2,
-        explanation: "Los desarrolladores son los encargados de actualizar su plan durante el Sprint[cite: 4]."
+        explanation: "Los desarrolladores son los encargados de actualizar su plan durante el Sprint."
     },
     {
         question: "¿De qué suele ser responsable un PO durante un Sprint? (Selecciona dos)",
@@ -3718,7 +3718,7 @@ const defaultQuestions = [
             "Nada"
         ],
         correctAnswer: [1, 3],
-        explanation: "El PO colabora con interesados y trabaja en el refinamiento del Backlog[cite: 4]."
+        explanation: "El PO colabora con interesados y trabaja en el refinamiento del Backlog."
     },
     {
         question: "¿Los equipos multifuncionales están optimizados para trabajar en un solo componente?",
@@ -3728,7 +3728,7 @@ const defaultQuestions = [
             "Falso"
         ],
         correctAnswer: 1,
-        explanation: "Deben tener todas las habilidades para entregar valor completo[cite: 4]."
+        explanation: "Deben tener todas las habilidades para entregar valor completo."
     },
     {
         question: "¿Se asegura el PO de que los desarrolladores seleccionen suficiente trabajo para satisfacer a los interesados?",
@@ -3738,7 +3738,7 @@ const defaultQuestions = [
             "Falso"
         ],
         correctAnswer: 1,
-        explanation: "Los desarrolladores determinan cuánto trabajo pueden realizar en el Sprint[cite: 4]."
+        explanation: "Los desarrolladores determinan cuánto trabajo pueden realizar en el Sprint."
     },
     {
         question: "¿Quién crea la definición de Hecho?",
@@ -3750,7 +3750,7 @@ const defaultQuestions = [
             "Los desarrolladores"
         ],
         correctAnswer: 1,
-        explanation: "La crea el equipo Scrum para asegurar una comprensión compartida[cite: 4]."
+        explanation: "La crea el equipo Scrum para asegurar una comprensión compartida."
     },
     {
         question: "¿Quién puede cancelar un Sprint?",
@@ -3762,7 +3762,7 @@ const defaultQuestions = [
             "Los interesados"
         ],
         correctAnswer: 2,
-        explanation: "Solo el Product Owner tiene la autoridad para cancelar el Sprint[cite: 4]."
+        explanation: "Solo el Product Owner tiene la autoridad para cancelar el Sprint."
     },
     {
         question: "¿Qué ocurre si el equipo no completa el trabajo al final del Sprint?",
@@ -3774,7 +3774,7 @@ const defaultQuestions = [
             "Se aprenden lecciones"
         ],
         correctAnswer: 0,
-        explanation: "No se extiende; el trabajo pendiente vuelve al Product Backlog[cite: 4]."
+        explanation: "No se extiende; el trabajo pendiente vuelve al Product Backlog."
     },
     {
         question: "¿Qué hacer si la carga de trabajo supera la capacidad? (Selecciona dos)",
@@ -3787,7 +3787,7 @@ const defaultQuestions = [
             "Trabajar horas extra"
         ],
         correctAnswer: [0, 1],
-        explanation: "Los desarrolladores colaboran con el PO para ajustar el alcance[cite: 4]."
+        explanation: "Los desarrolladores colaboran con el PO para ajustar el alcance."
     },
     {
         question: "¿Un Product Owner es lo mismo que un Project Manager?",
@@ -3797,7 +3797,7 @@ const defaultQuestions = [
             "Falso"
         ],
         correctAnswer: 1,
-        explanation: "Son roles distintos; el PO se enfoca en el valor, no en la gestión tradicional[cite: 4]."
+        explanation: "Son roles distintos; el PO se enfoca en el valor, no en la gestión tradicional."
     },
     {
         question: "¿Cómo debería ser la duración de un Sprint?",
@@ -3809,7 +3809,7 @@ const defaultQuestions = [
             "Todo lo anterior"
         ],
         correctAnswer: 3,
-        explanation: "Todas las opciones anteriores son correctas según Scrum[cite: 4]."
+        explanation: "Todas las opciones anteriores son correctas según Scrum."
     },
     {
         question: "¿El PO debe crear criterios de aceptación claros antes de seleccionar un elemento?",
@@ -3819,7 +3819,7 @@ const defaultQuestions = [
             "Falso"
         ],
         correctAnswer: 1,
-        explanation: "No son obligatorios; pueden refinarse durante el proceso[cite: 4]."
+        explanation: "No son obligatorios; pueden refinarse durante el proceso."
     },
     {
         question: "¿Cuándo puede cancelarse un Sprint?",
@@ -3831,7 +3831,7 @@ const defaultQuestions = [
             "Objetivo obsoleto"
         ],
         correctAnswer: 3,
-        explanation: "Un Sprint solo se cancela si el objetivo del Sprint queda obsoleto[cite: 4]."
+        explanation: "Un Sprint solo se cancela si el objetivo del Sprint queda obsoleto."
     },
     {
         question: "¿Qué ventajas tiene compartir un Objetivo de Producto claro? (Selecciona tres)",
@@ -3845,7 +3845,7 @@ const defaultQuestions = [
             "Facilita inspección"
         ],
         correctAnswer: [3, 4, 5],
-        explanation: "Ayuda a la dirección, el enfoque y la inspección del progreso[cite: 4]."
+        explanation: "Ayuda a la dirección, el enfoque y la inspección del progreso."
     },
     {
         question: "¿Cuándo es responsable un desarrollador del valor del elemento seleccionado?",
@@ -3858,7 +3858,7 @@ const defaultQuestions = [
             "Todo el equipo"
         ],
         correctAnswer: 4,
-        explanation: "Todo el equipo Scrum es responsable colectivamente[cite: 4]."
+        explanation: "Todo el equipo Scrum es responsable colectivamente."
     },
     {
         question: "¿Cuál es el propósito de una Revisión Sprint?",
@@ -3870,7 +3870,7 @@ const defaultQuestions = [
             "Revisar procesos"
         ],
         correctAnswer: 2,
-        explanation: "Inspeccionar el incremento con interesados y recopilar comentarios[cite: 4]."
+        explanation: "Inspeccionar el incremento con interesados y recopilar comentarios."
     },
     {
         question: "¿Cuándo y quién refina el Product Backlog? (Selecciona dos)",
@@ -3883,7 +3883,7 @@ const defaultQuestions = [
             "Equipo continuamente"
         ],
         correctAnswer: [0, 4],
-        explanation: "Es un proceso continuo que involucra a todo el equipo Scrum[cite: 4]."
+        explanation: "Es un proceso continuo que involucra a todo el equipo Scrum."
     },
     {
         question: "¿Qué hacer si hay demasiado trabajo al inicio del Sprint?",
@@ -3895,7 +3895,7 @@ const defaultQuestions = [
             "Reducir definición de hecho"
         ],
         correctAnswer: 1,
-        explanation: "Colaborar con el PO para negociar el alcance del Sprint Backlog[cite: 4]."
+        explanation: "Colaborar con el PO para negociar el alcance del Sprint Backlog."
     },
     {
         question: "¿Cuál es el tiempo del Daily Scrum?",
@@ -3907,7 +3907,7 @@ const defaultQuestions = [
             "15 minutos"
         ],
         correctAnswer: 3,
-        explanation: "Es un evento con un tiempo límite de 15 minutos[cite: 4]."
+        explanation: "Es un evento con un tiempo límite de 15 minutos."
     },
     {
         question: "¿Deben los PO especificar criterios de aceptación antes de la Planificación?",
@@ -3917,7 +3917,7 @@ const defaultQuestions = [
             "Falso"
         ],
         correctAnswer: 1,
-        explanation: "No tienen que especificarlos totalmente antes de la selección[cite: 4]."
+        explanation: "No tienen que especificarlos totalmente antes de la selección."
     },
     {
         question: "¿Qué medidas aseguran que el Product Backlog sea transparente? (Selecciona dos)",
@@ -3930,7 +3930,7 @@ const defaultQuestions = [
             "Herramienta web"
         ],
         correctAnswer: [0, 1],
-        explanation: "El orden y la visibilidad para los interesados aseguran transparencia[cite: 4]."
+        explanation: "El orden y la visibilidad para los interesados aseguran transparencia."
     },
     {
         question: "¿Cómo dividir 100 personas en equipos Scrum?",
@@ -3942,7 +3942,7 @@ const defaultQuestions = [
             "No importa"
         ],
         correctAnswer: 2,
-        explanation: "Se debe basar en la visión del producto y las reglas de Scrum[cite: 4]."
+        explanation: "Se debe basar en la visión del producto y las reglas de Scrum."
     },
     {
         question: "¿Cuándo empieza el segundo Sprint?",
@@ -3954,7 +3954,7 @@ const defaultQuestions = [
             "Tras seleccionar elementos"
         ],
         correctAnswer: 2,
-        explanation: "Un nuevo Sprint comienza inmediatamente después del anterior[cite: 4]."
+        explanation: "Un nuevo Sprint comienza inmediatamente después del anterior."
     },
     {
         question: "¿Qué temas trata la Planificación de Sprints?",
@@ -3967,7 +3967,7 @@ const defaultQuestions = [
             "Errores previos"
         ],
         correctAnswer: 3,
-        explanation: "Se define qué, cómo y por qué se hará el trabajo[cite: 4]."
+        explanation: "Se define qué, cómo y por qué se hará el trabajo."
     },
     {
         question: "¿Tiene Scrum un rol de Gestor de Proyecto?",
@@ -3977,7 +3977,7 @@ const defaultQuestions = [
             "Falso"
         ],
         correctAnswer: 1,
-        explanation: "Scrum no tiene el rol de Project Manager[cite: 4]."
+        explanation: "Scrum no tiene el rol de Project Manager."
     },
     {
         question: "¿Qué métricas indican valor? (Selecciona dos)",
@@ -3990,7 +3990,7 @@ const defaultQuestions = [
             "Alcance"
         ],
         correctAnswer: [0, 3],
-        explanation: "La satisfacción del cliente y el tiempo de salida al mercado son clave[cite: 4]."
+        explanation: "La satisfacción del cliente y el tiempo de salida al mercado son clave."
     },
     {
         question: "¿Cuándo se crea el Sprint Backlog?",
@@ -4002,7 +4002,7 @@ const defaultQuestions = [
             "Planificación"
         ],
         correctAnswer: 3,
-        explanation: "Se crea durante la Planificación del Sprint[cite: 4]."
+        explanation: "Se crea durante la Planificación del Sprint."
     },
     {
         question: "¿Qué debatir en la Retrospectiva? (Selecciona tres)",
@@ -4015,7 +4015,7 @@ const defaultQuestions = [
             "Organizar backlog"
         ],
         correctAnswer: [0, 2, 3],
-        explanation: "Se reflexiona sobre relaciones, procesos y la definición de Hecho[cite: 4]."
+        explanation: "Se reflexiona sobre relaciones, procesos y la definición de Hecho."
     },
     {
         question: "¿Qué hacer en el primer Sprint? (Selecciona dos)",
@@ -4028,7 +4028,7 @@ const defaultQuestions = [
             "Crear incremento"
         ],
         correctAnswer: [3, 4],
-        explanation: "Se debe construir funcionalidad valiosa y crear un incremento[cite: 4]."
+        explanation: "Se debe construir funcionalidad valiosa y crear un incremento."
     },
     {
         question: "¿Cómo hacer visibles requisitos no funcionales? (Selecciona dos)",
@@ -4040,7 +4040,7 @@ const defaultQuestions = [
             "Lista aparte"
         ],
         correctAnswer: [0, 2],
-        explanation: "Añadiéndolos al Backlog o a la definición de Hecho[cite: 4]."
+        explanation: "Añadiéndolos al Backlog o a la definición de Hecho."
     },
     {
         question: "¿Qué preguntar al formar equipos de 45 personas?",
@@ -4052,7 +4052,7 @@ const defaultQuestions = [
             "Experiencia adecuada"
         ],
         correctAnswer: 3,
-        explanation: "La clave es asegurar la experiencia adecuada en cada equipo[cite: 4]."
+        explanation: "La clave es asegurar la experiencia adecuada en cada equipo."
     },
     {
         question: "¿Cuándo pueden los desarrolladores cancelar un sprint?",
@@ -4066,7 +4066,7 @@ const defaultQuestions = [
             "Dependencia"
         ],
         correctAnswer: 2,
-        explanation: "Los desarrolladores no tienen autoridad para cancelar un sprint[cite: 4]."
+        explanation: "Los desarrolladores no tienen autoridad para cancelar un sprint."
     },
     {
         question: "¿Cuál es el artefacto que describe cómo es probable que crezca el producto?",
