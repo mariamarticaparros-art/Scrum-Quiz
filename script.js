@@ -19,7 +19,7 @@ const startButton = document.getElementById('start-quiz-button');
 const quizModeSelect = document.getElementById('quiz-mode-select');
 const questionOrderSelect = document.getElementById('question-order-select'); // Nuevo
 const clearReviewButton = document.getElementById('clear-review-button'); // Botón para vaciar repaso
-const excelUpload = document.getElementById('excel-upload');
+// const excelUpload = document.getElementById('excel-upload'); // Comentado porque ya no se usa
 const timerDisplay = document.getElementById('timer-display');
 
 const questionTextElement = document.getElementById('question-text');
@@ -45,8 +45,8 @@ const endTitle = document.getElementById('end-title');
 const tryAgainButton = document.getElementById('try-again-button');
 
 // Deshabilitar inicio hasta cargar datos
-startButton.disabled = true;
-startButton.innerText = "Cargando preguntas...";
+// startButton.disabled = true; // Se habilita al cargar las preguntas por defecto
+// startButton.innerText = "Cargando preguntas...";
 
 // Configuración de Sliders
 numQuestionsSlider.oninput = function() { numQuestionsVal.innerHTML = this.value; }
@@ -90,60 +90,60 @@ function updateReviewButtonUI() {
 }
 
 // Función para cargar Excel
-async function loadQuestionsFromExcel() {
-    // Ya no se carga el excel externo, se usan las defaultQuestions.
-    // Esta función se mantiene vacía para no romper la llamada inicial.
-}
+// async function loadQuestionsFromExcel() {
+//     // Ya no se carga el excel externo, se usan las defaultQuestions.
+//     // Esta función se mantiene vacía para no romper la llamada inicial.
+// }
 
-function processWorkbookData(data) {
-    const workbook = XLSX.read(data, { type: 'array' });
-    const firstSheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[firstSheetName];
-    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+// function processWorkbookData(data) {
+//     const workbook = XLSX.read(data, { type: 'array' });
+//     const firstSheetName = workbook.SheetNames[0];
+//     const worksheet = workbook.Sheets[firstSheetName];
+//     const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-    questions = [];
-    jsonData.forEach((row, index) => {
-        // Validar que los campos obligatorios existan y no estén vacíos
-        const hasQuestion = row.question && row.question.toString().trim() !== "";
-        const hasType = row.type && row.type.toString().trim() !== "";
-        const hasOptions = row.options && row.options.toString().trim() !== "";
-        const hasAnswer = row.correctAnswer !== undefined && row.correctAnswer !== null && row.correctAnswer.toString().trim() !== "";
+//     questions = [];
+//     jsonData.forEach((row, index) => {
+//         // Validar que los campos obligatorios existan y no estén vacíos
+//         const hasQuestion = row.question && row.question.toString().trim() !== "";
+//         const hasType = row.type && row.type.toString().trim() !== "";
+//         const hasOptions = row.options && row.options.toString().trim() !== "";
+//         const hasAnswer = row.correctAnswer !== undefined && row.correctAnswer !== null && row.correctAnswer.toString().trim() !== "";
 
-        if (hasQuestion && hasType && hasOptions && hasAnswer) {
-            try {
-                const options = row.options.toString().split(';').map(opt => opt.trim()).filter(opt => opt !== "");
-                if (options.length < 2) throw new Error("Debe tener al menos 2 opciones");
+//         if (hasQuestion && hasType && hasOptions && hasAnswer) {
+//             try {
+//                 const options = row.options.toString().split(';').map(opt => opt.trim()).filter(opt => opt !== "");
+//                 if (options.length < 2) throw new Error("Debe tener al menos 2 opciones");
 
-                let correctAnswer;
-                if (row.type === 'multiple_choice') {
-                    // Convertir "0,1" en [0, 1] y filtrar valores no numéricos
-                    correctAnswer = row.correctAnswer.toString().split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
-                    if (correctAnswer.length === 0) throw new Error("Respuesta múltiple mal formateada");
-                } else {
-                    correctAnswer = parseInt(row.correctAnswer);
-                    if (isNaN(correctAnswer)) throw new Error("Respuesta única no es un número válido");
-                }
+//                 let correctAnswer;
+//                 if (row.type === 'multiple_choice') {
+//                     // Convertir "0,1" en [0, 1] y filtrar valores no numéricos
+//                     correctAnswer = row.correctAnswer.toString().split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+//                     if (correctAnswer.length === 0) throw new Error("Respuesta múltiple mal formateada");
+//                 } else {
+//                     correctAnswer = parseInt(row.correctAnswer);
+//                     if (isNaN(correctAnswer)) throw new Error("Respuesta única no es un número válido");
+//                 }
 
-                questions.push({
-                    question: row.question.toString(),
-                    type: row.type.toString(),
-                    options: options,
-                    correctAnswer: correctAnswer,
-                    explanation: row.explanation || "Sin explicación disponible."
-                });
-            } catch (error) {
-                console.warn(`Fila ${index + 2} omitida: ${error.message}`);
-            }
-        } else {
-            console.warn(`Fila ${index + 2} omitida por campos incompletos.`);
-        }
-    });
+//                 questions.push({
+//                     question: row.question.toString(),
+//                     type: row.type.toString(),
+//                     options: options,
+//                     correctAnswer: correctAnswer,
+//                     explanation: row.explanation || "Sin explicación disponible."
+//                 });
+//             } catch (error) {
+//                 console.warn(`Fila ${index + 2} omitida: ${error.message}`);
+//             }
+//         } else {
+//             console.warn(`Fila ${index + 2} omitida por campos incompletos.`);
+//         }
+//     });
 
-    updateConfigUI();
-    startButton.disabled = false;
-    startButton.innerText = "Empezar Quiz";
-    console.log("Preguntas cargadas correctamente");
-}
+//     updateConfigUI();
+//     startButton.disabled = false;
+//     startButton.innerText = "Empezar Quiz";
+//     console.log("Preguntas cargadas correctamente");
+// }
 
 // Función para actualizar la interfaz de configuración (conteos y límites)
 function updateConfigUI() {
@@ -164,17 +164,17 @@ function updateConfigUI() {
 }
 
 // Evento para carga manual de archivo
-if (excelUpload) {
-    excelUpload.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-            processWorkbookData(evt.target.result);
-        };
-        reader.readAsArrayBuffer(file);
-    });
-}
+// if (excelUpload) {
+//     excelUpload.addEventListener('change', (e) => {
+//         const file = e.target.files[0];
+//         if (!file) return;
+//         const reader = new FileReader();
+//         reader.onload = (evt) => {
+//             processWorkbookData(evt.target.result);
+//         };
+//         reader.readAsArrayBuffer(file);
+//     });
+// }
 
 // Inicialización de preguntas base desde el documento interno
 if (typeof defaultQuestions !== 'undefined' && defaultQuestions.length > 0) {
@@ -403,8 +403,8 @@ function displayQuizEnd() {
     const percentage = quizQuestions.length > 0 ? Math.round((correctCount / quizQuestions.length) * 100) : 0;
     percentageCountSpan.textContent = percentage;
 
-    // Lógica de Victoria o Derrota (ej: 70% para ganar)
-    if (percentage >= 70) {
+    // Lógica de Victoria o Derrota (ej: 85% para ganar)
+    if (percentage >= 85) {
         endStatusLabel.textContent = "¡GENIAL!";
         endTitle.textContent = "¡HAS GANADO!";
         endTitle.style.color = "#1A237E";
@@ -443,4 +443,4 @@ if (exitButton) {
 }
 
 // Cargar datos al iniciar
-loadQuestionsFromExcel();
+// loadQuestionsFromExcel(); // Ya no es necesario
