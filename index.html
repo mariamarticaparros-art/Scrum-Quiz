@@ -4,65 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz de la Guía Scrum</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="quiz-container">
+
+        <!-- 1. PANTALLA DE INICIO -->
         <div id="config-screen">
-            <h1>Configuración del Quiz</h1>
-            <div class="config-item" id="total-info-container">
-                <label for="num-questions-slider">Número de preguntas: <span id="num-questions-val">10</span></label>
-                <input type="range" id="num-questions-slider" min="10" max="80" value="10" step="1">
+            <div class="splash-card">
+                <h1>Quiz de la Guía Scrum</h1>
+                <div class="deco-item gear">⚙️</div>
+                <div class="deco-item question">?</div>
             </div>
-            <div class="config-item">
-                <label for="time-slider">Tiempo total (minutos): <span id="time-val">15</span></label>
-                <input type="range" id="time-slider" min="1" max="60" value="15" step="1">
+            
+            <div class="config-controls">
+                <div class="config-item">
+                    <label>🎮 Modo de Juego:</label>
+                    <div class="config-row">
+                        <select id="quiz-mode-select">
+                            <option value="all" id="option-all">Todas las preguntas</option>
+                            <option value="review" id="option-review">Repasar marcadas</option>
+                        </select>
+                        <!-- <button id="clear-review-button" class="nav-btn" title="Vaciar Repaso">🗑️</button> -->
+                    </div>
+                </div>
+                <div class="config-item">
+                    <label>📝 Cantidad de Preguntas: <span id="num-questions-val">10</span></label>
+                    <input type="range" id="num-questions-slider" min="1" max="50" value="10">
+                </div>
+                <div class="config-item">
+                    <label>⏳ Tiempo Límite (min): <span id="time-val">5</span></label>
+                    <input type="range" id="time-slider" min="1" max="60" value="5">
+                </div>
+                <div class="config-item">
+                    <label>🔀 Orden de aparición:</label>
+                    <div class="config-row">
+                        <select id="question-order-select">
+                            <option value="sequential">Secuencial</option>
+                            <option value="random">Aleatorio</option>
+                        </select>
+                        <!-- <div class="nav-btn" style="pointer-events: none; cursor: default;">🔄</div> -->
+                    </div>
+                </div>
             </div>
-            <div class="config-item">
-                <label for="quiz-mode-select">Modo de juego:</label>
-                <select id="quiz-mode-select">
-                    <option id="option-all" value="all">Todas las preguntas</option>
-                    <option id="option-review" value="review">Solo preguntas para repasar</option>
-                </select>
-                <button id="clear-review-button" style="margin-top: 10px; background-color: #95a5a6; font-size: 0.8em; padding: 5px 10px;">Vaciar lista de repaso</button>
-            </div>
-            <div class="config-item">
-                <label for="question-order-select">Orden de las preguntas:</label>
-                <select id="question-order-select">
-                    <option value="random">Aleatorio</option>
-                    <option value="sequential">Secuencial</option>
-                </select>
-            </div>
-            <div class="config-item">
-                <label>O selecciona tu archivo Excel manualmente:</label>
-                <input type="file" id="excel-upload" accept=".xlsx">
-            </div>
-            <button id="start-quiz-button">Empezar Quiz</button>
+            <button id="start-quiz-button" class="btn-main">START</button>            
         </div>
 
+        <!-- 2. PANTALLA DE TRIVIA -->
         <div id="quiz-screen" class="hidden">
-            <button id="top-restart-button" class="top-restart-button hidden">Volver a Empezar</button>
+            <button id="top-restart-button" class="top-restart-button hidden">🔄</button>
             <h1>Quiz de la Guía Scrum</h1>
-
+            
             <div class="score-board">
-                <div class="stat"><span>Pregunta:</span> <span id="current-question-number">1</span>/<span id="total-questions">0</span></div>
-                <div class="stat"><span>Tiempo:</span> <span id="timer-display">00:00</span></div>
-                <div class="stat"><span class="correct-label">Aciertos:</span> <span id="correct-count">0</span></div>
-                <div class="stat"><span class="incorrect-label">Fallos:</span> <span id="incorrect-count">0</span></div>
-                <div class="stat"><span>Porcentaje de acierto:</span> <span id="current-percentage-count">0</span>%</div>
+                <div class="stat">❓ Pregunta: <span id="current-question-number">1</span>/<span id="total-questions">0</span></div>
+                <div class="stat">⏱️ Tiempo: <span id="timer-display">00:00</span></div>
+                <div class="stat">✅ Aciertos: <span id="correct-count">0</span></div>
+                <div class="stat">❌ Fallos: <span id="incorrect-count">0</span></div>
+                <div class="stat" id="score-stat">📈 Porcentaje: <span id="current-percentage-count">0</span>%</div>
             </div>
 
-            <button id="toggle-review-button" class="review-btn">☆ Añadir a repaso</button>
-            <div class="question-area">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 20px;">
-                    <h2 id="question-text" style="margin: 0; flex: 1;"></h2>
+            <div class="question-area-wrapper">
+                <button id="toggle-review-button" class="review-btn">☆ Repasar</button>
+                <div class="question-card">
+                    <h2 id="question-text"></h2>
                 </div>
-                <div id="options-container" class="options-container"></div>
             </div>
+
+            <div id="options-container" class="options-container"></div>
 
             <div class="controls">
-                <button id="answer-button">Responder Pregunta</button>
-                <button id="next-button" class="hidden">Siguiente Pregunta</button>
+                <button id="answer-button" disabled>Responder</button>
+                <button id="next-button" class="hidden">Siguiente</button>
             </div>
 
             <div id="explanation-area" class="explanation-area hidden">
@@ -71,17 +84,28 @@
             </div>
         </div>
 
+        <!-- 3 & 4. PANTALLAS DE FIN (VICTORIA/DERROTA) -->
         <div id="quiz-end-message" class="quiz-end-message hidden">
-            <h2>¡Quiz Terminado!</h2>
-            <p>Has respondido todas las preguntas.</p>
-            <p>Aciertos finales: <span id="final-correct-count"></span></p>
-            <p>Fallos finales: <span id="final-incorrect-count"></span></p>
-            <p>Porcentaje de acierto: <span id="percentage-count"></span>%</p>
-            <button id="restart-button">Reiniciar Quiz</button>
+            <div id="end-status-label" class="status-label">GREAT!</div>
+            
+            <div class="end-card">
+                <h2 id="end-title">YOU WIN!</h2>
+                <p>Aciertos: <span id="final-correct-count"></span></p>
+                <p>Fallos: <span id="final-incorrect-count"></span></p>
+                <p>Efectividad: <span id="percentage-count"></span>%</p>
+            </div>
+
+            <button id="try-again-button" class="btn-main hidden">INTENTAR DE NUEVO</button>
+
+            <div class="nav-bar-bottom">
+                <button id="exit-button" class="nav-btn">✖</button>
+                <button id="restart-button" class="nav-btn">🔄</button>
+            </div>
         </div>
     </div>
 
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="defaultQuestions.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

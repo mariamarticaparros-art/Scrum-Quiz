@@ -91,6 +91,13 @@ function updateReviewButtonUI() {
 
 // Función para cargar Excel
 async function loadQuestionsFromExcel() {
+    // Check if running on file:// protocol to avoid CORS errors
+    if (window.location.protocol === 'file:') {
+        console.warn("La carga automática de Excel no funciona a través del protocolo file:// debido a restricciones de seguridad (CORS).");
+        startButton.disabled = questions.length === 0; // Enable if defaultQuestions exists
+        return;
+    }
+
     try {
         const response = await fetch('questions.xlsx');
         if (!response.ok) throw new Error("No se pudo cargar automáticamente");
@@ -98,7 +105,6 @@ async function loadQuestionsFromExcel() {
         processWorkbookData(data);
     } catch (error) {
         console.error("Error cargando el Excel:", error);
-        startButton.innerText = "Selecciona el archivo Excel";
         // No lanzamos alert aquí para no molestar, esperamos a que el usuario use el input
     }
 }
@@ -284,6 +290,21 @@ function loadQuestion() {
             answerButton.disabled = false; // Habilita el botón de responder al seleccionar una opción
         });
 
+        // Lógica para resaltar la selección del usuario
+        input.addEventListener('click', () => {
+            if (question.type !== 'multiple_choice') {
+                // Para single_choice y true_false, quitar el resaltado de los demás
+                optionsContainer.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+            }
+            // Añadir o quitar el resaltado en el actual
+            if (input.checked) {
+                label.classList.add('selected');
+            } else {
+                label.classList.remove('selected');
+            }
+        });
+
+
         label.appendChild(input);
         label.appendChild(document.createTextNode(option));
         optionsContainer.appendChild(label);
@@ -348,8 +369,10 @@ function checkAnswer() {
 
     if (isCorrect) {
         correctCount++;
+        correctCountSpan.parentElement.classList.add('highlight-correct');
     } else {
         incorrectCount++;
+        incorrectCountSpan.parentElement.classList.add('highlight-incorrect');
     }
 
     explanationText.textContent = question.explanation;
@@ -358,6 +381,10 @@ function checkAnswer() {
 }
 
 function nextQuestion() {
+    // Limpiar resaltados del marcador antes de pasar a la siguiente
+    correctCountSpan.parentElement.classList.remove('highlight-correct');
+    incorrectCountSpan.parentElement.classList.remove('highlight-incorrect');
+
     currentQuestionIndex++;
     if (currentQuestionIndex < quizQuestions.length) {
         loadQuestion();
@@ -392,13 +419,13 @@ function displayQuizEnd() {
 
     // Lógica de Victoria o Derrota (ej: 70% para ganar)
     if (percentage >= 70) {
-        endStatusLabel.textContent = "GREAT!";
-        endTitle.textContent = "YOU WIN!";
+        endStatusLabel.textContent = "¡GENIAL!";
+        endTitle.textContent = "¡HAS GANADO!";
         endTitle.style.color = "#1A237E";
         tryAgainButton.classList.add('hidden');
     } else {
-        endStatusLabel.textContent = "OH NO!";
-        endTitle.textContent = "YOU LOST!";
+        endStatusLabel.textContent = "¡OH NO!";
+        endTitle.textContent = "¡HAS PERDIDO!";
         endTitle.style.color = "#D32F2F";
         tryAgainButton.classList.remove('hidden');
     }
