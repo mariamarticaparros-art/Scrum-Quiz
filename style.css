@@ -49,7 +49,7 @@ body {
 h1 {
     color: #212121; /* Gris muy oscuro para títulos */
     font-size: 2.5em; /* Tamaño de fuente más moderado */
-    margin: 30px 0;
+    margin: 70px 0;
     letter-spacing: normal; /* Eliminar espaciado de letras */
     text-align: center;
 }
@@ -241,8 +241,8 @@ button:disabled { background: #eee; opacity: 0.5; box-shadow: none; transform: n
 
 .nav-btn {
     background: #FFF;
-    width: 50px; /* Tamaño más pequeño */
-    height: 50px;
+    width: 45px; /* Tamaño más pequeño */
+    height: 45px;
     padding: 0;
     font-size: 1.2em;
     display: flex;
@@ -251,12 +251,19 @@ button:disabled { background: #eee; opacity: 0.5; box-shadow: none; transform: n
     border: 1px solid #E0E0E0;
     border-radius: 50%; /* Botones circulares */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    margin: 0px;
 }
 
 .nav-btn:hover {
     background-color: #F5F5F5;
     transform: translateY(-1px);
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.config-row {
+    display: flex;
+    height: 40px;
+    justify-content: space-around;
 }
 
 #try-again-button {
@@ -313,6 +320,34 @@ select {
     transform: rotate(90deg);
 }
 
+/* Contenedor para botones superiores */
+.top-nav-buttons {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+/* Botón de cierre superior */
+.top-close-button {
+    position: static; /* Quitar posicionamiento absoluto */
+    margin: 0; /* Resetear margen */
+    background-color: transparent;
+    border: none;
+    font-size: 1.5em;
+    color: #90A4AE;
+    cursor: pointer;
+    z-index: 100;
+    padding: 5px;
+    line-height: 1;
+    box-shadow: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+.top-close-button:hover {
+    color: #D32F2F; /* Rojo al pasar el ratón */
+    transform: scale(1.2);
+}
 .review-btn {
     background-color: #f0f0f0;
     color: #333;
@@ -361,4 +396,222 @@ select {
     .config-controls {
         padding: 20px;
     }
+}
+
+/* Botones de navegación superior */
+.btn-secondary {
+    margin: 0; /* Resetear margen para que el flexbox lo controle */
+}
+
+/* --- Estilos para la pantalla de listado de preguntas --- */
+#questions-list-screen {
+    padding: 20px;
+    text-align: center;
+}
+
+.question-list-item {
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.2s;
+}
+
+.question-list-title {
+    cursor: pointer;
+}
+
+.question-list-item:hover { 
+    background-color: #f8f9fa; 
+}
+
+.selected-start-question .question-list-title { 
+    background-color: #e3f2fd; 
+    font-weight: bold; 
+    border-left: 4px solid #2196F3;
+    padding-left: 6px; /* Ajuste para que no se pegue al borde */
+    margin-left: -10px; /* Compensar el padding */
+}
+
+/* Contenedor de detalles (respuesta y explicación) */
+.question-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+    background-color: #fafafa;
+    font-size: 0.9em;
+    color: #444;
+    padding: 0 15px;
+}
+
+.question-list-item.expanded .question-details {
+    max-height: 300px; /* Altura suficiente para el contenido */
+    padding: 15px;
+    transition: max-height 0.5s ease-in, padding 0.5s ease-in;
+}
+
+/* Estilo para preguntas marcadas para repaso en la lista */
+.question-list-item.is-review-question {
+    color: #E65100; /* Naranja oscuro para destacar */
+}
+#questions-list-container { max-height: 60vh; overflow-y: auto; margin: 20px 0; text-align: left; border: 1px solid #ccc; padding: 10px; background-color: #fff; }
+
+.review-legend {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
+/* --- Estilos para la pantalla de teoría --- */
+#theory-screen {
+    padding: 20px;
+    text-align: center;
+}
+
+.theory-content {
+    text-align: left;
+    margin: 30px 0;
+}
+
+.theory-content h2 {
+    font-size: 1.5em;
+    color: #333;
+    border-bottom: 2px solid #2196F3;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.theory-content ol, .theory-content ul {
+    padding-left: 25px;
+    margin: 20px 0;
+}
+
+.theory-content li {
+    margin-bottom: 12px;
+    line-height: 1.6;
+    padding-left: 5px;
+}
+
+.theory-content h3 {
+    font-size: 1.2em;
+    color: #1976D2; /* Azul un poco más oscuro para los subtítulos */
+    margin-top: 25px;
+}
+
+.theory-content h4 {
+    font-size: 1.1em;
+    color: #455A64;
+    margin-top: 20px;
+}
+
+/* --- Estilos para la Teoría Desplegable --- */
+.theory-section {
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    overflow: hidden; /* Para que el contenido no se salga al colapsar */
+}
+
+.theory-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.theory-section-header:hover {
+    background-color: #e9ecef;
+}
+
+.theory-section-header h2 {
+    font-size: 1.2em;
+    color: #333;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin: 0;
+}
+
+.theory-section-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #888;
+    cursor: pointer;
+    padding: 0 5px;
+    margin: 0;
+    box-shadow: none;
+}
+
+.theory-section-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+    padding: 0 20px; /* Padding horizontal para el contenido */
+}
+
+.theory-section.expanded .theory-section-body {
+    max-height: 2000px; /* Un valor alto para permitir cualquier contenido */
+    padding: 20px;
+    transition: max-height 0.7s ease-in, padding 0.7s ease-in;
+}
+
+/* --- Estilos para la Teoría Desplegable --- */
+.theory-section {
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    overflow: hidden; /* Para que el contenido no se salga al colapsar */
+}
+
+.theory-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.theory-section-header:hover {
+    background-color: #e9ecef;
+}
+
+.theory-section-header h2 {
+    font-size: 1.2em;
+    color: #333;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin: 0;
+}
+
+.theory-section-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #888;
+    cursor: pointer;
+    padding: 0 5px;
+    margin: 0;
+    box-shadow: none;
+}
+
+.theory-section-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+    padding: 0 20px; /* Padding horizontal para el contenido */
+}
+
+.theory-section.expanded .theory-section-body {
+    max-height: 2000px; /* Un valor alto para permitir cualquier contenido */
+    padding: 20px;
+    transition: max-height 0.7s ease-in, padding 0.7s ease-in;
+}
+
+
+p {
+    text-align: justify;
 }

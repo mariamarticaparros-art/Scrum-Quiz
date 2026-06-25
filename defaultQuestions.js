@@ -1,4818 +1,4952 @@
-const defaultQuestions = [
-    {
-        question: "Si un elemento del Sprint Backlog no puede terminarse antes de que termine el Sprint (resultó que hay mucho más trabajo del que se estimaba), el Sprint se cancela.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "El Sprint solo se cancela en caso de que el Sprint Goal quede obsoleto. Si no se podía realizar algún trabajo, el Sprint Backlog debería renegociarse entre el Product Owner y el equipo de desarrollo."
-    },
-    {
-        question: "El equipo de melé está formado por",
-        type: "single_choice",
-        options: [
-            "El Product Owner",
-            "Los principales actores",
-            "El Scrum Master",
-            "El equipo de desarrollo"
-        ],
-        correctAnswer: [0, 2, 3],
-        explanation: "El equipo Scrum está formado oficialmente por un Product Owner, el equipo de desarrollo y un Scrum Master de forma horizontal y cohesionada."
-    },
-    {
-        question: "¿Qué compone Scrum (seleccionar cuatro)?",
-        type: "multiple_choice",
-        options: [
-            "Roles",
-            "Informes",
-            "Listas de quemado",
-            "Eventos",
-            "Artefactos",
-            "Reglas"
-        ],
-        correctAnswer: [0, 3, 4, 5],
-        explanation: "El marco Scrum consta de los equipos Scrum y sus roles, eventos, artefactos y reglas asociados. Cada componente dentro del marco cumple un propósito específico y es esencial para el éxito."
-    },
-    {
-        question: "¿Quién puede hacer cambios en el Product Backlog? Selecciona dos opciones.",
-        type: "multiple_choice",
-        options: [
-            "Cualquiera",
-            "El Product Owner",
-            "El Scrum Master",
-            "Los principales actores",
-            "El equipo de desarrollo, pero con permiso del Product Owner"
-        ],
-        correctAnswer: [1, 4],
-        explanation: "El Product Owner es la única persona responsable del Product Backlog. Sin embargo, puede delegar parte del trabajo relacionado con la gestión del backlog de producto al equipo de desarrollo."
-    },
-    {
-        question: "¿Quién es responsable de supervisar el progreso hacia objetivos de alto nivel?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master y el Equipo de Desarrollo",
-            "El Scrum Master",
-            "El Product Owner y el equipo de desarrollo",
-            "El equipo de melé",
-            "El equipo de desarrollo",
-            "El Product Owner"
-        ],
-        correctAnswer: 5,
-        explanation: "El Product Owner registra el trabajo total restante al menos en cada revisión de Sprint y evalúa el progreso hacia la finalización del trabajo proyectado antes del tiempo deseado."
-    },
-    {
-        question: "El equipo de desarrollo debería ser capaz de explicar al Product Owner y al Scrum Master cómo pretende trabajar como un equipo autoorganizado para lograr el objetivo del Sprint y crear el Incremento previsto.",
-        type: "true_false",
-        options: [
-            "Falso",
-            "Cierto"
-        ],
-        correctAnswer: 1,
-        explanation: "Al final de la Planificación del Sprint, el equipo de desarrollo debería ser capaz de explicar al Product Owner y al Scrum Master cómo pretende trabajar como un equipo autoorganizado para lograr el Sprint Goal."
-    },
-    {
-        question: "¿Qué es el Sprint Backlog?",
-        type: "single_choice",
-        options: [
-            "Los elementos de Product Backlog seleccionados para este Sprint",
-            "El plan para entregar los artículos de Product Backlog",
-            "Los artículos de Product Backlog seleccionados para este Sprint más el plan para su entrega",
-            "Los elementos de Product Backlog seleccionados para este Sprint más los elementos de Team Backlog"
-        ],
-        correctAnswer: 2,
-        explanation: "El Backlog de Sprint es el conjunto de elementos de Product Backlog seleccionados para el Sprint, además de un plan para entregar el Incremento del producto y alcanzar el objetivo del Sprint."
-    },
-    {
-        question: "Revisa todas las oportunidades formales para inspeccionar y adaptarse.",
-        type: "multiple_choice",
-        options: [
-            "El Sprint",
-            "La Revisión de Sprint",
-            "El Daily Scrum",
-            "La retrospectiva del sprint",
-            "La planificación del sprint"
-        ],
-        correctAnswer: [0, 1, 2, 3, 4],
-        explanation: "Aparte del propio Sprint, que es un contenedor para todos los demás eventos, cada evento en Scrum es una oportunidad formal para inspeccionar y adaptar algo."
-    },
-    {
-        question: "¿Qué debe tenerse en cuenta para la definición de \"hecho\"? Selecciona los dos elementos más apropiados.",
-        type: "multiple_choice",
-        options: [
-            "Experiencia del Product Owner",
-            "Definición de \"Hecho\" de otros equipos Scrum trabajando en el mismo producto",
-            "Definición de \"Hecho\" de otros equipos Scrum trabajando en otros productos",
-            "Convenciones, normas y directrices de la Organización",
-            "Consejo del Scrum Master"
-        ],
-        correctAnswer: [1, 3],
-        explanation: "Si la definición es parte de las convenciones organizacionales, todos los equipos deben seguirla. Si no, el equipo debe definirla. Si hay varios equipos en el mismo producto, deben definirla mutuamente."
-    },
-    {
-        question: "¿Cómo sirve el Scrum Master a la organización? Selecciona las tres respuestas más adecuadas.",
-        type: "multiple_choice",
-        options: [
-            "Planificación de implementaciones de Scrum dentro de la organización",
-            "Combinar desarrolladores experimentados y especialistas junior en diferentes equipos de desarrollo de la organización para acelerar la adopción de Scrum",
-            "Asegurarse de que los principales interesados estén invitados a todas las revisiones de Scrum dentro de la organización",
-            "Liderar y entrenar a la organización en su adopción de Scrum",
-            "Colaborando con otros Scrum Masters para aumentar la eficacia de la aplicación de Scrum en la organización"
-        ],
-        correctAnswer: [0, 3, 4],
-        explanation: "El Scrum Master sirve liderando y entrenando en la adopción, planificando implementaciones y colaborando con otros Scrum Masters para aumentar la eficacia del marco."
-    },
-    {
-        question: "¿Qué es el Incremento?",
-        type: "single_choice",
-        options: [
-            "La suma de todos los elementos del Product Backlog completados durante el Sprint y el valor de los incrementos de todos los Sprints anteriores",
-            "La suma de todos los elementos del Product Backlog completados durante el Sprint",
-            "Todos los elementos del Sprint Backlog que podrían ser publicados independientemente de si el Product Owner decide hacerlo o no",
-            "Todos los elementos \"Hechos\" en el Backlog de Sprint"
-        ],
-        correctAnswer: 0,
-        explanation: "El incremento es la suma de todos los elementos del Product Backlog completados durante el Sprint y el valor de los incrementos de todos los Sprints anteriores."
-    },
-    {
-        question: "¿Qué muestra Cone of Doubt?",
-        type: "single_choice",
-        options: [
-            "Dependencias, horarios de inicio y de finalización de las tareas del proyecto",
-            "Jerarquía de tareas que conforman un proyecto",
-            "Cuánto trabajo queda hasta el final del Sprint",
-            "Cuánto se sabe sobre el Producto a lo largo del tiempo"
-        ],
-        correctAnswer: 3,
-        explanation: "El Cono de Incertidumbre describe la evolución de la cantidad de incertidumbre durante un proyecto, demostrando que sabemos más a lo largo del tiempo."
-    },
-    {
-        question: "¿Qué incluye la gestión del Product Backlog? Selecciona los tres elementos más aplicables.",
-        type: "multiple_choice",
-        options: [
-            "Asegurarse de que el Product Backlog sea visible, transparente y claro para todos, y muestre en qué trabajará el equipo Scrum a continuación",
-            "Trasladar los elementos del retraso de producto al backlog de Sprint",
-            "Presentar los elementos del Backlog de Producto a los Principales Interesados",
-            "Optimizar el valor del trabajo que realiza el Equipo de Desarrollo",
-            "Encargar los artículos del Product Backlog para lograr mejor los objetivos y misiones"
-        ],
-        correctAnswer: [0, 3, 4],
-        explanation: "Incluye expresar claramente los elementos, ordenarlos para lograr mejor objetivos y misiones, optimizar el valor y asegurarse de que el backlog sea visible, transparente y claro."
-    },
-    {
-        question: "La definición de Hecho puede revisarse y adaptarse en cada Sprint Retrospective. ¿Verdadero o falso?",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "Durante cada retrospectiva de Sprint, el equipo Scrum planifica formas de aumentar la calidad del producto mejorando los procesos de trabajo o adaptando la definición de \"Hecho\" si es apropiado."
-    },
-    {
-        question: "¿Dónde se puede usar Scrum? Revisa todos los elementos aplicables.",
-        type: "multiple_choice",
-        options: [
-            "Gestión del funcionamiento de una organización",
-            "Investigación e identificación de mercados, tecnologías y capacidades de producto viables",
-            "Desarrollo y mantenimiento de entornos operativos en la nube y otros",
-            "Desarrollo de productos y mejoras",
-            "Desarrollo de software y hardware",
-            "Desarrollo de casi todo lo que usamos en nuestra vida diaria como individuos y sociedades"
-        ],
-        correctAnswer: [0, 1, 2, 3, 4, 5],
-        explanation: "Scrum se utiliza extensamente en todo el mundo para desarrollo complejo en software, hardware, funcionamiento organizacional, investigación de mercados y prácticamente cualquier cosa en nuestra vida diaria."
-    },
-    {
-        question: "¿Podría terminarse la planificación del Sprint si solo el trabajo planificado para los primeros días del Sprint se descompone en unidades de un día o menos?",
-        type: "single_choice",
-        options: [
-            "Sí, si también se estima el trabajo restante, quizá en unidades más grandes",
-            "No, todos los elementos del Sprint Backlog deberían descomponerse en unidades de un día o menos al final de la planificación del Sprint"
-        ],
-        correctAnswer: 0,
-        explanation: "La Guía Scrum requiere que solo el trabajo planificado para los primeros días del Sprint se descomponga al final de la Planificación, a menudo en unidades de un día o menos."
-    },
-    {
-        question: "¿Cuáles son las preguntas que responde la Planificación de Sprints? Selecciona dos.",
-        type: "multiple_choice",
-        options: [
-            "¿Qué se puede ofrecer en el Incremento resultante del próximo Sprint?",
-            "¿Cómo se logrará el trabajo necesario para entregar el Incremento?",
-            "¿Cuál es el tamaño de la Deuda Técnica y cómo podría eliminarse?",
-            "¿Qué nuevas tecnologías podrían usarse para acelerar la velocidad del equipo de desarrollo?",
-            "¿Quién será responsable de cada elemento en el Backlog de Sprint?"
-        ],
-        correctAnswer: [0, 1],
-        explanation: "La reunión de Sprint Planning responde de manera oficial a dos preguntas críticas: ¿Qué se puede entregar? y ¿Cómo se logrará hacer ese trabajo?"
-    },
-    {
-        question: "¿Cuáles son los cuadros de tiempo para la Sprint Review y la Sprint Retrospective?",
-        type: "single_choice",
-        options: [
-            "Caja de tiempo de 4 horas para cada una",
-            "3 y 4 horas respectivamente",
-            "Caja de tiempo de 3 horas para cada una",
-            "4 y 3 horas respectivamente"
-        ],
-        correctAnswer: 3,
-        explanation: "La Revisión del Sprint es, como mucho, una reunión de cuatro horas para Sprints de un mes. La Retrospectiva del Sprint es, como mucho, una reunión de tres horas para los Sprints de un mes."
-    },
-    {
-        question: "¿Cuánto debería durar la Planificación del Sprint?",
-        type: "single_choice",
-        options: [
-            "No más de 8 horas",
-            "Hasta que todos los elementos del Sprint Backlog se descomponen en unidades de un día o menos",
-            "No más de 4 horas",
-            "No más del 10% de la capacidad del equipo de desarrollo"
-        ],
-        correctAnswer: 0,
-        explanation: "La planificación de sprints está limitada a un máximo de ocho horas para un sprint de duración mensual (un mes estándar)."
-    },
-    {
-        question: "¿Quién es responsable de todas las estimaciones en el Product Backlog?",
-        type: "single_choice",
-        options: [
-            "El equipo de desarrollo",
-            "El Product Owner",
-            "El equipo de melé",
-            "El Product Owner y el Scrum Master",
-            "El Scrum Master y el Equipo de Desarrollo",
-            "El Product owner y el equipo de desarrollo",
-            "El Scrum Master"
-        ],
-        correctAnswer: 0,
-        explanation: "El equipo de desarrollo es responsable de todas las estimaciones. El Product Owner puede influir y guiar ayudando a entender los intercambios, pero quien hace el trabajo tiene la última palabra."
-    },
-    {
-        question: "¿Se permite saltarse el Daily Scrum si no hay nada interesante de qué hablar?",
-        type: "single_choice",
-        options: [
-            "Sí",
-            "No"
-        ],
-        correctAnswer: 1,
-        explanation: "Cada evento es una oportunidad formal de inspección y adaptación. No incluir alguno de estos eventos resulta en una menor transparencia y es una oportunidad perdida para el marco empírico."
-    },
-    {
-        question: "El propósito de la Retrospectiva Sprint es (seleccionar tres):",
-        type: "multiple_choice",
-        options: [
-            "Identificar y ordenar los principales elementos que han ido bien y las posibles mejoras",
-            "Crea un plan para implementar mejoras en la forma en que el equipo Scrum realiza su trabajo",
-            "Observa cómo fue el último Sprint en cuanto a personas, relaciones, procesos y herramientas",
-            "Obtén asesoramiento técnico o de dominio de especialistas invitados por el Equipo de Desarrollo o el Scrum Master",
-            "Recibe comentarios de los Principales Interesados invitados por el Product Owner"
-        ],
-        correctAnswer: [0, 1, 2],
-        explanation: "El propósito es inspeccionar el último Sprint respecto a personas, relaciones, procesos y herramientas; identificar qué salió bien y qué se puede mejorar; y crear un plan de implementación."
-    },
-    {
-        question: "La caja de tiempo de Daily Scrum depende del tamaño del equipo de desarrollo.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "El Daily Scrum es un evento con un timebox estricto de 15 minutos diseñado para el equipo de desarrollo, sin importar si el tamaño de este es grande o pequeño."
-    },
-    {
-        question: "¿Podrían el Product Owner y el Scrum Master formar parte del equipo de desarrollo?",
-        type: "single_choice",
-        options: [
-            "No",
-            "Sí"
-        ],
-        correctAnswer: 1,
-        explanation: "Sí. Scrum no prohíbe que el Product Owner ni el Scrum Master realicen trabajo técnico de desarrollo, aunque no se considere una mejor práctica por potenciales conflictos de interés."
-    },
-    {
-        question: "¿Quién tiene autoridad para cancelar el Sprint?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master",
-            "El equipo de desarrollo",
-            "Los principales actores",
-            "El Product Owner y el Scrum Master",
-            "El Product Owner"
-        ],
-        correctAnswer: 4,
-        explanation: "Solo el Product Owner tiene la autoridad exclusiva para cancelar el Sprint, aunque pueda recibir influencias legítimas de stakeholders o de los desarrolladores."
-    },
-    {
-        question: "Solo el Product Owner y el equipo de desarrollo participan en la planificación del sprint. No hay nada que hacer para el Scrum Master.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "El trabajo que se realizará en el Sprint se planifica mediante la colaboración activa de todo el Scrum Team completo, incluyendo la facilitación y coaching del Scrum Master."
-    },
-    {
-        question: "¿Qué son los artefactos Scrum? Selecciona todos los elementos aplicables.",
-        type: "multiple_choice",
-        options: [
-            "La lista de impedimentos eliminados",
-            "Catálogo de productos",
-            "Lista de Sprint",
-            "El objetivo del sprint",
-            "Incremento"
-        ],
-        correctAnswer: [1, 2, 4],
-        explanation: "Los únicos tres artefactos oficiales definidos dentro de Scrum son el Product Backlog (Catálogo), el Sprint Backlog (Lista de Sprint) y el Incremento."
-    },
-    {
-        question: "El Sprint Backlog se crea en la Planificación de Sprints. El equipo de desarrollo prohíbe añadir nuevo trabajo al Sprint Backlog posteriormente.",
-        type: "true_false",
-        options: [
-            "Falso",
-            "Cierto"
-        ],
-        correctAnswer: 0,
-        explanation: "El equipo de desarrollo modifica el Backlog de Sprint a lo largo de la iteración según surge y se aprende más sobre el trabajo necesario para alcanzar el objetivo del Sprint."
-    },
-    {
-        question: "¿Cuáles son las dos características esenciales que debe poseer un equipo de scrum?",
-        type: "multiple_choice",
-        options: [
-            "Debe tener todas las competencias necesarias para realizar el trabajo sin depender de otros que no forman parte del equipo",
-            "Debería ser lo suficientemente flexible para completar todo el trabajo previsto para el Sprint incluso si algunos miembros del equipo están de vacaciones",
-            "Debe elegir cómo realizar mejor su trabajo, en lugar de ser dirigida por otros fuera del equipo",
-            "Debe utilizar herramientas, procesos y técnicas aprobados por la Organización"
-        ],
-        correctAnswer: [0, 2],
-        explanation: "Los equipos Scrum son autoorganizados (eligen la mejor manera de realizar su trabajo en lugar de ser dirigidos desde fuera) y multifuncionales (poseen todas las competencias)."
-    },
-    {
-        question: "Imagina que eres un Scrum Master en una pequeña organización que intenta adoptar Scrum. Hay 10 desarrolladores y el Product Owner. ¿Cómo pueden dividirse en equipos? Elige todas las opciones aplicables:",
-        type: "multiple_choice",
-        options: [
-            "2 equipos de 6 y 4 personas (porque es bueno tener un equipo de control de calidad aparte)",
-            "3 equipos de 4, 3 y 3 personas (cada equipo es multifuncional)",
-            "1 equipo de 10 personas (porque no hay razón para dividirse)",
-            "2 equipos de 6 y 4 personas (tras una breve reunión, los desarrolladores decidieron que esta era la mejor opción)"
-        ],
-        correctAnswer: [1, 3],
-        explanation: "El tamaño óptimo del equipo de desarrollo es entre 3 y 9 miembros. Tener 10 personas en desarrollo rompe la regla de un máximo de 9. Dividirlos en 2 equipos multifuncionales elegidos por ellos mismos o en 3 equipos pequeños es lo idóneo."
-    },
-    {
-        question: "¿Qué muestra el Burn-down Chart?",
-        type: "single_choice",
-        options: [
-            "Dependencias, horarios de inicio y de finalización de las tareas del proyecto",
-            "Cuánto trabajo queda hasta el final del Sprint",
-            "Jerarquía de tareas que conforman un proyecto",
-            "La evolución de la cantidad de incertidumbre durante un proyecto"
-        ],
-        correctAnswer: 1,
-        explanation: "El gráfico de burn-down muestra de manera visual la evolución del esfuerzo o trabajo restante acumulado contra el paso del tiempo dentro del Sprint."
-    },
-    {
-        question: "¿Quién participa en la Sprint Review? Selecciona todas las variantes aplicables.",
-        type: "multiple_choice",
-        options: [
-            "El CEO de la Organización",
-            "Los principales actores",
-            "El Product Owner",
-            "El equipo de desarrollo",
-            "El Scrum Master"
-        ],
-        correctAnswer: [1, 2, 3, 4],
-        explanation: "Durante la Revisión, el equipo Scrum completo (PO, SM y Desarrolladores) y los stakeholders (principales actores clave) invitados colaboran activas sobre lo que se construyó."
-    },
-    {
-        question: "¿Cuál es el horario del Daily Scrum?",
-        type: "single_choice",
-        options: [
-            "25 minutos",
-            "20 minutos",
-            "No limitado. Cada miembro del equipo de desarrollo debería tener tiempo suficiente para responder a las tres preguntas principales.",
-            "15 minutos"
-        ],
-        correctAnswer: 3,
-        explanation: "El Daily Scrum es un evento diario interno de los desarrolladores limitado estrictamente a una caja de tiempo máxima de 15 minutos."
-    },
-    {
-        question: "¿Cuál podría ser la fuente de los requisitos para que se hagan cambios en el producto?",
-        type: "single_choice",
-        options: [
-            "El retraso de productos",
-            "El CEO de la Organización",
-            "Los principales actores"
-        ],
-        correctAnswer: 0,
-        explanation: "El Product Backlog (retraso de productos) es una lista ordenada de todo lo que pueda necesitarse y constituye la única fuente oficial de requisitos para cualquier cambio en el producto."
-    },
-    {
-        question: "¿En qué reuniones se permite la participación de los Actores Clave?",
-        type: "single_choice",
-        options: [
-            "La retrospectiva del sprint",
-            "La Revisión de Sprint",
-            "La planificación del sprint",
-            "El Daily Scrum"
-        ],
-        correctAnswer: 1,
-        explanation: "Los Principales Actores o Stakeholders sólo están invitados formalmente a participar en la reunión de Revisión del Sprint para dar feedback del incremento."
-    },
-    {
-        question: "La definición de \"Hecho\" se crea durante el primer Sprint y permanece sin cambios hasta el lanzamiento del producto.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Durante cada retrospectiva de Sprint, el equipo Scrum planifica formas de aumentar la calidad del producto adaptando y madurando la definición de \"Hecho\" según corresponda."
-    },
-    {
-        question: "¿Cuáles son las características de un equipo de desarrollo? Selecciona las tres opciones más adecuadas.",
-        type: "multiple_choice",
-        options: [
-            "El scrum no reconoce a ningún equipo secundario en el equipo de desarrollo",
-            "La responsabilidad corresponde al equipo de desarrollo en su conjunto",
-            "Contar con al menos un ingeniero de pruebas en el equipo de desarrollo",
-            "Scrum no reconoce títulos para los miembros del equipo de desarrollo",
-            "Tener al Scrum Master como desarrollador a tiempo parcial en el equipo de desarrollo"
-        ],
-        correctAnswer: [0, 1, 3],
-        explanation: "No se reconocen subequipos internos, la responsabilidad es colectiva del equipo entero y no existen títulos o jerarquías para sus miembros individuales, independientemente de su especialidad."
-    },
-    {
-        question: "El Scrum Master se centra principalmente en el Scrum Team y normalmente no le importan los que están fuera del Scrum Team.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "El Scrum Master es un líder al servicio de la organización, ayudando a las personas externas a entender qué interacciones con el equipo son de utilidad para maximizar el valor."
-    },
-    {
-        question: "¿Qué significa la palabra \"desarrollo\" en el contexto de Scrum? Selecciona la mejor opción.",
-        type: "single_choice",
-        options: [
-            "Desarrollo de software y hardware",
-            "Desarrollo de producto, su lanzamiento y mantenimiento",
-            "Trabajo complejo que puede incluir todas las opciones sugeridas e incluso más",
-            "Investigación e identificación de mercados, tecnologías y capacidades de producto viables",
-            "Desarrollo de un entorno operativo para el producto"
-        ],
-        correctAnswer: 2,
-        explanation: "En la Guía Scrum, el desarrollo se refiere a trabajos complejos y amplios que engloban investigación, creación, mantenimiento de entornos, hardware, software y soporte a lo largo de la vida del producto."
-    },
-    {
-        question: "¿Cuál es la entrada a la planificación de los sprints? Selecciona cuatro.",
-        type: "multiple_choice",
-        options: [
-            "El último producto Increment",
-            "Capacidad proyectada del equipo de desarrollo durante el Sprint",
-            "El retraso de productos",
-            "Comentarios de los principales actores",
-            "Comentarios del CEO de la Organización",
-            "Rendimiento previo del equipo de desarrollo"
-        ],
-        correctAnswer: [0, 1, 2, 5],
-        explanation: "Las entradas oficiales son: el Product Backlog, el Incremento más reciente, la capacidad proyectada de los desarrolladores para la iteración y el rendimiento histórico del equipo."
-    },
-    {
-        question: "Es buena práctica tener de vez en cuando un Sprint técnico especial que consista únicamente en tareas para eliminar la deuda técnica sin implementar ninguna funcionalidad nueva.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Cada Sprint debe entregar obligatoriamente un Incremento de funcionalidad potencialmente liberable que aporte valor y cumpla el \"Hecho\". No existen los Sprints exclusivamente técnicos."
-    },
-    {
-        question: "¿Qué pertenece exclusivamente al equipo de desarrollo?",
-        type: "single_choice",
-        options: [
-            "El Incremento",
-            "El retraso de productos",
-            "El retraso en Sprint",
-            "La definición de hecho"
-        ],
-        correctAnswer: 2,
-        explanation: "El Sprint Backlog (retraso en Sprint) es una imagen visible y en tiempo real del plan que pertenece única y exclusivamente al equipo de desarrollo para cumplir el Sprint Goal."
-    },
-    {
-        question: "¿Quién es responsable de hacer un seguimiento del trabajo total restante en el Sprint Backlog para proyectar la probabilidad de alcanzar el objetivo del Sprint?",
-        type: "single_choice",
-        options: [
-            "El Product Owner y el equipo de desarrollo",
-            "El equipo de desarrollo",
-            "El Product Owner",
-            "El equipo de melé",
-            "El Scrum Master"
-        ],
-        correctAnswer: 1,
-        explanation: "Los desarrolladores registran y analizan el trabajo total restante al menos en cada Daily Scrum para evaluar las probabilidades de cumplir el Sprint Goal y gestionar su propio progreso."
-    },
-    {
-        question: "Todos los equipos de desarrollo que trabajan en el mismo producto deben usar el mismo backlog de productos.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "Varios equipos Scrum pueden trabajar juntos en el mismo producto. En ese escenario, se utiliza un único y unificado Product Backlog para describir el trabajo futuro."
-    },
-    {
-        question: "¿Quién es responsable del retraso de productos?",
-        type: "single_choice",
-        options: [
-            "El Product Owner y el equipo de desarrollo",
-            "El Product Owner y el Scrum Master",
-            "El equipo de desarrollo",
-            "El Product Owner",
-            "El Scrum Master y el Equipo de Desarrollo",
-            "El Scrum Master"
-        ],
-        correctAnswer: 3,
-        explanation: "El Product Owner es el único y máximo responsable de la gestión del Product Backlog (retraso de productos), incluyendo su contenido, disponibilidad y ordenamiento."
-    },
-    {
-        question: "¿Quién puede participar en el Daily Scrum?",
-        type: "single_choice",
-        options: [
-            "Los principales actores",
-            "El Scrum Master",
-            "El equipo de desarrollo",
-            "El Product Owner"
-        ],
-        correctAnswer: 2,
-        explanation: "El Daily Scrum es una reunión estructurada e interna exclusivamente para los desarrolladores. Si otros asisten, el Scrum Master cuida que no interfieran en la sesión."
-    },
-    {
-        question: "¿Quién es responsable de gestionar el Backlog de Producto?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master",
-            "El Product Owner",
-            "El equipo de desarrollo",
-            "Los principales actores"
-        ],
-        correctAnswer: 1,
-        explanation: "El Product Owner es la única persona con la responsabilidad integral sobre la gestión, refinamiento y mantenimiento del Product Backlog."
-    },
-    {
-        question: "¿Quién puede cambiar el backlog del Sprint durante el Sprint?",
-        type: "single_choice",
-        options: [
-            "El equipo de desarrollo",
-            "El Scrum Master",
-            "El equipo de desarrollo y el Product Owner",
-            "El Product Owner",
-            "El equipo de melé"
-        ],
-        correctAnswer: 0,
-        explanation: "Sólo los desarrolladores tienen la autoridad para modificar su propio Sprint Backlog basándose en lo que descubren a lo largo del Sprint. El artefacto les pertenece."
-    },
-    {
-        question: "El Daily Scrum siempre debería durar exactamente 15 minutos. Por ejemplo, si tu equipo lo ha conseguido en 5 minutos, deberías dedicar 10 minutos más a alguna actividad útil del equipo como el refinamiento del Product Backlog, pero no más.",
-        type: "true_false",
-        options: [
-            "Falso",
-            "Cierto"
-        ],
-        correctAnswer: 0,
-        explanation: "Los eventos en Scrum tienen una duración máxima determinada (caja de tiempo), pero no se exige un tiempo mínimo. Si el equipo cumple el propósito en 5 minutos, la sesión termina."
-    },
-    {
-        question: "¿Cuál es el orden de los artículos en el catálogo de productos?",
-        type: "single_choice",
-        options: [
-            "Menos valiosos y los objetos más poco claros están al final",
-            "Los elementos menos claros en la parte superior",
-            "Los elementos añadidos recientemente en la parte superior",
-            "Alfabético"
-        ],
-        correctAnswer: 0,
-        explanation: "El Product Backlog se ordena de mayor a menor valor, lo que sitúa los elementos más valiosos, prioritarios y claros arriba, y los menos claros o valiosos al final."
-    },
-    {
-        question: "¿Quién es responsable de la creación de la definición de \"hecho\"?",
-        type: "single_choice",
-        options: [
-            "El equipo de melé",
-            "El Scrum Master",
-            "El equipo de desarrollo",
-            "El Product Owner"
-        ],
-        correctAnswer: 2,
-        explanation: "Si no es proporcionada por los estándares de la organización de desarrollo, el equipo de desarrollo dentro del Scrum Team es responsable de definir el criterio de \"Hecho\" idóneo para el producto."
-    },
-    {
-        question: "Todos los equipos Scrum que trabajan en el mismo producto deberían tener la misma duración de Sprint.",
-        type: "true_false",
-        options: [
-            "Falso",
-            "Cierto"
-        ],
-        correctAnswer: 0,
-        explanation: "Scrum no requiere ni impone que los Sprints tengan que estar alineados en duración o fechas para diferentes equipos trabajando en paralelo."
-    },
-    {
-        question: "Selecciona los cinco Valores Scrum.",
-        type: "multiple_choice",
-        options: [
-            "Respeto",
-            "Apertura",
-            "Efectividad",
-            "Enfoque",
-            "Autoorganización",
-            "Compromiso",
-            "Agilidad",
-            "Valor"
-        ],
-        correctAnswer: [0, 1, 3, 5, 7],
-        explanation: "Los cinco valores definidos de forma explícita en la Guía oficial de Scrum son: compromiso (commitment), coraje/valor (courage), enfoque (focus), apertura (openness) y respeto (respect)."
-    },
-    {
-        question: "Selecciona las dos reuniones en las que se permite la participación de personas fuera del Equipo Scrum.",
-        type: "multiple_choice",
-        options: [
-            "La retrospectiva del sprint",
-            "El Daily Scrum",
-            "La Revisión de Sprint",
-            "La planificación del sprint"
-        ],
-        correctAnswer: [2, 3],
-        explanation: "Los desarrolladores pueden invitar a asesores técnicos externos en el Sprint Planning, y el Product Owner invita de forma activa a los Stakeholders clave a la Sprint Review."
-    },
-    {
-        question: "¿Cómo sirve el Scrum Master al equipo de desarrollo? Selecciona las tres respuestas más adecuadas.",
-        type: "multiple_choice",
-        options: [
-            "Ayudar al equipo de desarrollo a crear productos de alto valor",
-            "Añadir o eliminar desarrolladores del equipo de desarrollo según los cambios en la velocidad del equipo",
-            "Coaching al equipo de desarrollo en autoorganización y funcionalidad transversal",
-            "Eliminación de obstáculos para el progreso del equipo de desarrollo",
-            "Ayudar al equipo de desarrollo como líder del equipo"
-        ],
-        correctAnswer: [0, 2, 3],
-        explanation: "Sirve entrenando en autoorganización y multifuncionalidad, eliminando los impedimentos que bloquean el avance y guiándolos en la creación de productos de alto valor."
-    },
-    {
-        question: "¿Qué son las características del Product Backlog? Selecciona tres.",
-        type: "multiple_choice",
-        options: [
-            "Nunca está completo",
-            "Un Product Backlog podría cerrarse cuando no contiene elementos para incluir en el siguiente Sprint",
-            "Es dinámico",
-            "Cuando se lanza la versión final de un producto, se descarta su Backlog de Producto",
-            "Mientras exista un producto, también existe su Backlog de Productos"
-        ],
-        correctAnswer: [0, 2, 4],
-        explanation: "El Product Backlog es dinámico, cambia constantemente, nunca se da por completado de forma definitiva y coexiste con el ciclo de vida real del producto en el mercado."
-    },
-    {
-        question: "¿Cuáles son los tres pilares que sostienen el Scrum?",
-        type: "multiple_choice",
-        options: [
-            "Inspección",
-            "Transparencia",
-            "Funcionalidad cruzada",
-            "Autoorganización",
-            "Agilidad",
-            "Adaptación"
-        ],
-        correctAnswer: [0, 1, 5],
-        explanation: "El control de procesos empírico en el que se cimienta Scrum requiere de tres pilares fundamentales que sustentan su éxito: la transparencia, la inspección y la adaptación."
-    },
-    {
-        question: "Cómo ayuda la definición de \"Hecho\" al equipo de scrum? Selecciona los tres elementos más aplicables.",
-        type: "multiple_choice",
-        options: [
-            "El DoD ayuda en la inspección y adaptación",
-            "El DoD guía al equipo de desarrollo para saber cuántos elementos de Product Backlog puede seleccionar durante una planificación de sprint",
-            "El DoD se utiliza para evaluar cuándo se ha completado el trabajo en el producto Incremento",
-            "El DoD garantiza la transparencia de los artefactos",
-            "El DoD ayuda a calcular la velocidad del equipo de melé"
-        ],
-        correctAnswer: [1, 2, 3],
-        explanation: "Ayuda a evaluar la completitud del Incremento, sirve de guía en la planificación sobre cuántos elementos se pueden tomar y aporta una transparencia crítica a los artefactos."
-    },
-    {
-        question: "¿Quién crea el incremento?",
-        type: "single_choice",
-        options: [
-            "El Product Owner",
-            "El equipo de melé",
-            "El equipo de desarrollo y el propietario del producto",
-            "El Scrum Master",
-            "El equipo de desarrollo"
-        ],
-        correctAnswer: 4,
-        explanation: "Única y exclusivamente las personas asignadas como desarrolladores dentro del equipo de Scrum poseen el rol operativo para fabricar y crear un Incremento 'Hecho'."
-    },
-    {
-        question: "¿Qué es Scrum?",
-        type: "single_choice",
-        options: [
-            "Un proceso de diseño secuencial, utilizado en procesos de desarrollo de software, en el que el progreso se percibe como un flujo constante hacia abajo.",
-            "Un marco dentro del cual las personas pueden abordar problemas adaptativos complejos, mientras entregan productos valiosos.",
-            "Una metodología de desarrollo de software destinada a mejorar la calidad del software."
-        ],
-        correctAnswer: 1,
-        explanation: "Scrum no es un proceso ni metodología pesada; está definido textualmente como un marco liviano que ayuda a personas, equipos y organizaciones a generar valor mediante soluciones adaptativas."
-    },
-    {
-        question: "¿Quién es responsable de promover y apoyar Scrum? Selecciona la mejor opción.",
-        type: "single_choice",
-        options: [
-            "El Scrum Master",
-            "El equipo de desarrollo",
-            "El equipo de melé",
-            "El Product Owner",
-            "El Scrum Master y el Product Owner"
-        ],
-        correctAnswer: 0,
-        explanation: "El Scrum Master es el responsable explícito de promover, divulgar y apoyar Scrum enseñando la teoría, prácticas, reglas y valores esenciales a todo el entorno."
-    },
-    {
-        question: "¿Qué ocurre durante el Sprint? Selecciona tres respuestas.",
-        type: "multiple_choice",
-        options: [
-            "No se han hecho cambios que pongan en peligro el Sprint Goal",
-            "Los objetivos de calidad no disminuyen",
-            "El Objetivo de Sprint cambia frecuentemente para reflejar el estado de la obra restante",
-            "El alcance puede aclararse y renegociarse entre el Product Owner y el equipo de desarrollo a medida que se aprenda más",
-            "El alcance del sprint se define en la Planificación del Sprint y no puede cambiarse"
-        ],
-        correctAnswer: [0, 1, 3],
-        explanation: "Durante la iteración no se ejecutan cambios que afecten al Sprint Goal, los estándares de calidad se mantienen firmes y el alcance se puede renegociar con el PO si se aprende más."
-    },
-    {
-        question: "¿Quién es responsable de elaborar el Objetivo de Sprint en la Planificación de Sprint?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master",
-            "El equipo de desarrollo",
-            "Los principales actores",
-            "El equipo de melé",
-            "El Product Owner"
-        ],
-        correctAnswer: 3,
-        explanation: "Después de que los desarrolladores pronostican los elementos a entregar, el Scrum Team en conjunto (el equipo completo de melé) elabora de manera consensuada el Sprint Goal."
-    },
-    {
-        question: "¿Cuáles son las tres características más aplicables del Product Owner?",
-        type: "multiple_choice",
-        options: [
-            "Maximizador de valor del producto",
-            "Evangelista líder de Scrum en la organización",
-            "Facilitador principal de la participación de los principales actores",
-            "Facilitador de eventos Scrum",
-            "Experto en el mercado de productos"
-        ],
-        correctAnswer: [0, 2, 4],
-        explanation: "El Product Owner destaca principalmente por optimizar y maximizar el valor del producto, actuar como el enlace con los interesados clave (stakeholders) y dominar el negocio del mercado."
-    },
-    {
-        question: "¿Qué parte de la capacidad del equipo de desarrollo suele consumir el refinamiento del Product Backlog?",
-        type: "single_choice",
-        options: [
-            "El equipo de desarrollo no está autorizado para el refinamiento del Product Backlog",
-            "No más del 10%",
-            "No más del 20%",
-            "No más del 5%"
-        ],
-        correctAnswer: 1,
-        explanation: "El proceso continuo de refinamiento y detalle del Product Backlog por parte del equipo técnico de desarrollo normalmente no consume más del 10% de su capacidad total diaria."
-    },
-    {
-        question: "¿Quién es responsable de afrontar la transparencia incompleta de los artefactos?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master",
-            "El equipo de desarrollo",
-            "El equipo de melé",
-            "El Product Owner"
-        ],
-        correctAnswer: 0,
-        explanation: "Es responsabilidad inherente al rol del Scrum Master colaborar activamente con el equipo y la organización para potenciar e incrementar los niveles de transparencia de los artefactos."
-    },
-    {
-        question: "Es normal tener un Sprint de \"endurecimiento\" para eliminar toda deuda técnica y preparar el producto para su próximo lanzamiento.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Falso. Al terminar cada Sprint, el Incremento entregado ya debe encontrarse en estado utilizable y potencialmente liberable cumpliendo el \"Hecho\", eliminando la necesidad de Sprints de preparación especiales."
-    },
-    {
-        question: "Es buena práctica tener al menos dos Product Owners en proyectos grandes.",
-        type: "true_false",
-        options: [
-            "Falso",
-            "Cierto"
-        ],
-        correctAnswer: 0,
-        explanation: "El Product Owner representa a una persona individual única, no a un comité multifacético, con el objetivo de resguardar una toma de decisiones ágil y transparente sobre el backlog."
-    },
-    {
-        question: "Imagina la siguiente situación. En la reunión retrospectiva de Sprint, el equipo Scrum identificó algunas mejoras que se pueden hacer. ¿Qué debería hacer el Scrum Team? Selecciona la mejor opción.",
-        type: "single_choice",
-        options: [
-            "Asigna miembros responsables para cada mejora. Consulta el progreso en la próxima retrospectiva.",
-            "Asigna un miembro responsable para al menos una mejora. Consulta el progreso en la próxima retrospectiva.",
-            "Asegúrate de que el Sprint Backlog para el próximo Sprint incluya todas las mejoras.",
-            "Asegúrate de que el backlog de Sprint para el próximo Sprint incluya al menos una mejora de proceso de alta prioridad."
-        ],
-        correctAnswer: 3,
-        explanation: "Para garantizar la mejora e inspección continuas, el Sprint Backlog del ciclo venidero debe incluir por regla al menos una acción o mejora de proceso prioritaria identificada en la retrospectiva."
-    },
-    {
-        question: "¿Cuál es la esencia de Scrum? Selecciona la opción más adecuada.",
-        type: "single_choice",
-        options: [
-            "El equipo de desarrollo",
-            "La Guía de la melé",
-            "El Scrum Master y el Product Owner",
-            "Un equipo pequeño de personas, muy flexible y adaptable"
-        ],
-        correctAnswer: 3,
-        explanation: "La esencia de Scrum radica intrínsecamente en el funcionamiento de un núcleo o equipo humano pequeño, sumamente adaptable, multifuncional y ágil ante entornos complejos."
-    },
-    {
-        question: "¿Con qué frecuencia deberían los usuarios de Scrum inspeccionar artefactos de Scrum y avanzar hacia un objetivo de Sprint?",
-        type: "single_choice",
-        options: [
-            "Después del Daily Scrum",
-            "En la Sprint Review",
-            "Con frecuencia, pero no debería interponerse en el trabajo",
-            "Tan a menudo como sea posible"
-        ],
-        correctAnswer: 2,
-        explanation: "La inspección de artefactos y del avance diario hacia el Sprint Goal debe ser frecuente, pero cuidando meticulosamente que no interfiera ni se convierta en una traba constante para el desarrollo real del trabajo."
-    },
-    {
-        question: "Scrum recomienda usar solo aquellos componentes y reglas de Scrum que más se adapten a un proyecto en particular.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Scrum es un marco inmutable. Aunque se pueden usar prácticas complementarias, el uso fragmentado de Scrum deja de ser considerado Scrum, ya que cada componente cumple un fin esencial para el empirismo."
-    },
-    {
-        question: "¿Cuáles son las tres preguntas que da la Guía de Scrum como ejemplo que pueden usarse en el Daily Scrum?",
-        type: "multiple_choice",
-        options: [
-            "¿Le expliqué todos los problemas descubiertos que encontré ayer al Product Owner?",
-            "¿Qué haré hoy para ayudar al equipo de desarrollo a alcanzar el objetivo del Sprint?",
-            "¿Veo algún impedimento que impida que yo o el equipo de desarrollo alcancemos el objetivo del Sprint?",
-            "¿Qué hice ayer que ayudó al equipo de desarrollo a alcanzar el objetivo del Sprint?",
-            "¿Tengo una comprensión completa del elemento de Sprint Backlog en el que estoy trabajando?"
-        ],
-        correctAnswer: [1, 2, 3],
-        explanation: "Las preguntas ejemplo son: ¿Qué hice ayer que ayudó a lograr el Sprint Goal? ¿Qué haré hoy para ayudar a lograr el Sprint Goal? y ¿Detecto algún impedimento que bloquee el cumplimiento del Sprint Goal?"
-    },
-    {
-        question: "El Scrum Master realiza lo siguiente respecto al Scrum Diario (selecciona todas las variantes aplicables):",
-        type: "multiple_choice",
-        options: [
-            "Es responsable de llevar a cabo el Daily Scrum",
-            "Si hay otros presentes en el Daily Scrum, asegúrate de que no interrumpan la reunión",
-            "Garantiza que el equipo de desarrollo tenga la reunión",
-            "Enseña al equipo de desarrollo a mantener el Daily Scrum dentro del límite de 15 minutos"
-        ],
-        correctAnswer: [1, 2, 3],
-        explanation: "El SM se asegura de que la sesión ocurra, enseña a mantenerla en el timebox de 15 minutos y se cerciora de que asistentes externos no interrumpan las dinámicas propias del equipo técnico."
-    },
-    {
-        question: "¿Qué guía al equipo de desarrollo sobre por qué está construyendo el Incremento?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master",
-            "El objetivo del sprint",
-            "El Product Owner",
-            "El retraso en Sprint"
-        ],
-        correctAnswer: 1,
-        explanation: "El Sprint Goal (Objetivo del Sprint) suministra una guía estratégica e inspiradora sobre el propósito del negocio detrás de por qué se construye el Incremento de valor en la iteración."
-    },
-    {
-        question: "¿Qué ocurre cuando se cancela un Sprint? Selecciona tres.",
-        type: "multiple_choice",
-        options: [
-            "Se revisan cualquier elemento del Backlog de Producto completado o \"Hecho\"",
-            "Si parte del trabajo es potencialmente liberable, el Product Owner normalmente lo acepta",
-            "En la Retrospectiva del Sprint, el Scrum Master determina quién, del equipo de desarrollo, es responsable de cancelar el Sprint",
-            "Todos los artículos incompletos del catálogo de productos se reestiman y se vuelven a añadir al porquería de productos",
-            "Varios de los principales artículos de Product Backlog se incorporan al Sprint Backlog para reemplazar los artículos obsoletos"
-        ],
-        correctAnswer: [0, 1, 3],
-        explanation: "Al cancelarse el Sprint, se analizan los elementos terminados bajo el criterio \"Hecho\". Lo que aporte valor liberable es aceptado por el PO, y todo lo inacabado se reestima y se regresa al Product Backlog general."
-    },
-    {
-        question: "La estructura del Scrum Diario está bien definida y es constante. Cada miembro del equipo debe responder a las tres preguntas principales: ¿Qué hice ayer? ¿Qué haré hoy? ¿Veo algún impedimento?",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "La Guía Scrum no prescribe una estructura obligatoria o estricta. Las preguntas clásicas son solo un ejemplo disponible; los desarrolladores definen soberanamente el formato idóneo enfocado en el Sprint Goal."
-    },
-    {
-        question: "Si un inspector determina que uno o más aspectos de un proceso se desvían de los límites aceptables, ¿cuándo debe realizarse un ajuste?",
-        type: "single_choice",
-        options: [
-            "Las desviaciones deben discutirse en el Daily Scrum y luego debe hacerse un ajuste",
-            "Lo antes posible para minimizar desviaciones adicionales",
-            "Después de aclarar todos los detalles con el Product Owner",
-            "Tras la aprobación del Scrum Master"
-        ],
-        correctAnswer: 1,
-        explanation: "Bajo la premisa empírica de la adaptación rápida, si un proceso sale de las métricas admisibles arriesgando la calidad del producto, el ajuste operativo correspondiente se debe realizar de forma inmediata."
-    },
-    {
-        question: "Scrum no permite reuniones adicionales que no estén definidas en Scrum.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Scrum no tiene un enfoque prohibitivo hacia otros espacios de coordinación técnica. Permite y promueve sesiones adicionales que sean sanas y útiles para facilitar la conquista del Sprint Goal."
-    },
-    {
-        question: "¿Cuáles son las tres cualidades principales que el modelo de equipo en Scrum está diseñado para optimizar?",
-        type: "multiple_choice",
-        options: [
-            "Agilidad",
-            "Productividad",
-            "Flexibilidad",
-            "Creatividad",
-            "Competencia",
-            "Responsabilidad"
-        ],
-        correctAnswer: [1, 2, 3],
-        explanation: "El modelo estructural de los Scrum Teams (orientado a la autogestión y multifuncionalidad) está configurado explícitamente para optimizar e impulsar la flexibilidad, la creatividad y la productividad global."
-    },
-    {
-        question: "El scrum se basa en",
-        type: "single_choice",
-        options: [
-            "Empirismo",
-            "Crítica empírica",
-            "Sentido común",
-            "Sistema Kanban"
-        ],
-        correctAnswer: 0,
-        explanation: "Scrum fue concebido sobre los fundamentos teóricos del empirismo (el conocimiento nace de la experiencia vivida) junto al pensamiento esbelto (lean thinking) para reducir desperdicios."
-    },
-    {
-        question: "Otras personas además del equipo Scrum pueden asistir a la Planificación de Sprint para ofrecer asesoramiento técnico o de dominio.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "Cierto. Los desarrolladores y el equipo tienen la facultad de invitar a asesores, expertos técnicos o de negocio externos a la sesión de Sprint Planning para recibir orientación detallada."
-    },
-    {
-        question: "¿Cómo ayuda el Scrum Master al Product Owner? Selecciona las tres respuestas más adecuadas.",
-        type: "multiple_choice",
-        options: [
-            "Facilitar eventos de Scrum según se solicite o sea necesario",
-            "Liderar y entrenar a la organización en su adopción de Scrum",
-            "Introducción de prácticas de desarrollo de vanguardia",
-            "Encontrar técnicas para una gestión eficaz del backlog de productos",
-            "Comprender la planificación de productos en un entorno empírico"
-        ],
-        correctAnswer: [0, 3, 4],
-        explanation: "El SM ayuda al PO encontrando técnicas eficientes para gestionar y ordenar el backlog, facilitando el entendimiento de la planificación empírica de productos y dinamizando los eventos necesarios."
-    },
-    {
-        question: "¿Qué es la Sprint Retrospective?",
-        type: "single_choice",
-        options: [
-            "Es una reunión para inspeccionar el Incremento y adaptar el Backlog de Producto si es necesario",
-            "Es una reunión en la que el Equipo de Desarrollo sincroniza las actividades y crea un plan para las próximas 24 horas",
-            "Es la reunión clave para inspeccionar y adaptar",
-            "Es una oportunidad para que el equipo Scrum se autoexamine y cree un plan para las mejoras que se implementarán durante el próximo Sprint"
-        ],
-        correctAnswer: 3,
-        explanation: "La Retrospectiva es el último evento oficial del Sprint destinado puntualmente a la autoinspección del equipo sobre sus dinámicas internas (procesos, herramientas, relaciones) para trazar mejoras de calidad."
-    },
-    {
-        question: "El scrum no es un proceso ni una técnica. ¿Verdadero o falso?",
-        type: "true_false",
-        options: [
-            "Falso",
-            "Cierto"
-        ],
-        correctAnswer: 1,
-        explanation: "Cierto. Scrum no es un manual de pasos mecánicos o rígidos. Es un marco de trabajo de diseño minimalista (framework) dentro del cual los equipos inyectan sus metodologías operativas internas."
-    },
-    {
-        question: "¿Quién participa en la Planificación del Sprint? Selecciona tres.",
-        type: "multiple_choice",
-        options: [
-            "Los principales actores",
-            "El Product Owner",
-            "El Scrum Master",
-            "El Jefe del Equipo",
-            "El equipo de desarrollo"
-        ],
-        correctAnswer: [1, 2, 4],
-        explanation: "El Sprint Planning requiere la participación integral y colaborativa del Scrum Team en su totalidad, compuesto por el Product Owner, el Scrum Master y la totalidad de los Desarrolladores."
-    },
-    {
-        question: "¿Cuál es el resultado de la Sprint Review?",
-        type: "single_choice",
-        options: [
-            "Comprensión común de lo que se puede entregar en el Incremento y cómo se realizará el trabajo necesario para lograr dicho Incremento",
-            "Comprensión común del progreso hacia el objetivo de Sprint y cómo se está orientando hacia completar el trabajo en el Sprint Backlog",
-            "Un Product Backlog revisado que define los probables elementos del Product Backlog para el próximo Sprint",
-            "Una lista de mejoras que el equipo Scrum implementará en el próximo Sprint"
-        ],
-        correctAnswer: 2,
-        explanation: "El resultado o entregable neto de la Sprint Review es un Product Backlog adaptado, priorizado y actualizado frente al feedback de los stakeholders, proyectando los pasos más probables a seguir."
-    },
-    {
-        question: "¿Quién puede hacer cambios en el Product Backlog? Selecciona dos opciones.",
-        type: "multiple_choice",
-        options: [
-            "El Scrum Master",
-            "Cualquiera",
-            "El Product Owner",
-            "Los principales actores",
-            "El equipo de desarrollo, pero con permiso del Product Owner"
-        ],
-        correctAnswer: [2, 4],
-        explanation: "El Product Owner es la única persona responsable del Product Backlog. Sin embargo, puede delegar parte del trabajo relacionado con la gestión del backlog de producto al equipo de desarrollo."
-    },
-    {
-        question: "¿Quién es responsable de gestionar el Backlog de Producto?",
-        type: "single_choice",
-        options: [
-            "Los principales actores",
-            "El Product Owner",
-            "El Scrum Master",
-            "El equipo de desarrollo"
-        ],
-        correctAnswer: 1,
-        explanation: "El Product Owner es la única persona responsable de gestionar el Product Backlog."
-    },
-    {
-        question: "El Sprint Backlog se crea en la Planificación de Sprints. El equipo de desarrollo prohíbe añadir nuevo trabajo al Sprint Backlog posteriormente.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "El equipo de desarrollo modifica el Backlog de Sprint a lo largo del Sprint, y el Backlog de Sprint surge durante el Sprint mientras se aprende más sobre el trabajo necesario para alcanzar el objetivo."
-    },
-    {
-        question: "¿Podrían el Product Owner y el Scrum Master formar parte del equipo de desarrollo?",
-        type: "true_false",
-        options: [
-            "Sí",
-            "No"
-        ],
-        correctAnswer: 0,
-        explanation: "Sí. Scrum no prohíbe que el Product Owner ni el Scrum Master realicen trabajo de desarrollo, aunque no es la mejor práctica por conflictos de intereses."
-    },
-    {
-        question: "Selecciona las dos reuniones en las que se permite la participación de personas fuera del Equipo Scrum.",
-        type: "multiple_choice",
-        options: [
-            "La retrospectiva del sprint",
-            "La planificación del sprint",
-            "El Daily Scrum",
-            "La Revisión de Sprint"
-        ],
-        correctAnswer: [1, 3],
-        explanation: "El equipo de desarrollo puede invitar a otras personas a asistir a la Planificación del Sprint para asesoramiento técnico. El Product Owner es responsable de invitar a los principales interesados a la reunión de Sprint Review."
-    },
-    {
-        question: "¿Quién debería encargarse de recopilar los datos del mercado para el Product Owner?",
-        type: "single_choice",
-        options: [
-            "No importa quién haga el trabajo",
-            "El Product Owner",
-            "El equipo Scrum y los principales actores",
-            "El equipo de melé"
-        ],
-        correctAnswer: 0,
-        explanation: "El Product Owner puede o no ser quien esté recopilando los datos del mercado, pero el PO debería estar al tanto de dichos datos/investigaciones."
-    },
-    {
-        question: "¿Quién es el principal visionario del producto?",
-        type: "single_choice",
-        options: [
-            "El Product Owner",
-            "El Scrum Master",
-            "El Director de Marketing (CMO)",
-            "El Director Ejecutivo (CEO)"
-        ],
-        correctAnswer: 0,
-        explanation: "El Product Owner es el principal visionario del producto y debe ser capaz de articular claramente la visión al equipo Scrum y a los principales interesados."
-    },
-    {
-        question: "¿Quién es el líder en cuanto a recibir feedback de los Actores Clave en la Revisión Sprint?",
-        type: "single_choice",
-        options: [
-            "El equipo de desarrollo",
-            "El equipo de melé",
-            "El Product Owner",
-            "El Scrum Master"
-        ],
-        correctAnswer: 2,
-        explanation: "El Product Owner es un líder vital a la hora de obtener retroalimentación de los principales actores en la Revisión Sprint."
-    },
-    {
-        question: "¿Cómo comunica el Product Owner su conocimiento del mercado al equipo Scrum (seleccionando tres)?",
-        type: "multiple_choice",
-        options: [
-            "Retrospectivas de Sprint",
-            "Scrums diarios",
-            "Refinamiento del retraso de productos",
-            "Interacciones diarias ad hoc",
-            "Análisis de Sprint"
-        ],
-        correctAnswer: [2, 3, 4],
-        explanation: "El Product Owner comunica todo este conocimiento del mercado al equipo de Scrum mediante interacciones diarias ad hoc, así como refinamiento del Product Backlog y revisiones en Sprint."
-    },
-    {
-        question: "Todos los equipos de desarrollo que trabajan en el mismo producto deben usar el mismo backlog de productos.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "Varios equipos Scrum suelen trabajar juntos en el mismo producto. Un Backlog de Producto se utiliza para describir el trabajo próximo en el producto."
-    },
-    {
-        question: "¿Cuáles son las características de un artículo de la lista de productos que está \"listo\" para ser seleccionado en una planificación de sprints? Selecciona tres.",
-        type: "multiple_choice",
-        options: [
-            "Se puede \"hacer\" en un solo sprint",
-            "Puede implementarse en un Sprint y probadoes en el siguiente Sprint",
-            "En algún lugar de la cima del catálogo de productos",
-            "Tiene menos detalle",
-            "En algún lugar al final de la lista de productos pendientes",
-            "Bien refinado"
-        ],
-        correctAnswer: [0, 2, 5],
-        explanation: "Los elementos en la parte superior suelen ser más claros, detallados y refinados. Los elementos del Product Backlog que pueden ser \"Hechos\" por el equipo dentro de un Sprint se consideran \"Listos\"."
-    },
-    {
-        question: "¿Qué parte de la capacidad del equipo de desarrollo suele consumir el refinamiento del Product Backlog?",
-        type: "single_choice",
-        options: [
-            "No más del 5%",
-            "El equipo de desarrollo no está autorizado para el refinamiento del Product Backlog",
-            "No más del 20%",
-            "No más del 10%"
-        ],
-        correctAnswer: 3,
-        explanation: "El refinamiento del Product Backlog normalmente no consume más del 10% de la capacidad del equipo de desarrollo."
-    },
-    {
-        question: "¿Qué muestra el Burn-down Chart?",
-        type: "single_choice",
-        options: [
-            "Jerarquía de tareas que conforman un proyecto",
-            "Cuánto trabajo queda hasta el final del Sprint",
-            "La evolución de la cantidad de incertidumbre durante un proyecto",
-            "Dependencias, horarios de inicio y de finalización de las tareas del proyecto"
-        ],
-        correctAnswer: 1,
-        explanation: "El gráfico de burn-down muestra la evolución del esfuerzo restante contra el tiempo."
-    },
-    {
-        question: "¿Cuál es la esencia de Scrum? Selecciona la opción más adecuada.",
-        type: "single_choice",
-        options: [
-            "Un equipo pequeño de personas, muy flexible y adaptable",
-            "El equipo de desarrollo",
-            "La Guía de la melé",
-            "El Scrum Master y el Product Owner"
-        ],
-        correctAnswer: 0,
-        explanation: "La esencia de Scrum es un equipo pequeño de personas. El equipo individual es muy flexible y adaptable."
-    },
-    {
-        question: "Imagina la siguiente situación. En la reunión retrospectiva de Sprint, el equipo Scrum identificó algunas mejoras que se pueden hacer. ¿Qué debería hacer el Scrum Team? Selecciona la mejor opción.",
-        type: "single_choice",
-        options: [
-            "Asigna un miembro responsable para al menos una mejora. Consulta el progreso en la próxima retrospectiva.",
-            "Asegúrate de que el backlog de Sprint para el próximo Sprint incluya al menos una mejora de proceso de alta prioridad.",
-            "Asegúrate de que el Sprint Backlog para el próximo Sprint incluya todas las mejoras.",
-            "Asigna miembros responsables para cada mejora. Consulta el progreso en la próxima retrospectiva."
-        ],
-        correctAnswer: 1,
-        explanation: "Para garantizar la mejora continua, incluye al menos una mejora de procesos de alta prioridad identificada en la reunión retrospectiva anterior."
-    },
-    {
-        question: "¿Quién es responsable de promover y apoyar Scrum? Selecciona la mejor opción.",
-        type: "single_choice",
-        options: [
-            "El Scrum Master",
-            "El equipo de melé",
-            "El Product Owner",
-            "El equipo de desarrollo",
-            "El Scrum Master y el Product Owner"
-        ],
-        correctAnswer: 0,
-        explanation: "El Scrum Master es responsable de promover y apoyar Scrum según lo definido en la Guía Scrum ayudando a todos a entender la teoría, prácticas, reglas y valores."
-    },
-    {
-        question: "¿Cuáles son los cuadros de tiempo para la Sprint Review y la Sprint Retrospective?",
-        type: "single_choice",
-        options: [
-            "3 y 4 horas respectivamente",
-            "4 y 3 horas respectivamente",
-            "Caja de tiempo de 4 horas para cada una",
-            "Caja de tiempo de 3 horas para cada una"
-        ],
-        correctAnswer: 1,
-        explanation: "La Revisión del Sprint es, como mucho, una reunión de cuatro horas para Sprints de un mes. La Retrospectiva del Sprint es, como mucho, una reunión de tres horas para los Sprints de un mes."
-    },
-    {
-        question: "La práctica de refinamiento del backlog de producto se centra en los ítems de los próximos Sprints, no en el Sprint actual en curso. ¿Verdadero o falso?",
-        type: "true_false",
-        options: [
-            "Falso",
-            "Cierto"
-        ],
-        correctAnswer: 1,
-        explanation: "Cierto. Los elementos del Sprint actual ya no están en el Product Backlog, porque ahora están en el Sprint Backlog. Sin embargo, está bien que el PO aporte detalles al trabajo actual."
-    },
-    {
-        question: "Cada artículo de Pendiente de Producto debe ser creado personalmente por el Product Owner y solo entonces el equipo de desarrollo podrá añadir detalles a discreción del PO.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Falso. El PO es el responsable de las decisiones en el Product Backlog, pero el trabajo de gestión puede delegarse completamente al equipo de desarrollo, por lo que es posible que el PO nunca escriba un ítem."
-    },
-    {
-        question: "Una vez que el Product Owner ha adquirido su Visión de Producto y definido las tácticas para hacer realidad esta visión, es una mala idea cambiarlas antes del próximo Lanzamiento del Producto.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "El PO nunca debería tener miedo de cambiar la visión o las tácticas según los cambios del mercado. Poder reorientar estratégicamente es uno de los principales beneficios de una mentalidad Ágil."
-    },
-    {
-        question: "¿Dónde se puede usar Scrum? Revisa todos los elementos aplicables.",
-        type: "multiple_choice",
-        options: [
-            "Desarrollo de productos y mejoras",
-            "Investigación e identificación de mercados, tecnologías y capacidades de producto viables",
-            "Desarrollo y mantenimiento de entornos operativos en la nube y otros",
-            "Gestión del funcionamiento de una organización",
-            "Desarrollo de software y hardware",
-            "Desarrollo de casi todo lo que usamos en nuestra vida diaria como individuos y sociedades"
-        ],
-        correctAnswer: [0, 1, 2, 3, 4, 5],
-        explanation: "Scrum se ha utilizado para desarrollar software, hardware, vehículos autónomos, escuelas, gobierno, marketing, gestión organizativa y casi todo lo que utilizamos en nuestra vida diaria."
-    },
-    {
-        question: "¿Quién es responsable de todas las estimaciones en el Product Backlog?",
-        type: "single_choice",
-        options: [
-            "El equipo de desarrollo",
-            "El Product Owner",
-            "El Scrum Master",
-            "El equipo de melé",
-            "El Product owner y el equipo de desarrollo",
-            "El Scrum Master y el Equipo de Desarrollo",
-            "El Product Owner y el Scrum Master"
-        ],
-        correctAnswer: 0,
-        explanation: "El equipo de desarrollo es responsable de todas las estimaciones en el Product Backlog. Las personas que realizarán el trabajo hacen la estimación final."
-    },
-    {
-        question: "El Product Owner quiere aplicar algunos requisitos no funcionales al Producto. ¿Cuál es la mejor manera de proceder?",
-        type: "single_choice",
-        options: [
-            "Crea un nuevo artículo para cada requisito en el Catálogo de Producto",
-            "Añadir los requisitos no funcionales al DoD y comprobar cada Incremento con estos criterios",
-            "Encontrar una forma de convertir los requisitos no funcionales en características del Producto y actuar en consecuencia",
-            "Los requisitos no funcionales no pueden gestionarse dentro de los límites de Scrum"
-        ],
-        correctAnswer: 1,
-        explanation: "La única forma de cumplir con estos requisitos es tenerlos como parte de la Definición de Hecho (DoD) y comprobar cada incremento según estos criterios."
-    },
-    {
-        question: "El Product Owner debe conocer de forma experta el mercado del producto.",
-        type: "single_choice",
-        options: [
-            "Depende",
-            "Falso",
-            "Cierto"
-        ],
-        correctAnswer: 2,
-        explanation: "El Product Owner debe conocer de forma experta el mercado del producto. Deben estar constantemente recopilando información para maximizar el valor."
-    },
-    {
-        question: "¿Quién es responsable de hacer un seguimiento del trabajo total restante en el Sprint Backlog para proyectar la probabilidad de alcanzar el objetivo del Sprint?",
-        type: "single_choice",
-        options: [
-            "El Product Owner",
-            "El equipo de desarrollo",
-            "El Product Owner y el equipo de desarrollo",
-            "El equipo de melé",
-            "El Scrum Master"
-        ],
-        correctAnswer: 1,
-        explanation: "El equipo de desarrollo registra este trabajo total restante al menos para cada Daily Scrum para proyectar la probabilidad de alcanzar el objetivo del Sprint."
-    },
-    {
-        question: "¿Cuánto tiempo dura el Product Backlog?",
-        type: "single_choice",
-        options: [
-            "Mientras el Producto exista",
-            "No más de 5 años",
-            "Hasta el lanzamiento final del producto",
-            "Mientras al menos un equipo de desarrollo está trabajando en ello"
-        ],
-        correctAnswer: 0,
-        explanation: "El Backlog de Productos es dinámico. Si existe un producto, también existe su lista de productos pendientes."
-    },
-    {
-        question: "¿Quién decide si lanza la última versión del producto?",
-        type: "single_choice",
-        options: [
-            "El equipo de desarrollo",
-            "El Scrum Master",
-            "El Product Owner",
-            "El Product Owner y el Scrum Master",
-            "El equipo de melé"
-        ],
-        correctAnswer: 2,
-        explanation: "El Product Owner es la única persona que puede decidir si lanzar el último incremento del producto."
-    },
-    {
-        question: "Es buena práctica tener al menos dos Product Owners en proyectos grandes.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "El Product Owner es una sola persona, no un comité, pero el Product Owner puede representar los deseos de un comité en el Product Backlog."
-    },
-    {
-        question: "¿Qué técnica debería emplearse para representar los artículos de la lista de productos pendientes?",
-        type: "single_choice",
-        options: [
-            "Historias de usuario",
-            "Pruebas de aceptación",
-            "Cualquier técnica, incluso una mezcla de varias técnicas",
-            "Casos de uso",
-            "Escenarios"
-        ],
-        correctAnswer: 2,
-        explanation: "Las historias de usuario son una técnica común, pero se pueden utilizar otras técnicas (escenarios, casos de uso, etc.). El Product Backlog podría contener una mezcla heterogénea."
-    },
-    {
-        question: "¿Qué guía al equipo de desarrollo sobre por qué está construyendo el Incremento?",
-        type: "single_choice",
-        options: [
-            "El objetivo del sprint",
-            "El retraso en Sprint",
-            "El Scrum Master",
-            "El Product Owner"
-        ],
-        correctAnswer: 0,
-        explanation: "El objetivo del Sprint proporciona orientación al equipo de desarrollo sobre por qué está construyendo el Incremento."
-    },
-    {
-        question: "¿Quién identifica a los principales interesados del producto?",
-        type: "single_choice",
-        options: [
-            "El equipo de melé",
-            "La alta dirección",
-            "El Scrum Master",
-            "El equipo de desarrollo",
-            "El Product Owner"
-        ],
-        correctAnswer: 4,
-        explanation: "Para maximizar el valor, el Product Owner debe identificar a los principales interesados del producto e involucrarlos según sea necesario."
-    },
-    {
-        question: "¿Quién tiene autoridad para cancelar el Sprint?",
-        type: "single_choice",
-        options: [
-            "Los principales actores",
-            "El equipo de desarrollo",
-            "El Scrum Master",
-            "El Product Owner",
-            "El Product Owner y el Scrum Master"
-        ],
-        correctAnswer: 3,
-        explanation: "Solo el Product Owner tiene la autoridad para cancelar el Sprint, aunque pueda hacerlo bajo la influencia de los interesados, el equipo de desarrollo o el Scrum Master."
-    },
-    {
-        question: "Refinamiento del catálogo de productos... Selecciona los tres finales de frase más apropiados.",
-        type: "multiple_choice",
-        options: [
-            "Es el acto de añadir detalles, presupuestos y pedidos a los artículos del Product Backlog",
-            "Es un proceso continuo",
-            "Normalmente no ocupa más del 10% de la capacidad del equipo de desarrollo",
-            "Está limitado a un máximo de 4 horas",
-            "Responde a la pregunta: ¿cómo se logrará el trabajo necesario para entregar el Incremento",
-            "Normalmente ocurre 2-4 veces dependiendo de la longitud del Sprint"
-        ],
-        correctAnswer: [0, 1, 2],
-        explanation: "El refinamiento del Product Backlog es el acto de añadir detalles, estimaciones y pedidos. Es un proceso continuo y consume normalmente no más del 10% de la capacidad del equipo."
-    },
-    {
-        question: "¿Quién participa en la Planificación del Sprint? Selecciona tres.",
-        type: "multiple_choice",
-        options: [
-            "El equipo de desarrollo",
-            "El Product Owner",
-            "El Jefe del Equipo",
-            "Los principales actores",
-            "El Scrum Master"
-        ],
-        correctAnswer: [0, 1, 4],
-        explanation: "El plan se crea gracias al trabajo colaborativo de todo el equipo Scrum (Product Owner, Scrum Master y Equipo de desarrollo)."
-    },
-    {
-        question: "¿Qué significa la palabra \"desarrollo\" en el contexto de Scrum? Selecciona la mejor opción.",
-        type: "single_choice",
-        options: [
-            "Desarrollo de producto, su lanzamiento y mantenimiento",
-            "Desarrollo de software y hardware",
-            "Desarrollo de un entorno operativo para el producto",
-            "Investigación e identificación de mercados, tecnologías y capacidades de producto viables",
-            "Trabajo complejo que puede incluir todas las opciones sugeridas e incluso más"
-        ],
-        correctAnswer: 4,
-        explanation: "En la Guía Scrum, se refiere a trabajos complejos que incluyen el desarrollo de software, hardware, lanzamiento de productos, mantenimiento de entornos, investigación y más."
-    },
-    {
-        question: "¿Cómo puede el Product Owner dar vida a su visión de producto (selecciona 3)?",
-        type: "multiple_choice",
-        options: [
-            "Utilizando las características subyacentes de planificación empírica de productos de Scrum",
-            "Pidiendo la aprobación de la alta dirección",
-            "A través del Product Backlog e iterando hacia esa visión en cada Sprint",
-            "Hacer que el Scrum Master lleve la visión al equipo Scrum y a los principales actores",
-            "Articular la visión del producto al equipo Scrum y a los Stakeholders Clave desde el principio y con frecuencia"
-        ],
-        correctAnswer: [0, 2, 4],
-        explanation: "El PO debe comunicar su visión desde el principio y con frecuencia, utilizando la planificación empírica y dando vida de manera táctica a través del Product Backlog e iterando cada Sprint."
-    },
-    {
-        question: "¿Qué dos atributos son opcionales para un artículo de Product Backlog?",
-        type: "multiple_choice",
-        options: [
-            "Descripciones de pruebas que demuestren la completitud del ítem PB cuando esté \"Hecho\"",
-            "Valor",
-            "Descripción",
-            "Orden",
-            "Estimación",
-            "Dependencias"
-        ],
-        correctAnswer: [0, 5],
-        explanation: "Los artículos de Product Backlog tienen obligatoriamente descripción, orden, estimación y valor. Las descripciones de pruebas (y dependencias) son atributos opcionales."
-    },
-    {
-        question: "El equipo de desarrollo debería ser capaz de explicar al Product Owner y al Scrum Master cómo pretende trabajar como un equipo autoorganizado para lograr el objetivo del Sprint y crear el Incremento previsto.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "Al final de la Planificación del Sprint, el equipo de desarrollo debería ser capaz de explicar cómo pretende trabajar como un equipo autoorganizado para lograr el Sprint Goal."
-    },
-    {
-        question: "¿Qué muestra Cone of Doubt?",
-        type: "single_choice",
-        options: [
-            "Jerarquía de tareas que conforman un proyecto",
-            "Dependencias, horarios de inicio y de finalización de las tareas del proyecto",
-            "Cuánto trabajo queda hasta el final del Sprint",
-            "Cuánto se sabe sobre el Producto a lo largo del tiempo"
-        ],
-        correctAnswer: 3,
-        explanation: "El Cono de Incertidumbre (Cone of Doubt) describe la evolución de la cantidad de incertidumbre durante un proyecto (cuánto se sabe a lo largo del tiempo)."
-    },
-    {
-        question: "¿Qué ocurre durante el Sprint? Selecciona tres respuestas.",
-        type: "multiple_choice",
-        options: [
-            "El Objetivo de Sprint cambia frecuentemente para reflejar el estado de la obra restante",
-            "No se han hecho cambios que pongan en peligro el Sprint Goal",
-            "El alcance puede aclararse y renegociarse entre el Product Owner y el equipo de desarrollo a medida que se aprenda más",
-            "Los objetivos de calidad no disminuyen",
-            "El alcance del sprint se define en la Planificación del Sprint y no puede cambiarse"
-        ],
-        correctAnswer: [1, 2, 3],
-        explanation: "Durante el sprint no se realizan cambios que peligren el Sprint Goal, los objetivos de calidad no disminuyen y el alcance puede aclararse y renegociarse a medida que se aprende más."
-    },
-    {
-        question: "Todos los equipos Scrum que trabajan en el mismo producto deberían tener la misma duración de Sprint.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Falso. Scrum no requiere tener Sprints alineados ni con la misma duración para varios equipos."
-    },
-    {
-        question: "¿Qué son las características del Product Backlog? Selecciona tres.",
-        type: "multiple_choice",
-        options: [
-            "Cuando se lanza la versión final de un producto, se descarta su Backlog de Producto",
-            "Es dinámico",
-            "Un Product Backlog podría cerrarse cuando no contiene elementos para incluir en el siguiente Sprint",
-            "Nunca está completo",
-            "Mientras exista un producto, también existe su Backlog de Productos"
-        ],
-        correctAnswer: [1, 3, 4],
-        explanation: "Un Product Backlog nunca se completa, es dinámico, cambia constantemente y mientras exista un producto, también existirá su backlog."
-    },
-    {
-        question: "¿Cuándo se permite al equipo Scrum interactuar con los Stakeholders Clave (seleccionar la opción más aplicable)?",
-        type: "single_choice",
-        options: [
-            "La Revisión de Sprint",
-            "El Daily Scrum",
-            "Siempre que sea valioso contar con la opinión de los Stakeholders",
-            "La retrospectiva del sprint"
-        ],
-        correctAnswer: 2,
-        explanation: "Los Stakeholders pueden estar involucrados con el equipo Scrum en cualquier momento cuando sea valioso contar con su aportación."
-    },
-    {
-        question: "¿Cómo ayuda la definición de \"Hecho\" al equipo de scrum? Selecciona los tres elementos más aplicables.",
-        type: "multiple_choice",
-        options: [
-            "El DoD ayuda a calcular la velocidad del equipo de melé",
-            "El DoD garantiza la transparencia de los artefactos",
-            "El DoD se utiliza para evaluar cuándo se ha completado el trabajo en el producto Incremento",
-            "El DoD ayuda en la inspección y adaptación",
-            "Guía al equipo de desarrollo para saber cuántos elementos de Product Backlog puede seleccionar durante una planificación de sprint"
-        ],
-        correctAnswer: [1, 2, 4],
-        explanation: "El DoD se utiliza para evaluar cuándo se ha completado el incremento, garantiza la transparencia de los artefactos y guía al equipo en cuántos elementos seleccionar en la planificación."
-    },
-    {
-        question: "Selecciona los cinco Valores Scrum.",
-        type: "multiple_choice",
-        options: [
-            "Valor",
-            "Respeto",
-            "Enfoque",
-            "Apertura",
-            "Agilidad",
-            "Autoorganización",
-            "Efectividad",
-            "Compromiso"
-        ],
-        correctAnswer: [0, 1, 2, 3, 7],
-        explanation: "La Guía Scrum reconoce los siguientes Valores Scrum: compromiso, coraje (valor), enfoque, apertura y respeto."
-    },
-    {
-        question: "Si un elemento del Sprint Backlog no puede terminarse antes de que termine el Sprint (resultó que hay mucho más trabajo del que se estimaba), el Sprint se cancela.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "El Sprint solo se cancela en caso de que el Sprint Goal quede obsoleto. Si no se podía realizar el trabajo, el Sprint Backlog se renegocia entre el PO y los desarrolladores."
-    },
-    {
-        question: "¿Cuál es el orden de los artículos en el catálogo de productos?",
-        type: "single_choice",
-        options: [
-            "Menos valiosos y los objetos más poco claros están al final",
-            "Los elementos menos claros en la parte superior",
-            "Alfabético",
-            "Los elementos añadidos recientemente en la parte superior"
-        ],
-        correctAnswer: 0,
-        explanation: "El Product Owner es responsable de colocar los elementos más valiosos y claros en la parte superior, dejando los menos valiosos e indefinidos al final."
-    },
-    {
-        question: "¿Quién puede participar en el Daily Scrum?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master",
-            "El equipo de desarrollo",
-            "Los principales actores",
-            "El Product Owner"
-        ],
-        correctAnswer: 1,
-        explanation: "El Daily Scrum es una reunión interna del equipo de desarrollo. Si hay otras personas, el Scrum Master se asegura de que no interrumpan."
-    },
-    {
-        question: "¿Cómo ayuda el Scrum Master al Product Owner? Selecciona las tres respuestas más adecuadas.",
-        type: "multiple_choice",
-        options: [
-            "Introducción de prácticas de desarrollo de vanguardia",
-            "Facilitar eventos de Scrum según se solicite o sea necesario",
-            "Comprender la planificación de productos en un entorno empírico",
-            "Encontrar técnicas para una gestión eficaz del backlog de productos",
-            "Liderar y entrenar a la organización en su adopción de Scrum"
-        ],
-        correctAnswer: [1, 2, 3],
-        explanation: "El SM sirve al PO encontrando técnicas para una gestión eficaz del backlog, ayudando a comprender la planificación empírica y facilitando eventos según sea necesario."
-    },
-    {
-        question: "¿Qué categorías de KVA debería considerar el Product Owner para medir y rastrear la creación y entrega de valor al mercado (selecciona tres)?",
-        type: "multiple_choice",
-        options: [
-            "Reducción de riesgos",
-            "Tiempo de salida al mercado",
-            "Capacidad para innovar",
-            "Valor actual",
-            "Satisfacción de los empleados",
-            "Desarrollo de capacidades"
-        ],
-        correctAnswer: [1, 2, 3],
-        explanation: "Según la Gestión Basada en la Evidencia (EBM), las Áreas Clave de Valor (KVA) son: Valor Actual, Tiempo de salida al mercado y Capacidad para innovar."
-    },
-    {
-        question: "¿Quiénes son los típicos Actores Clave (selecciona tres)?",
-        type: "multiple_choice",
-        options: [
-            "Las personas humanas que realmente usan el producto en desarrollo",
-            "Las personas responsables de pagar para usar el producto",
-            "Las personas responsables del desarrollo de productos",
-            "Las personas responsables de tomar las decisiones de financiación para el esfuerzo de desarrollo del producto",
-            "Las personas responsables del marketing de producto"
-        ],
-        correctAnswer: [0, 1, 3],
-        explanation: "Los stakeholders se dividen en tres grandes categorías: Usuarios (los que usan el producto), Clientes Externos (los que pagan) y Clientes Internos (los que financian)."
-    },
-    {
-        question: "El Scrum Master no debe permitir que el Product Owner asista a la Planificación del Sprint si el PO no está preparado con un Objetivo de Sprint. ¿Es esto cierto o falso?",
-        type: "true_false",
-        options: [
-            "Falso",
-            "Cierto"
-        ],
-        correctAnswer: 0,
-        explanation: "Falso. El equipo de Scrum en su conjunto colabora y elabora un objetivo de sprint durante la planificación del sprint."
-    },
-    {
-        question: "Si varios actores tienen intereses diferentes en el producto y diferentes puntos de vista, ¿cuál es la mejor estrategia para el Product Owner?",
-        type: "single_choice",
-        options: [
-            "Calcula el ROI (Retorno de la Inversión) para cada punto de vista y selecciona el máximo",
-            "Escucha a quienes financian el desarrollo del producto porque siempre tienen la última palabra",
-            "Mantente fiel a la perspectiva que promete el tiempo de salida al mercado más rápido",
-            "Haz un equilibrio inteligente de intereses e intenta maximizar el valor del producto en su conjunto"
-        ],
-        correctAnswer: 3,
-        explanation: "La responsabilidad del Product Owner es maximizar el valor del producto en su conjunto, y esto implicará un equilibrio inteligente de intereses."
-    },
-    {
-        question: "¿Quién puede decirle al equipo de desarrollo que trabaje según un conjunto de requisitos?",
-        type: "single_choice",
-        options: [
-            "El Product Owner y el Scrum Master",
-            "Los principales actores",
-            "El Product Owner",
-            "El Scrum Master",
-            "Alta dirección"
-        ],
-        correctAnswer: 2,
-        explanation: "Las decisiones del Product Owner son visibles en el Product Backlog. Nadie más puede decirle al equipo de desarrollo que trabaje con un conjunto diferente de requisitos."
-    },
-    {
-        question: "¿Quién participa en la Sprint Review? Selecciona todas las variantes aplicables.",
-        type: "multiple_choice",
-        options: [
-            "Los principales actores",
-            "El CEO de la Organización",
-            "El Product Owner",
-            "El Scrum Master",
-            "El equipo de desarrollo"
-        ],
-        correctAnswer: [0, 2, 3, 4],
-        explanation: "Durante la Revisión del Sprint, el equipo Scrum (PO, SM, equipo de desarrollo) y los Stakeholders (principales actores) colaboran sobre lo realizado."
-    },
-    {
-        question: "¿Cuál podría ser la fuente de los requisitos para que se hagan cambios en el producto?",
-        type: "single_choice",
-        options: [
-            "El retraso de productos",
-            "El CEO de la Organización",
-            "Los principales actores"
-        ],
-        correctAnswer: 0,
-        explanation: "El Product Backlog es una lista ordenada de todo lo que pueda necesitarse y es la única fuente de requisitos para cualquier cambio en el producto."
-    },
-    {
-        question: "¿Quién es responsable del retraso de productos?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master y el Equipo de Desarrollo",
-            "El Product Owner",
-            "El Product Owner y el equipo de desarrollo",
-            "El Scrum Master",
-            "El Product Owner y el Scrum Master",
-            "El equipo de desarrollo"
-        ],
-        correctAnswer: 1,
-        explanation: "El Product Owner es responsable del Backlog de Producto (retraso de productos), incluyendo su contenido, disponibilidad y pedidos."
-    },
-    {
-        question: "Selecciona las tres mejores opciones para terminar la frase a continuación. La deuda técnica...",
-        type: "multiple_choice",
-        options: [
-            "es la falta de suministros técnicos",
-            "es un riesgo real que realmente puede incurrir",
-            "pertenece íntegramente al equipo de desarrollo. Nadie más debería saberlo.",
-            "refleja un trabajo adicional de desarrollo",
-            "compromete la calidad a largo plazo del producto"
-        ],
-        correctAnswer: [1, 3, 4],
-        explanation: "La deuda técnica refleja el trabajo adicional que surge por decisiones de diseño rápidas o deficientes, compromete la calidad a largo plazo y es un riesgo real."
-    },
-    {
-        question: "Cuando un producto crece, es muy posible que la oficina de compra reciba ayuda de otros Product Managers y de otros miembros de la organización que interactúan en las actividades de atención al cliente y el conocimiento del mercado de productos. ¿Es buena idea que el PO haga un proxy o externalice algunas de sus tareas del equipo Scrum a estas personas (por ejemplo, tareas del equipo Scrum que se enfrentan a ellos)?",
-        type: "true_false",
-        options: [
-            "Sí",
-            "No"
-        ],
-        correctAnswer: 1,
-        explanation: "No es aceptable que el PO intente hacer un proxy o externalizar sus funciones nucleares o tareas del equipo Scrum hacia personas externas."
-    },
-    {
-        question: "¿Con qué frecuencia debe el Product Owner comunicar y reiterar su visión de producto al equipo Scrum y a los principales grupos de interés?",
-        type: "single_choice",
-        options: [
-            "Cada Daily Scrum",
-            "Cada retrospectiva de Sprint",
-            "Temprano y con frecuencia",
-            "Una vez en la primera Planificación del Sprint"
-        ],
-        correctAnswer: 2,
-        explanation: "El PO debe comunicar y reiterar su visión del producto al equipo Scrum y a los Stakeholders Clave desde el principio y con frecuencia para maximizar el valor."
-    },
-    {
-        question: "¿Quién puede cambiar el backlog del Sprint durante el Sprint?",
-        type: "single_choice",
-        options: [
-            "El equipo de desarrollo y el Product Owner",
-            "El Scrum Master",
-            "El Product Owner",
-            "El equipo de desarrollo",
-            "El equipo de melé"
-        ],
-        correctAnswer: 3,
-        explanation: "Solo el equipo de desarrollo puede modificar su Backlog de Sprint durante un Sprint, ya que pertenece exclusivamente a ellos."
-    },
-    {
-        question: "La Revisión del Sprint es simplemente una demostración de los elementos del Product Backlog completados durante un Sprint. ¿Estás de acuerdo?",
-        type: "single_choice",
-        options: [
-            "No, la Sprint Review contiene muchas más actividades",
-            "No, la demo también debería incluir los ítems completados en los Sprints anteriores que por alguna razón no se demostraron",
-            "Sí. No hay mucha diferencia."
-        ],
-        correctAnswer: 0,
-        explanation: "No. La Revisión contiene muchas más actividades para inspeccionar el incremento y adaptar el backlog (colaborar en qué hacer a continuación, revisar presupuesto, mercado, etc.)."
-    },
-    {
-        question: "¿Cuánto debería durar la Planificación del Sprint?",
-        type: "single_choice",
-        options: [
-            "No más del 10% de la capacidad del equipo de desarrollo",
-            "No más de 4 horas",
-            "No más de 8 horas",
-            "Hasta que todos los elementos del Sprint Backlog se descomponen en unidades de un día o menos"
-        ],
-        correctAnswer: 2,
-        explanation: "La planificación de sprints está limitada a un máximo de ocho horas para un sprint de un mes."
-    },
-    {
-        question: "¿Quién es responsable de elaborar el Objetivo de Sprint en la Planificación de Sprint?",
-        type: "single_choice",
-        options: [
-            "El Product Owner",
-            "El Scrum Master",
-            "El equipo de melé",
-            "El equipo de desarrollo",
-            "Los principales actores"
-        ],
-        correctAnswer: 2,
-        explanation: "Después de que el equipo de desarrollo pronostica los elementos que entregará, el equipo Scrum (equipo de melé) en conjunto elabora el objetivo."
-    },
-    {
-        question: "¿Qué incluye la gestión del Product Backlog? Selecciona los tres elementos más aplicables.",
-        type: "multiple_choice",
-        options: [
-            "Trasladar los elementos del retraso de producto al backlog de Sprint",
-            "Optimizar el valor del trabajo que realiza el Equipo de Desarrollo",
-            "Asegurarse de que el Product Backlog sea visible, transparente y claro para todos, y muestre en qué trabajará el equipo Scrum a continuación",
-            "Presentar los elementos del Backlog de Producto a los Principales Interesados",
-            "Encargar los artículos del Product Backlog para lograr mejor los objetivos y misiones"
-        ],
-        correctAnswer: [1, 2, 4],
-        explanation: "Incluye expresar claramente los elementos, ordenarlos (encargarlos) para lograr objetivos, optimizar el valor y asegurar que sea visible, transparente y claro."
-    },
-    {
-        question: "¿Qué es el Incremento?",
-        type: "single_choice",
-        options: [
-            "Todos los elementos del Sprint Backlog que podrían ser publicados independientemente de si el Product Owner decide hacerlo o no",
-            "Todos los elementos \"Hechos\" en el Backlog de Sprint",
-            "La suma de todos los elementos del Product Backlog completados durante el Sprint",
-            "La suma de todos los elementos del Product Backlog completados durante el Sprint y el valor de los incrementos de todos los Sprints anteriores"
-        ],
-        correctAnswer: 3,
-        explanation: "El incremento es la suma de todos los elementos del Product Backlog completados durante el Sprint y el valor de los incrementos de todos los Sprints anteriores."
-    },
-    {
-        question: "Selecciona las dos áreas de enfoque que no se consideran en la ejecución del Desarrollo Orientado al Valor por parte del Product Owner.",
-        type: "multiple_choice",
-        options: [
-            "Responsable de Toma de Decisiones de Lanzamientos de Producto",
-            "Visionario del producto",
-            "Experto en el mercado de productos",
-            "Eliminación de los obstáculos para el progreso del Equipo de Desarrollo",
-            "Facilitador principal de la participación de los principales actores",
-            "Maximizador de valor del producto",
-            "Entrenador del equipo de desarrollo en autoorganización y funcionalidad"
-        ],
-        correctAnswer: [3, 6],
-        explanation: "Al ejecutar el Desarrollo Orientado al Valor, el PO se enfoca en maximizar el valor, ser visionario, experto del mercado, líder con stakeholders y tomador de decisiones de lanzamientos. La eliminación de obstáculos y el coaching técnico corresponden al Scrum Master."
-    },
-    {
-        question: "¿Con qué frecuencia deberían producirse los lanzamientos de productos?",
-        type: "single_choice",
-        options: [
-            "Con suficiente frecuencia como para eliminar el riesgo de que el valor del producto se desajuste del mercado",
-            "Cada sprint",
-            "Cada 3 meses",
-            "Al final del desarrollo del producto",
-            "Al menos cada 6 meses"
-        ],
-        correctAnswer: 0,
-        explanation: "Cuanto más tiempo pase desde el último lanzamiento, mayor es el riesgo de que el valor se desajuste del mercado. Debe lanzarse con suficiente frecuencia para mitigar este riesgo."
-    },
-    {
-        question: "Cuando algo en Scrum frustra al Product Owner, el PO puede delegar algunas responsabilidades al Scrum Master.",
-        type: "true_false",
-        options: [
-            "Falso",
-            "Cierto"
-        ],
-        correctAnswer: 0,
-        explanation: "Falso. No es aceptable externalizar o delegar las funciones del PO. Cuando algo le frustre, debe consultar al SM para encontrar formas de implementar el framework de forma efectiva."
-    },
-    {
-        question: "¿Quién es responsable de supervisar el progreso hacia objetivos de alto nivel?",
-        type: "single_choice",
-        options: [
-            "El equipo de melé",
-            "El Product Owner",
-            "El Scrum Master",
-            "El Scrum Master y el Equipo de Desarrollo",
-            "El Product Owner y el equipo de desarrollo",
-            "El equipo de desarrollo"
-        ],
-        correctAnswer: 1,
-        explanation: "El Product Owner registra el trabajo total restante al menos en cada revisión de Sprint y evalúa el progreso hacia la finalización del trabajo proyectado en relación al objetivo."
-    },
-    {
-        question: "Un equipo de desarrollo está esperando un componente de software específico que necesita integrar y utilizar. El componente debería estar listo en un mes. Los Elementos de Backlog con mayores prioridades dependen de este componente específico. ¿Qué debería hacer el Product Owner?",
-        type: "single_choice",
-        options: [
-            "Elimina los artículos dependientes del porquería de productos y ponlos en una lista de espera especial. Cuando se resuelve la dependencia, los Elementos deben ser devueltos.",
-            "Nada. El Product Backlog ya tiene los artículos más valiosos en la parte superior. El equipo de desarrollo no puede continuar hasta que se resuelva la dependencia.",
-            "Asegúrate de que la dependencia sea visible en el Product Backlog y que el equipo de desarrollo tenga suficientes elementos independientes para el siguiente Sprint.",
-            "Transfiere los elementos dependientes al equipo de integración"
-        ],
-        correctAnswer: 2,
-        explanation: "El Product Backlog debería hacer visible la dependencia. Normalmente, elementos con dependencias externas no están \"listos\" para seleccionarse en el Sprint Planning."
-    },
-    {
-        question: "¿Quién es responsable de la creación de la definición de \"hecho\"?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master",
-            "El Product Owner",
-            "El equipo de desarrollo",
-            "El equipo de melé"
-        ],
-        correctAnswer: 2,
-        explanation: "Si no es una convención de la organización de desarrollo, el equipo de desarrollo del equipo Scrum debe definir una definición de \"hecho\" adecuada para el producto."
-    },
-    {
-        question: "¿Cuáles son las tres características más aplicables del Product Owner?",
-        type: "multiple_choice",
-        options: [
-            "Facilitador principal de la participación de los principales actores",
-            "Maximizador de valor del producto",
-            "Facilitador de eventos Scrum",
-            "Evangelista líder de Scrum en la organización",
-            "Experto en el mercado de productos"
-        ],
-        correctAnswer: [0, 1, 4],
-        explanation: "Las tres características clave del rol de PO son: Maximizador de valor del producto, Facilitador principal de la participación de los Stakeholders y Experto en el mercado."
-    },
-    {
-        question: "¿Qué son los artefactos Scrum? Selecciona todos los elementos aplicables.",
-        type: "multiple_choice",
-        options: [
-            "Lista de Sprint",
-            "Catálogo de productos",
-            "La lista de impedimentos eliminados",
-            "Incremento",
-            "El objetivo del sprint"
-        ],
-        correctAnswer: [0, 1, 3],
-        explanation: "Los únicos artefactos oficiales de Scrum son el Product Backlog (Catálogo de productos), Sprint Backlog (Lista de Sprint) y el Incremento."
-    },
-    {
-        question: "¿Qué ocurre cuando se cancela un Sprint? Selecciona tres.",
-        type: "multiple_choice",
-        options: [
-            "Si parte del trabajo es potencialmente liberable, el Product Owner normalmente lo acepta",
-            "Todos los artículos incompletos del catálogo de productos se reestiman y se vuelven a añadir al porquería de productos",
-            "Varios de los principales artículos de Product Backlog se incorporan al Sprint Backlog para reemplazar los artículos obsoletos",
-            "Se revisan cualquier elemento del Backlog de Producto completado o \"Hecho\"",
-            "En la Retrospectiva del Sprint, el Scrum Master determina quién, del equipo de desarrollo, es responsable de cancelar el Sprint"
-        ],
-        correctAnswer: [0, 1, 3],
-        explanation: "Se revisan los elementos \"Hechos\". Si parte es liberable, el PO lo acepta. Todos los artículos incompletos se reestiman y se vuelven a añadir al backlog (contenido pendiente)."
-    },
-    {
-        question: "El equipo de melé está formado por",
-        type: "single_choice",
-        options: [
-            "Los principales actores",
-            "El Scrum Master",
-            "El Product Owner",
-            "El equipo de desarrollo"
-        ],
-        correctAnswer: [1, 2, 3],
-        explanation: "El equipo Scrum (equipo de melé) está formado por un Product Owner, el equipo de desarrollo y un Scrum Master."
-    },
-    {
-        question: "¿En qué reuniones se permite la participación de los Actores Clave?",
-        type: "single_choice",
-        options: [
-            "La retrospectiva del sprint",
-            "El Daily Scrum",
-            "La Revisión de Sprint",
-            "La planificación del sprint"
-        ],
-        correctAnswer: 2,
-        explanation: "Los Principales Actores solo pueden participar formalmente en la reunión de Revisión Sprint."
-    },
-    {
-        question: "¿Qué es el Sprint Backlog?",
-        type: "single_choice",
-        options: [
-            "Los artículos de Product Backlog seleccionados para este Sprint más el plan para su entrega",
-            "El plan para entregar los artículos de Product Backlog",
-            "Los elementos de Product Backlog seleccionados para este Sprint",
-            "Los elementos de Product Backlog seleccionados para este Sprint más los elementos de Team Backlog"
-        ],
-        correctAnswer: 0,
-        explanation: "El Backlog de Sprint es el conjunto de elementos de Product Backlog seleccionados para el Sprint, además de un plan para entregar el Incremento del producto."
-    },
-    {
-        question: "¿Quién tiene la \"última palabra\" sobre el orden de los artículos en el Product Backlog?",
-        type: "single_choice",
-        options: [
-            "El Product Owner",
-            "El Scrum Master",
-            "El equipo de desarrollo",
-            "El Product Owner y el Scrum Master"
-        ],
-        correctAnswer: 0,
-        explanation: "Aunque otros puedan influir, el Product Owner tiene la \"última palabra\" sobre el orden del Product Backlog."
-    },
-    {
-        question: "¿Qué factores debe tener en cuenta el Product Owner en la decisión de lanzamiento (seleccionar cuatro)?",
-        type: "multiple_choice",
-        options: [
-            "La cantidad de trabajo que queda para alcanzar el objetivo del Sprint",
-            "Los costes y beneficios de la mejora",
-            "¿El incremento cumple con la definición de \"hecho\"?",
-            "Los clientes que estarán limitados por el nuevo lanzamiento",
-            "¿Pueden los clientes realmente absorber el nuevo lanzamiento?",
-            "Aprobación de los principales actores",
-            "El riesgo de que el valor del producto pueda desalinearse con el mercado"
-        ],
-        correctAnswer: [1, 3, 4, 6],
-        explanation: "El PO evalúa el riesgo de desalineación con el mercado, si los clientes pueden absorber el lanzamiento, las limitaciones de estos y el balance de costes y beneficios de la actualización."
-    },
-    {
-        question: "¿Por qué debería haber un solo Product Owner para un producto? Elige las tres mejores respuestas.",
-        type: "multiple_choice",
-        options: [
-            "Facilitates las cosas para el Scrum Master, que no tiene que gestionar un equipo de product owners",
-            "Existe una clara responsabilidad por el éxito o fracaso del producto",
-            "Las decisiones sobre el producto pueden tomarse más rápido",
-            "Es claro para los desarrolladores quién decide el orden de los elementos del Product Backlog",
-            "Garantiza que todos los requisitos estén redactados en detalle por la misma persona"
-        ],
-        correctAnswer: [1, 2, 3],
-        explanation: "Tener un único Product Owner optimiza la velocidad en la toma de decisiones, establece una responsabilidad clara sobre el ROI y evita confusiones en los desarrolladores sobre la prioridad del Backlog."
-    },
-    {
-        question: "Las dependencias pueden afectar la forma en que el Product Owner decide pedir artículos del Product Backlog.",
-        type: "true_false",
-        options: [
-            "Sí",
-            "No"
-        ],
-        correctAnswer: 0,
-        explanation: "El Product Owner debe considerar dependencias técnicas o externas al ordenar el Backlog para minimizar bloqueos durante los Sprints."
-    },
-    {
-        question: "¿Cuáles son métricas que hablan del valor que el equipo Scrum está aportando? Elige los dos mejores.",
-        type: "multiple_choice",
-        options: [
-            "Velocidad de sprint",
-            "Momento de salida al mercado",
-            "Puntuaciones de satisfacción del cliente",
-            "Alcance que se ha completado",
-            "Alta productividad"
-        ],
-        correctAnswer: [1, 2],
-        explanation: "El valor real en Scrum se mide mediante resultados e impacto de negocio (como la satisfacción del cliente y el Time-to-Market), no mediante métricas de rendimiento interno como la velocidad."
-    },
-    {
-        question: "Como Product Owner, ¿cuáles son los criterios válidos para pedir el Product Backlog? Elige todos los que sean relevantes.",
-        type: "multiple_choice",
-        options: [
-            "Valor",
-            "Dependencias entre elementos",
-            "Perspectivas de la anterior Retrospectiva Sprint",
-            "Dependencias relacionada con otros productos",
-            "La productividad del Scrum Master",
-            "Todo lo anterior es correcto"
-        ],
-        correctAnswer: [0, 1, 3],
-        explanation: "El Product Backlog se ordena considerando principalmente el valor, pero también las dependencias internas y externas del ecosistema de productos."
-    },
-    {
-        question: "El Product Owner debe tener varios Product Backlogs cuando varios equipos trabajan en el mismo producto.",
-        type: "true_false",
-        options: [
-            "Sí",
-            "No"
-        ],
-        correctAnswer: 1,
-        explanation: "Un solo producto tiene un único Product Backlog, independientemente de cuántos equipos Scrum trabajen en él."
-    },
-    {
-        question: "¿Qué aspectos podría considerar un Product Owner de Scrum para asegurarse de que el producto genere valor? Elige las tres mejores.",
-        type: "multiple_choice",
-        options: [
-            "Cómo está mejorando la velocidad",
-            "Comentarios y datos de los clientes",
-            "Qué facilidad para el uso del producto puede ser utilizado por los clientes finales",
-            "Qué porcentaje de funcionalidad se está utilizando",
-            "Evitar cambios en el alcance del proyecto"
-        ],
-        correctAnswer: [1, 2, 3],
-        explanation: "Para asegurar el valor, el PO inspecciona el uso real de las funciones, la usabilidad y los comentarios/datos del mercado."
-    },
-    {
-        question: "¿Es la reseña de Sprint un foro adecuado para recopilar opiniones de clientes?",
-        type: "true_false",
-        options: [
-            "Sí",
-            "No"
-        ],
-        correctAnswer: 0,
-        explanation: "La Sprint Review es un evento colaborativo diseñado específicamente para que los Stakeholders y clientes inspeccionen el incremento y aporten feedback."
-    },
-    {
-        question: "El Product Owner es el equivalente a un Project Manager tradicional, en un contexto ágil.",
-        type: "true_false",
-        options: [
-            "Sí",
-            "No"
-        ],
-        correctAnswer: 1,
-        explanation: "El PO no es un Project Manager; su enfoque está en maximizar el valor del producto y el ROI, no en gestionar cronogramas, presupuestos o asignación de tareas de forma directiva."
-    },
-    {
-        question: "Todo el trabajo que los desarrolladores extraigan debe provenir del Product Backlog.",
-        type: "true_false",
-        options: [
-            "Sí",
-            "No"
-        ],
-        correctAnswer: 0,
-        explanation: "El Product Backlog es la única fuente de requisitos para cualquier cambio o trabajo a realizar en el producto."
-    },
-    {
-        question: "¿Cuál es una señal de que el Product Owner necesita trabajar más estrechamente con el resto del equipo Scrum?",
-        type: "single_choice",
-        options: [
-            "El Product Owner no trabaja como miembro a tiempo completo del equipo Scrum",
-            "El incremento del producto que se mostró durante la revisión de Sprint no es lo que el Product Owner pensaba que había pedido",
-            "No se han implementado pruebas automatizadas",
-            "Los desarrolladores duplicaron su velocidad durante el Sprint anterior"
-        ],
-        correctAnswer: 1,
-        explanation: "Si el Incremento final no coincide con las expectativas del PO, evidencia una falta de comunicación, colaboración y refinamiento continuo durante el Sprint."
-    },
-    {
-        question: "Si el Daily Scrum se celebrara cada dos días, ¿qué tres aspectos deberíamos preocuparnos? Elige las tres mejores respuestas.",
-        type: "multiple_choice",
-        options: [
-            "Los impedimentos pueden ser señalados y eliminados con retraso",
-            "El Product Owner no podrá actualizar a la dirección ni a los grupos de interés a diario",
-            "El plan para el Sprint puede no ser preciso",
-            "El Scrum Master no podrá seguir el progreso realizado por los desarrolladores",
-            "Se reduce la inspección y adaptación sobre el Sprint Backlog"
-        ],
-        correctAnswer: [0, 2, 4],
-        explanation: "Reducir la frecuencia del Daily Scrum daña el empirismo: se tarda más en detectar impedimentos, el plan pierde precisión ante imprevistos y cae la capacidad de adaptación."
-    },
-    {
-        question: "¿Quién es responsable de maximizar el valor del producto?",
-        type: "single_choice",
-        options: [
-            "Los desarrolladores",
-            "Los actores",
-            "El CTO",
-            "El CEO",
-            "El Propietario del Producto",
-            "El Scrum Master"
-        ],
-        correctAnswer: 4,
-        explanation: "El Product Owner (Propietario del Producto) es el responsable único de maximizar el valor resultante del trabajo del Scrum Team."
-    },
-    {
-        question: "El propietario del producto:",
-        type: "single_choice",
-        options: [
-            "Es quien dirige a los desarrolladores",
-            "Es el guardián que detiene interrupciones externas a los desarrolladores",
-            "Es el responsable de optimizar el valor del trabajo de los desarrolladores",
-            "Es la persona que gestiona el proyecto y optimiza su entrega a tiempo, presupuesto y alcance",
-            "Es el que establece la definición de Hecho"
-        ],
-        correctAnswer: 2,
-        explanation: "El rol central del PO en Scrum es optimizar de manera continua el valor del trabajo realizado por el equipo."
-    },
-    {
-        question: "¿Con qué frecuencia cambiará la composición del equipo de melé?",
-        type: "single_choice",
-        options: [
-            "No debe cambiarse en absoluto",
-            "Cada Sprint si es posible, para promover un espíritu de fuerte colaboración en equipo",
-            "Cuando sea necesario, aunque la productividad pueda verse afectada a corto plazo",
-            "Cada tres Sprints, para mejorar la moral del equipo"
-        ],
-        correctAnswer: 2,
-        explanation: "Los cambios en los miembros del equipo deben minimizarse, pero si es necesario, se realizan asumiendo una baja temporal de rendimiento a corto plazo mientras el equipo se estabiliza."
-    },
-    {
-        question: "¿Qué preguntas deberían usar los desarrolladores en el Daily Scrum? Elige los dos mejores.",
-        type: "multiple_choice",
-        options: [
-            "¿Qué hice ayer que ayudó al equipo a alcanzar el objetivo del Sprint? ¿Qué haré hoy para ayudar a alcanzar el objetivo del Sprint? ¿Veo algún impedimento?",
-            "¿Cuántas horas ideales trabajé ayer? ¿Qué haré mañana para ayudar a los desarrolladores a alcanzar el objetivo del Sprint? ¿Han aprobado mis tareas diarias por el Product Owner?",
-            "Las tres preguntas \"clásicas\" no son obligatorias ni forman parte del marco de Scrum",
-            "Los desarrolladores deciden la estructura del Daily Scrum y qué preguntas pueden usar"
-        ],
-        correctAnswer: [2, 3],
-        explanation: "La Guía Scrum actual eliminó las 3 preguntas clásicas. Los desarrolladores tienen total autonomía para estructurar la sesión como prefieran mientras se enfoquen en el progreso hacia el Sprint Goal."
-    },
-    {
-        question: "¿Cuándo se considera implementado un artículo de Product Backlog?",
-        type: "single_choice",
-        options: [
-            "When los evaluadores han cumplido su parte y se cumplen los criterios de aceptación",
-            "En la Sprint Review",
-            "Cuando el elemento del Product Backlog no tiene trabajo pendiente y puede ser publicado si el Product Owner así lo decide",
-            "Cuando se hayan finalizado todas las tareas de desarrollo en el Backlog de Sprint",
-            "Cuando el Scrum Master declara el elemento \"Hecho\""
-        ],
-        correctAnswer: 2,
-        explanation: "Un elemento está terminado cuando cumple completamente con la Definition of Done (DoD), quedando en un estado potencialmente desplegable y de valor utilizable."
-    },
-    {
-        question: "En cuanto a la gestión del retraso de productos, ¿qué prácticas ayudarían a reducir el desperdicio? Elige los dos mejores.",
-        type: "multiple_choice",
-        options: [
-            "Escribir elementos de Product Backlog como historias de usuario sin ambigüedades",
-            "Nombrar a otro Product Owner como especialista en Product Backlog",
-            "Añadir detalles a los elementos del Product Backlog solo cuando sea probable que se implementen en el próximo Sprint (s)",
-            "Eliminación de elementos antiguos del retraso de productos"
-        ],
-        correctAnswer: [2, 3],
-        explanation: "El enfoque Just-in-Time reduce desperdicios detallando los ítems solo cuando se acerca su desarrollo, y eliminando periódicamente los requisitos obsoletos que quitan claridad."
-    },
-    {
-        question: "Usando el framework Scrum, ¿quién crea la definición de Hecho?",
-        type: "single_choice",
-        options: [
-            "Los promotores, si la organización de desarrollo no tiene uno",
-            "El Scrum Master",
-            "El Equipo Scrum, si la organización de desarrollo no tiene uno",
-            "El Product Owner, si los interesados no presentan uno"
-        ],
-        correctAnswer: 2,
-        explanation: "Si la organización matriz no cuenta con una definición estándar de Hecho, el Scrum Team en conjunto debe adoptar una adecuada para el producto."
-    },
-    {
-        question: "Los desarrolladores son responsables de lanzar el producto más valioso que puedan implementar.",
-        type: "true_false",
-        options: [
-            "Sí",
-            "No"
-        ],
-        correctAnswer: 1,
-        explanation: "Falso. Los desarrolladores crean el incremento técnico según los estándares de calidad, pero la responsabilidad y decisión de lanzar ese valor comercial al mercado recae exclusivamente en el Product Owner."
-    },
-    {
-        question: "¿Cuándo actualiza el Product Owner de un equipo Scrum el plan del proyecto?",
-        type: "single_choice",
-        options: [
-            "El gráfico de Gantt del proyecto debe actualizarse antes de la reunión de planificación del sprint",
-            "Esto no es trabajo del Product Owner, el Scrum Master debe actualizar el plan del proyecto",
-            "En Scrum, el Product Backlog es el plan, que se actualiza a medida que se obtiene nueva información y retroalimentación",
-            "Scrum es incompatible con la planificación",
-            "Durante la retrospectiva del Sprint, con la ayuda de los desarrolladores"
-        ],
-        correctAnswer: 2,
-        explanation: "En Scrum el Product Backlog actúa como el plan vivo del proyecto. Es un artefacto dinámico que se adapta continuamente ante nueva información."
-    },
-    {
-        question: "El catálogo de productos (elige las tres mejores respuestas):",
-        type: "multiple_choice",
-        options: [
-            "Está gestionado por el Scrum Master",
-            "Es gestionado por el Product Owner",
-            "Está ordenado en función de la prioridad, el valor, las dependencias, el riesgo y el coste",
-            "Es una lista o inventario de elementos que el Producto puede incluir",
-            "Es una lista finalizada de todos los requisitos futuros que puedan afectar al Producto"
-        ],
-        correctAnswer: [1, 2, 3],
-        explanation: "El Product Backlog es una lista viva gestionada por el PO que abarca todo lo que el producto puede necesitar, ordenada dinámicamente bajo múltiples factores de valor y riesgo."
-    },
-    {
-        question: "¿Cuáles son los requisitos de Scrum? Elige todos los que se presentan.",
-        type: "multiple_choice",
-        options: [
-            "Scrum diario",
-            "Los desarrolladores tienen que levantarse durante el Daily Scrum",
-            "Planificación de la publicación",
-            "Revisión de Sprint",
-            "Gráfico de Burndown de Lanzamiento",
-            "Todo lo anterior es correcto"
-        ],
-        correctAnswer: [0, 3],
-        explanation: "El Daily Scrum y la Sprint Review son eventos oficiales obligatorios dentro de la estructura de Scrum."
-    },
-    {
-        question: "¿Quién forma parte del equipo de Scrum? Elige todas las respuestas que se apliquen.",
-        type: "multiple_choice",
-        options: [
-            "Propietario del producto",
-            "Los desarrolladores",
-            "La oficina de gestión de proyectos",
-            "Partes interesadas",
-            "Scrum Master",
-            "Clientes"
-        ],
-        correctAnswer: [0, 1, 4],
-        explanation: "El Scrum Team está compuesto estrictamente por tres roles: el Product Owner, los Developers (desarrolladores) y el Scrum Master."
-    },
-    {
-        question: "Hay cuatro equipos Scrum trabajando en un producto, y algunos desarrolladores preguntan al Scrum Master cómo podrían coordinar mejor el trabajo entre equipos. ¿Cuál de los siguientes sería el mejor camino para el Scrum Master?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master debería fusionar las tareas de Sprint de cada equipo en un plan maestro para el Sprint",
-            "El Scrum Master debería entrenar al Product Owner para colaborar con un desarrollador senior de cada equipo, que actuaría como representantes del equipo",
-            "El Scrum Master debe enseñar al Product Owner a trabajar con desarrolladores senior para evitar superposiciones excesivas de desarrollo durante el Sprint",
-            "El Scrum Master debe enseñar a los desarrolladores que son responsables de trabajar con los demás equipos, para producir un incremento integrado y finalizado",
-            "El Scrum Master debe supervisar a diario a los cuatro equipos para eliminar cualquier dependencia"
-        ],
-        correctAnswer: 3,
-        explanation: "La coordinación técnica entre múltiples equipos es responsabilidad directa de los propios desarrolladores, quienes deben autoorganizarse para asegurar un incremento integrado."
-    },
-    {
-        question: "¿Qué resultado de la reunión de planificación del Sprint proporciona una dirección general a los desarrolladores durante todo el Sprint?",
-        type: "single_choice",
-        options: [
-            "El Plan de Lanzamiento del Producto",
-            "El objetivo del sprint",
-            "Actas de planificación del sprint",
-            "El retraso en los sprints",
-            "El retraso de productos",
-            "El objetivo del producto"
-        ],
-        correctAnswer: 1,
-        explanation: "El Sprint Goal (objetivo del sprint) es el pilar que da propósito, foco y flexibilidad a los desarrolladores durante el transcurso del Sprint."
-    },
-    {
-        question: "¿Cuáles de las siguientes acciones aumentan la transparencia del retraso de productos? Elige los dos mejores.",
-        type: "multiple_choice",
-        options: [
-            "Mantenerlo actualizado con la información y los conocimientos más recientes de los clientes",
-            "Dimensionar sus artículos de forma que ninguno tenga más de 8 puntos de trabajo",
-            "Asegurarse de que los elementos de arriba estén dimensionados de tal forma que puedan completarse en un Sprint",
-            "Asegurarse de que solo se actualice durante la revisión del Sprint, permitiendo que el Product Owner y los interesados colaboren y lo ajusten",
-            "Actualizarlo solo durante el Daily Scrum, cuando está presente todo el equipo Scrum"
-        ],
-        correctAnswer: [0, 2],
-        explanation: "La transparencia aumenta manteniendo el backlog refinado con feedback real del cliente y asegurando que los ítems superiores sean pequeños y listos para ser completados."
-    },
-    {
-        question: "¿Quién estima los artículos del retraso de productos?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master, tras aclarar cualquier aspecto con el Product Owner",
-            "El Product Owner, tras aclarar cualquier aspecto con los desarrolladores",
-            "Los desarrolladores, tras aclarar cualquier aspecto con el Product Owner",
-            "Los desarrolladores, tras aclarar cualquier aspecto con el Scrum Master"
-        ],
-        correctAnswer: 2,
-        explanation: "Los encargados de realizar el esfuerzo técnico (los desarrolladores) son los únicos responsables de estimar las tareas del Product Backlog."
-    },
-    {
-        question: "¿Qué trabajo de Product Owner puede delegar en otros?",
-        type: "single_choice",
-        options: [
-            "Escribir historias de usuario claras",
-            "Pedido de los productos pendientes",
-            "Participación en la reunión de Sprint Review",
-            "Representar a los interesados ante el resto del equipo Scrum",
-            "Todo lo anterior"
-        ],
-        correctAnswer: 1,
-        explanation: "El PO puede delegar la estructuración u ordenación detallada de ciertos elementos a los desarrolladores, pero sigue manteniendo la responsabilidad última de la gestión."
-    },
-    {
-        question: "¿Qué es el cono de incertidumbre?",
-        type: "single_choice",
-        options: [
-            "Muestra que, a medida que avanza el proyecto, la incertidumbre se reduce",
-            "Es una herramienta de gestión para estimar las ganancias y pérdidas de un proyecto antes de que comience",
-            "Muestra el esfuerzo acumulado de desarrollo a lo largo del tiempo, ajustado por incertidumbre",
-            "Proporciona una representación visual del trabajo restante en un Sprint frente al alcance total del proyecto"
-        ],
-        correctAnswer: 0,
-        explanation: "El Cono de Incertidumbre grafica de qué forma disminuye la variabilidad y el desconocimiento sobre el producto conforme se obtiene conocimiento empírico."
-    },
-    {
-        question: "¿Cuáles de las siguientes acciones podría realizar el Scrum Master durante el Sprint? Elige los dos mejores.",
-        type: "multiple_choice",
-        options: [
-            "Seguir cómo progresan los desarrolladores",
-            "Asignar tareas de Sprint Backlog a los desarrolladores",
-            "Eliminar impedimentos",
-            "Asegurarse de que el Product Owner asista a todas las reuniones de Scrum",
-            "Facilitar oportunidades de mejoras en inspección, adaptación y transparencia según sea necesario",
-            "Escribir todas las historias de usuario para el Product Owner"
-        ],
-        correctAnswer: [2, 4],
-        explanation: "El Scrum Master actúa como líder servicial removiendo bloqueos externos y facilitando el uso correcto de los pilares empíricos (inspección/adaptación)."
-    },
-    {
-        question: "El Backlog de Sprint puede actualizarse mediante:",
-        type: "single_choice",
-        options: [
-            "El propietario del producto",
-            "El Scrum Master",
-            "Los desarrolladores",
-            "El Scrum Manager"
-        ],
-        correctAnswer: 2,
-        explanation: "El Sprint Backlog pertenece únicamente a los desarrolladores. Nadie más puede modificar su contenido durante el Sprint."
-    },
-    {
-        question: "Los equipos Scrum deberían tener un Sprint de Liberación (Release Sprint).",
-        type: "true_false",
-        options: [
-            "Sí",
-            "No"
-        ],
-        correctAnswer: 1,
-        explanation: "Scrum no contempla los \"Sprints de estabilización o liberación\". El equipo debe generar un incremento utilizable y potencialmente desplegable al final de cada Sprint regular."
-    },
-    {
-        question: "Durante Sprint 0, el Product Owner debe:",
-        type: "single_choice",
-        options: [
-            "No existe Sprint 0",
-            "Hacer todo el trabajo de descubrimiento desde el principio, antes de que comience el proyecto",
-            "Formar un equipo de desarrolladores senior",
-            "Elaborar un diagrama de Gantt con todas las actividades relevantes y una previsión presupuestaria"
-        ],
-        correctAnswer: 0,
-        explanation: "En la teoría pura de Scrum el \"Sprint 0\" no existe. El desarrollo y el marco empírico inician formalmente desde el Sprint 1."
-    },
-    {
-        question: "Los desarrolladores concluyen que han seleccionado demasiado trabajo para un Sprint. ¿Qué deberían hacer?",
-        type: "single_choice",
-        options: [
-            "Pedir al Scrum Master que contrate a más desarrolladores, para que se pueda realizar el trabajo extra",
-            "Hacer horas extra y asegurarse de que todo el trabajo se realice, independientemente",
-            "Informar al Product Owner lo antes posible para eliminar algunos artículos del Product Backlog",
-            "Acortar la definición de Hecho, para permitir que el trabajo restante encaje."
-        ],
-        correctAnswer: 2,
-        explanation: "Los desarrolladores deben colaborar inmediatamente con el Product Owner para remover o renegociar ítems del Sprint Backlog sin alterar el objetivo principal."
-    },
-    {
-        question: "¿Quién es responsable de hacer todo el trabajo para que un artículo de Product Backlog cumpla con la definición de Hecho?",
-        type: "single_choice",
-        options: [
-            "El departamento de Aseguramiento de la Calidad",
-            "El Propietario del Producto",
-            "Los desarrolladores",
-            "El Scrum Master",
-            "El equipo de melé",
-            "La organización de desarrollo"
-        ],
-        correctAnswer: 2,
-        explanation: "Los desarrolladores son los responsables directos de ejecutar todas las actividades técnicas necesarias para llevar un elemento al estándar de \"Hecho\"."
-    },
-    {
-        question: "Es obligatorio que el Product Owner de Scrum escriba todos los elementos del Product Backlog para poder entregarlos a los desarrolladores para su implementación.",
-        type: "true_false",
-        options: [
-            "Sí",
-            "No"
-        ],
-        correctAnswer: 1,
-        explanation: "El PO puede delegar la redacción técnica o creación de historias en los desarrolladores u otros colaboradores, manteniendo la rendición de cuentas final."
-    },
-    {
-        question: "Los desarrolladores de un equipo de Scrum han empezado a trabajar de forma remota pero están teniendo problemas de coordinación para configurar el Scrum Diario. Por ejemplo, les cuesta encontrar la herramienta adecuada de videoconferencia. ¿Qué debería hacer el Scrum Master?",
-        type: "single_choice",
-        options: [
-            "Dejar que los desarrolladores se autogestionen y decidan cómo resolver los problemas",
-            "Organizar el Daily Scrum y no dejar que el equipo pierda su tiempo con esto",
-            "Instruir a los desarrolladores para que roten la propiedad del Daily Scrum",
-            "Pedir al Product Owner que intervenga y elija la mejor herramienta de comunicación para el equipo"
-        ],
-        correctAnswer: 0,
-        explanation: "El Scrum Master debe guiar e incentivar la autogestión de los desarrolladores para que resuelvan de forma autónoma sus retos operativos de coordinación."
-    },
-    {
-        question: "La caja de tiempo para la Sprint Review es:",
-        type: "single_choice",
-        options: [
-            "4 horas para un Sprint de un mes",
-            "3 horas para un sprint de un mes",
-            "4 horas para un Sprint de un mes, aunque puede extenderse otras 4 horas si es necesario",
-            "3 horas para un Sprint de un mes, aunque puede extenderse otras 3 horas si es necesario"
-        ],
-        correctAnswer: 0,
-        explanation: "La Sprint Review posee un Timebox estricto de máximo 4 horas para Sprints estandarizados de un mes completo."
-    },
-    {
-        question: "Si los desarrolladores le dicen al Product Owner que probablemente no implementarán toda la funcionalidad que previeron, ¿qué debería hacer el Product Owner?",
-        type: "single_choice",
-        options: [
-            "Despedir al desarrollador principal y poner al resto del equipo en evaluación de desempeño",
-            "Cambiar el objetivo de sprint según sea necesario",
-            "Trabajar con los desarrolladores para eliminar o modificar los elementos del Retraso de Producto, de modo que se pueda cumplir el Objetivo del Sprint",
-            "Saltarse la Retrospectiva del Sprint para ahorrar tiempo",
-            "Exigir a los desarrolladores que trabajen horas extra si es necesario"
-        ],
-        correctAnswer: 2,
-        explanation: "El PO colabora activamente con el equipo para ajustar y refinar el alcance del Sprint protegiendo la integridad del Sprint Goal."
-    },
-    {
-        question: "¿Qué tamaño tiene un artículo \"listo\" en Product Backlog?",
-        type: "single_choice",
-        options: [
-            "Tiene 8 puntos de historia o menos",
-            "Se puede hacer en un día o menos",
-            "Se puede hacer dentro de un Sprint",
-            "Puede hacerse en un Sprint por un solo desarrollador"
-        ],
-        correctAnswer: 2,
-        explanation: "Un ítem está \"listo\" cuando su nivel de claridad y tamaño permite ser completado holgadamente dentro de los límites de un único Sprint."
-    },
-    {
-        question: "El Product Owner debe elaborar criterios de aceptación exhaustivos antes de que un artículo de Product Backlog pueda incluirse en la Planificación del Sprint.",
-        type: "true_false",
-        options: [
-            "Sí",
-            "No"
-        ],
-        correctAnswer: 1,
-        explanation: "No se requieren especificaciones exhaustivas previas; los detalles y criterios se complementan y emergen de manera colaborativa durante el refinamiento y la planificación."
-    },
-    {
-        question: "Se necesita un objetivo de Sprint (Sprint Goal) porque:",
-        type: "single_choice",
-        options: [
-            "Los desarrolladores tienen un objetivo compartido que también proporciona flexibilidad durante el Sprint",
-            "Los objetivos de sprint no son útiles, el Scrum Master debería impedir que los desarrolladores tengan uno",
-            "Expresa toda la visión del producto",
-            "Garantiza que todos los elementos seleccionados del Product Backlog sean realizados por los desarrolladores durante el Sprint"
-        ],
-        correctAnswer: 0,
-        explanation: "El Sprint Goal unifica los esfuerzos del equipo bajo una meta común, brindando flexibilidad ante imprevistos técnicos."
-    },
-    {
-        question: "Los desarrolladores eligen:",
-        type: "single_choice",
-        options: [
-            "Cómo pedir el retraso de productos",
-            "La duración de un Sprint",
-            "Cómo realizar el trabajo durante el Sprint",
-            "Cuándo lanzar el producto Incremento"
-        ],
-        correctAnswer: 2,
-        explanation: "Como equipo autogestionado, los desarrolladores poseen la autonomía absoluta de decidir el método técnico y operativo para construir el Incremento."
-    },
-    {
-        question: "¿Con qué frecuencia deberíamos medir la satisfacción del cliente?",
-        type: "single_choice",
-        options: [
-            "A veces",
-            "Cada trimestre",
-            "Cada día",
-            "Frecuentemente"
-        ],
-        correctAnswer: 3,
-        explanation: "La satisfacción del cliente debe ser evaluada de forma constante y frecuente para validar empíricamente que se está aportando valor continuo."
-    },
-    {
-        question: "¿Quién es responsable de crear el objetivo del producto?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master",
-            "Los desarrolladores",
-            "El Propietario del Producto",
-            "El Product Owner y el Scrum Master"
-        ],
-        correctAnswer: 2,
-        explanation: "El Product Owner es el responsable de definir el Product Goal (Objetivo del Producto), el cual describe el estado futuro a largo plazo del producto."
-    },
-    {
-        question: "¿Cuál de los siguientes aspectos no debería afectar al orden del retraso de productos?",
-        type: "single_choice",
-        options: [
-            "Dependencias",
-            "Relevancia para clientes y usuarios",
-            "Estrategia empresarial",
-            "Herramientas utilizadas por los desarrolladores",
-            "Riesgo",
-            "Valor"
-        ],
-        correctAnswer: 3,
-        explanation: "El entorno tecnológico o las herramientas operativas de los desarrolladores no determinan la prioridad de negocio del Product Backlog."
-    },
-    {
-        question: "¿Cuáles son las actividades habituales para el Product Owner durante un Sprint? Elige los dos mejores.",
-        type: "multiple_choice",
-        options: [
-            "Reunirse y trabajar con los grupos de interés y otros gestores de producto",
-            "Participar en cada Daily Scrum para resolver las dudas planteadas por los desarrolladores",
-            "Analizar el informe diario recopilado por el Scrum Master sobre el trabajo pendiente",
-            "Realizar el refinamiento del backlog de producto con los desarrolladores",
-            "Establecer informes diarios para el equipo Scrum en función del tiempo invertido, presupuesto y alcance"
-        ],
-        correctAnswer: [0, 3],
-        explanation: "Durante el ciclo, el PO divide su tiempo interactuando externamente con Stakeholders y refinando internamente los requisitos del backlog con el equipo."
-    },
-    {
-        question: "¿Cuál de la siguientes opciones pueden ofrecer los desarrolladores en un Sprint?",
-        type: "single_choice",
-        options: [
-            "Un producto mínimo viable con algunos fallos",
-            "Un documento funcional integral",
-            "Un conjunto de pruebas unitarias que puedan usarse para pruebas adecuadas en el próximo Sprint",
-            "Un incremento realizado de software funcional"
-        ],
-        correctAnswer: 3,
-        explanation: "El output obligatorio de cada Sprint debe ser un incremento utilizable, inspeccionable y funcional que cumpla con los criterios de \"Hecho\"."
-    },
-    {
-        question: "¿Por qué deberíamos celebrar el Daily Scrum en el mismo momento y lugar?",
-        type: "single_choice",
-        options: [
-            "Al contrario, se recomienda la variedad diaria",
-            "Reducir la complejidad",
-            "Que encaje en el calendario del Product Owner",
-            "Facilitar que el Scrum Master envíe las invitaciones a las reuniones"
-        ],
-        correctAnswer: 1,
-        explanation: "Mantener un horario y locación fija remueve barreras logísticas, minimiza la complejidad y establece un hábito predecible para el equipo."
-    },
-    {
-        question: "¿Cuándo deberían los desarrolladores cancelar un Sprint?",
-        type: "single_choice",
-        options: [
-            "Cuando los impedimentos son demasiados que no pueden superarse",
-            "Cuando el Scrum Master declara que la infraestructura de desarrollo no es adecuada",
-            "Cuando el equipo no tiene el nivel adecuado de autoorganización",
-            "Los desarrolladores no pueden cancelar un Sprint, solo el Product Owner puede"
-        ],
-        correctAnswer: 3,
-        explanation: "Únicamente el Product Owner retiene la autoridad formal para decretar la cancelación prematura de un Sprint en curso si el objetivo queda obsoleto."
-    },
-    {
-        question: "Para tomar decisiones de inversión, el Product Owner probablemente analizará el Coste Total de Propiedad (TCO) del producto que se está construyendo. ¿Qué costes tendrá en cuenta un Product Owner?",
-        type: "single_choice",
-        options: [
-            "El coste acumulado sobre el valor ganado del producto",
-            "El dinero invertido en el desarrollo y la entrega del producto",
-            "Todas las inversiones necesarias para concebir, desarrollar, operar y mantener el producto"
-        ],
-        correctAnswer: 2,
-        explanation: "El Product Owner no solo es responsable del desarrollo y lanzamiento de un producto, sino también del coste de mantenimiento y operación del producto a lo largo de su vida útil."
-    },
-    {
-        question: "¿Qué descripción encaja mejor con el rol del Product Owner?",
-        type: "single_choice",
-        options: [
-            "Protector de mira",
-            "Analista Jefe de Negocios",
-            "Maximizador de valor",
-            "Recaudador de requisitos",
-            "Gestor de Proyecto 2.0"
-        ],
-        correctAnswer: 2,
-        explanation: "El Product Owner es responsable de maximizar el valor del producto resultante del trabajo del Scrum Team."
-    },
-    {
-        question: "El valor que aporta un producto solo puede determinarse por los ingresos.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "El valor es un concepto subjetivo y multidimensional que probablemente varía entre diferentes tipos de productos y organizaciones, no limitándose solo a los ingresos financieros."
-    },
-    {
-        question: "¿Cuál es el valor principal de liberar el Incremento para los clientes?",
-        type: "single_choice",
-        options: [
-            "Para conocer la previsión de funcionalidad que se desarrolló",
-            "Para validar las suposiciones hechas al crear el producto",
-            "Para aprender sobre la productividad del equipo Scrum"
-        ],
-        correctAnswer: 1,
-        explanation: "Liberar el Incremento a clientes o usuarios reales en el mercado es la única forma empírica de validar las suposiciones hechas sobre el valor."
-    },
-    {
-        question: "El equipo Scrum debe elegir al menos un elemento de mejora de procesos de alta prioridad, identificado durante la retrospectiva de Sprint, e incluirlo en el Backlog de Sprint.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Falso. Aunque versiones anteriores de la Guía Scrum lo exigían como obligatorio, la actualización actual eliminó esta restricción para no ser tan prescriptiva, dejando la práctica como opcional si aporta valor al equipo."
-    },
-    {
-        question: "El Product Owner gestiona el Product Backlog. ¿Quién es responsable de estimar el esfuerzo para completar los elementos del Product Backlog?",
-        type: "single_choice",
-        options: [
-            "Los desarrolladores",
-            "El PMO",
-            "El Product Owner"
-        ],
-        correctAnswer: 0,
-        explanation: "Los desarrolladores que realizarán el trabajo son los únicos responsables de estimar el esfuerzo y presupuesto final de los elementos."
-    },
-    {
-        question: "¿Cómo sabe una organización que un producto construido con Scrum es exitoso?",
-        type: "single_choice",
-        options: [
-            "Midiendo el tiempo real dedicado al desarrollo frente al tiempo estimado para el desarrollo",
-            "Al medir esa velocidad, ha aumentado desde la última liberación",
-            "Liberando frecuentemente el Incremento al cliente y midiendo el valor que recibe el cliente",
-            "Por parte del Product Owner y los interesados que aceptan el Incremento en la Revisión Sprint"
-        ],
-        correctAnswer: 2,
-        explanation: "Scrum funciona de forma iterativa e incremental. Si el Incremento no se publica con frecuencia, se pierde la oportunidad de captar la opinión de los clientes y medir el verdadero valor real."
-    },
-    {
-        question: "¿Cómo ayudan los timeboxes al Product Owner y a los demás miembros del equipo Scrum a validar suposiciones, adaptarse y maximizar el valor de su producto?",
-        type: "single_choice",
-        options: [
-            "Al final de cada Sprint, cuando expira la caja de tiempo, se dispone de un informe detallado con todos los casos de prueba y resultados de las pruebas",
-            "Timeboxes asegura al Product Owner que los desarrolladores terminarán todo el trabajo en el Sprint Backlog antes de que termine el Sprint",
-            "Los Timeboxes ayudan asegurándose de que un Sprint no se detenga hasta que se completen todas las pruebas y el trabajo sea verificado por el Product Owner",
-            "Las cajas de tiempo ayudan a minimizar el riesgo creando la oportunidad de validar suposiciones utilizando la retroalimentación de usuarios y del mercado; permitiendo a los equipos Scrum inspeccionar el progreso hacia el objetivo del producto y decidir si cambiar de rumbo o perseverar"
-        ],
-        correctAnswer: 3,
-        explanation: "El PO asume que un elemento generará valor, pero esa suposición debe validarse en el mercado. Mantener Sprints cortos limita el riesgo financiero y temporal a un mes o menos."
-    },
-    {
-        question: "¿Qué expresiones describen mejor la relación entre el Product Owner y los desarrolladores? Elige las dos mejores respuestas.",
-        type: "multiple_choice",
-        options: [
-            "Deben trabajar separados tanto como sea posible para mantener separadas las preocupaciones de los negocios y la tecnología",
-            "Colaboran con frecuencia para que los desarrolladores construyan incrementos teniendo en cuenta las preocupaciones de los usuarios finales y partes interesadas",
-            "Colaboran con frecuencia para que el Product Owner pueda tomar decisiones informadas equilibrando el esfuerzo y el valor de los artículos del Product Backlog",
-            "No deberían compartir más que la reunión de Planificación de Sprint y Revisión de Sprints",
-            "El Product Owner debe estar con los desarrolladores a tiempo completo para desarrollar un conocimiento profundo de la tecnología utilizada"
-        ],
-        correctAnswer: [1, 2],
-        explanation: "El PO colabora con frecuencia con el equipo para que comprendan la visión del negocio, el valor esperado de los ítems y para renegociar el alcance si el esfuerzo técnico crece."
-    },
-    {
-        question: "¿Qué describe mejor la relación entre el Product Owner y los grupos de interés?",
-        type: "single_choice",
-        options: [
-            "El Product Owner redacta las User Stories tal y como las proporcionan los stakeholders",
-            "El Product Owner proporciona a los interesados los formularios de aceptación en la Revisión Sprint para que consten su acuerdo formal sobre el software entregado",
-            "El Product Owner tiene la decisión final sobre los requisitos y debe implicar a las partes interesadas lo menos posible",
-            "El Product Owner solicita activamente la opinión de los interesados y las expectativas que se incorporen al Backlog de Producto"
-        ],
-        correctAnswer: 3,
-        explanation: "El Product Owner representa activamente las necesidades de los interesados (stakeholders) ante el equipo de Scrum, integrando sus expectativas en el Product Backlog."
-    },
-    {
-        question: "¿Qué dos cosas ayudan mejor al Product Owner a gestionar el valor de un producto? Elige las dos mejores respuestas.",
-        type: "multiple_choice",
-        options: [
-            "Ideando una fórmula para un cálculo neutral del valor",
-            "Establecer valor en los artículos individuales del catálogo de productos mediante Value Poker",
-            "El orden del catálogo de productos",
-            "Validando suposiciones de valor mediante publicaciones frecuentes"
-        ],
-        correctAnswer: [2, 3],
-        explanation: "El orden explícito del Product Backlog sirve como plan predictivo de valor, pero dicho valor solo se gestiona y confirma eficazmente lanzando el incremento frecuentemente al mercado."
-    },
-    {
-        question: "¿Cuáles son las actividades típicas para un Product Owner en un Sprint? Elige las dos mejores respuestas.",
-        type: "multiple_choice",
-        options: [
-            "Actualiza el plan de trabajo para los desarrolladores a diario",
-            "Colabora con los interesados, las comunidades de usuarios y los expertos en la materia",
-            "Asiste a cada Daily Scrum para responder preguntas funcionales sobre los elementos discutidos del Sprint Backlog",
-            "Trabaja con los desarrolladores en el refinamiento del backlog de producto",
-            "Elabora informes financieros sobre las horas dedicadas reportadas por el equipo Scrum"
-        ],
-        correctAnswer: [1, 3],
-        explanation: "Durante el Sprint, el PO equilibra su tiempo colaborando con el ecosistema externo de stakeholders y refinando continuamente los detalles del Product Backlog con los desarrolladores."
-    },
-    {
-        question: "¿Está obligado el Product Owner a estar presente en la Sprint Retrospective?",
-        type: "single_choice",
-        options: [
-            "Su asistencia es obligatoria. La Retrospectiva del Sprint es una oportunidad para que el equipo de Scrum se evalúe y mejore",
-            "No están permitidas. La Sprint Retrospective es una oportunidad para que los desarrolladores mejoren",
-            "Son opcionales. Solo se requiere asistencia cuando el Product Owner es invitado por el Scrum Master"
-        ],
-        correctAnswer: 0,
-        explanation: "Es obligatoria. Al ser un miembro pleno del Scrum Team, el Product Owner debe participar activamente en la Retrospectiva para inspeccionar y adaptar los procesos y relaciones del equipo."
-    },
-    {
-        question: "Un primer Sprint puede comenzar antes de que el Product Owner tenga un Product Backlog completo y exhaustivo establecido.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "Cierto. Un primer Sprint solo requiere la presencia del Scrum Team y que existan suficientes ideas iniciales en el backlog para poder trabajar y cumplir un objetivo en ese ciclo inicial."
-    },
-    {
-        question: "¿Qué deberían hacer los desarrolladores si el Product Owner no está disponible?",
-        type: "single_choice",
-        options: [
-            "Espera hasta que el Product Owner esté disponible de nuevo",
-            "La dirección debería asignar un Product Owner sustituto para cubrir cuando el Product Owner no pueda estar presente",
-            "Pide al responsable del Product Owner que decida en ausencia del Product Owner",
-            "Dentro del Sprint, los desarrolladores toman las mejores decisiones posibles para asegurar el progreso hacia el objetivo del Sprint, realineándose con el Product Owner una vez que este esté disponible de nuevo"
-        ],
-        correctAnswer: 3,
-        explanation: "Scrum fomenta la autogestión. En ausencia temporal del PO, los desarrolladores operan de forma autónoma bajo su mejor criterio para proteger el avance del Sprint Goal, ajustándose después cuando este regrese."
-    },
-    {
-        question: "¿Cuáles son tres afirmaciones incorrectas, falsas o engañosas sobre Scrum? Elige las tres mejores respuestas.",
-        type: "multiple_choice",
-        options: [
-            "Scrum es un marco para desarrollar y mantener productos complejos",
-            "Scrum se basa en el empirismo y el pensamiento lean",
-            "Scrum es un marco que elimina la complejidad",
-            "Cada componente de Scrum cumple un propósito específico y es esencial para tu capacidad de usar Scrum para desarrollar productos complejos",
-            "Scrum es como los procesos tradicionales pero con autoorganización para sustituir a los Jefes de Proyecto",
-            "Scrum es una metodología en la que puedes elegir qué partes de Scrum crees que funcionarán para tu entorno"
-        ],
-        correctAnswer: [2, 4, 5],
-        explanation: "Scrum no es una metodología donde se eligen partes, sino un marco obligatorio en su totalidad. No elimina la complejidad del mundo real (ofrece una estructura para gestionarla) ni sustituye de forma directa los roles tradicionales como el Jefe de Proyecto."
-    },
-    {
-        question: "Es obligatorio que el Incremento del producto se libere al mercado o producción al final de cada Sprint.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "El Incremento debe ser utilizable y cumplir con la Definición de Hecho (potencialmente desplegable), pero la decisión comercial de lanzarlo o no al mercado corresponde exclusivamente al Product Owner."
-    },
-    {
-        question: "¿Quién es responsable de gestionar el Product Backlog?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master",
-            "Los Desarrolladores",
-            "El Product Owner",
-            "El Jefe de Proyecto"
-        ],
-        correctAnswer: 2,
-        explanation: "El Product Owner es el único responsable de gestionar el Product Backlog para optimizar el valor del producto."
-    },
-    {
-        question: "¿Cuándo empieza el próximo Sprint?",
-        type: "single_choice",
-        options: [
-            "Inmediatamente después de la conclusión del Sprint anterior",
-            "El lunes siguiente de la semana posterior",
-            "Tan pronto como el Product Owner defina el nuevo Sprint Goal",
-            "Después de una fase corta de estabilización arquitectónica"
-        ],
-        correctAnswer: 0,
-        explanation: "Un nuevo Sprint comienza inmediatamente después de que concluye el Sprint anterior, garantizando un ritmo y cadencia continuos sin pausas artificiales."
-    },
-    {
-        question: "¿Cuáles son los tres pilares del empirismo? Elige las tres mejores respuestas.",
-        type: "multiple_choice",
-        options: [
-            "Transparencia",
-            "Planificación",
-            "Inspección",
-            "Adaptación",
-            "Respeto",
-            "Colaboración"
-        ],
-        correctAnswer: [0, 2, 3],
-        explanation: "El control de procesos empíricos en Scrum se basa estrictamente en tres pilares: Transparencia, Inspección y Adaptación."
-    },
-    {
-        question: "¿Cuál es la duración máxima permitida para un Sprint en Scrum?",
-        type: "single_choice",
-        options: [
-            "Dos semanas",
-            "Un mes o menos",
-            "6 semanas",
-            "Tantas semanas como sea necesario para cumplir el alcance"
-        ],
-        correctAnswer: 1,
-        explanation: "Un Sprint tiene una duración fija (caja de tiempo) de un mes o menos para reducir el riesgo ante la complejidad y la incertidumbre."
-    },
-    {
-        question: "Durante el Sprint, el alcance puede aclararse y renegociarse a medida que se aprende más. ¿Quiénes participan en esta renegociación?",
-        type: "single_choice",
-        options: [
-            "El Product Owner y los Stakeholders",
-            "El Scrum Master y los Desarrolladores",
-            "El Product Owner y los Desarrolladores",
-            "Todo el Scrum Team junto con los clientes"
-        ],
-        correctAnswer: 2,
-        explanation: "A medida que se avanza en el Sprint y surge nuevo conocimiento técnico, el alcance se aclara y renegocia estrictamente entre el Product Owner y los Desarrolladores."
-    },
-    {
-        question: "¿Quién tiene la última palabra sobre el orden del Product Backlog?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master",
-            "El CEO o la Dirección de la empresa",
-            "Los Desarrolladores basados en dependencias técnicas",
-            "El Product Owner"
-        ],
-        correctAnswer: 3,
-        explanation: "El Product Owner es la máxima autoridad y el responsable único de ordenar los elementos del Product Backlog."
-    },
-    {
-        question: "¿Qué dos cosas debe hacer un Scrum Master si los Desarrolladores no pueden resolver un impedimento de forma autónoma? Elige las dos mejores respuestas.",
-        type: "multiple_choice",
-        options: [
-            "Resolver el problema directamente asignando tareas específicas al equipo",
-            "Ayudar a eliminar el impedimento para que el equipo recupere su efectividad",
-            "Llevar el impedimento ante la dirección o la organización si es necesario fuera del alcance del equipo",
-            "Decidir qué elementos del Sprint Backlog deben eliminarse para compensar el tiempo perdido"
-        ],
-        correctAnswer: [1, 2],
-        explanation: "El Scrum Master actúa como un líder que sirve al equipo; su rol implica guiar la autogestión pero también remover activamente obstáculos que bloqueen al equipo, escalándolos en la organización si es externo."
-    },
-    {
-        question: "El Scrum Team está compuesto por los siguientes roles:",
-        type: "single_choice",
-        options: [
-            "Product Owner, Scrum Master, Desarrolladores y Stakeholders",
-            "Product Owner, Scrum Master y Desarrolladores",
-            "Jefe de Proyecto, Product Owner y Desarrolladores",
-            "Product Owner, Diseñadores, Desarrolladores y QA"
-        ],
-        correctAnswer: 1,
-        explanation: "El Scrum Team es un equipo cohesionado y autosuficiente integrado exclusivamente por tres roles: el Product Owner, el Scrum Master y los Desarrolladores."
-    },
-    {
-        question: "¿Quién es responsable de velar por que Scrum se entienda y se adopte según lo definido en la Guía de Scrum?",
-        type: "single_choice",
-        options: [
-            "El Product Owner",
-            "El Scrum Master",
-            "Los Desarrolladores",
-            "La Oficina de Gestión de Proyectos (PMO)"
-        ],
-        correctAnswer: 1,
-        explanation: "El Scrum Master es el responsable de establecer Scrum ayudando a todos a comprender la teoría y práctica de Scrum, tanto internamente como en la organización."
-    },
-    {
-        question: "¿Cuándo puede considerarse terminado un elemento del Product Backlog?",
-        type: "single_choice",
-        options: [
-            "Cuando pasa las pruebas del departamento de Aseguramiento de la Calidad (QA)",
-            "Cuando el Product Owner firma el formulario de aceptación formal",
-            "Cuando cumple completamente con los criterios definidos en la Definición de Hecho (Definition of Done)",
-            "Cuando se han codificado todas sus tareas asociadas en el Sprint Backlog"
-        ],
-        correctAnswer: 2,
-        explanation: "Un elemento está verdaderamente terminado cuando el incremento resultante se ajusta de manera estricta y transparente a la Definición de Hecho (DoD)."
-    },
-    {
-        question: "¿Qué enunciado describe mejor la autogestión en un Scrum Team?",
-        type: "single_choice",
-        options: [
-            "El equipo decide internamente quién hace qué, cómo y cuándo hacerlo de forma autónoma",
-            "El Product Owner decide qué se hace y el Scrum Master decide cómo lo hacen los Desarrolladores",
-            "La dirección de la organización asigna las tareas diarias a cada miembro del equipo",
-            "Los Desarrolladores eligen libremente en qué producto trabajar sin intervención del Product Owner"
-        ],
-        correctAnswer: 0,
-        explanation: "Los equipos Scrum son autogestionados, lo que significa que eligen internamente quién hace qué, cómo y cuándo hacerlo, en lugar de ser dirigidos por personas externas."
-    },
-    {
-        question: "¿Cuál es el propósito principal del Daily Scrum?",
-        type: "single_choice",
-        options: [
-            "Informar el estado de las tareas individuales al Scrum Master y al Product Owner",
-            "Inspeccionar el progreso hacia el Sprint Goal y adaptar el Sprint Backlog si es necesario, creando un plan para las próximas 24 horas",
-            "Aprobar las horas invertidas en la herramienta de seguimiento del proyecto",
-            "Revisar el desempeño individual de los desarrolladores de bajo rendimiento"
-        ],
-        correctAnswer: 1,
-        explanation: "El Daily Scrum es un evento exclusivo para los Desarrolladores diseñado para inspeccionar el avance hacia el Sprint Goal y adaptar dinámicamente su plan de trabajo inmediato."
-    },
-    {
-        question: "¿Quién decide cómo se llevará a cabo el trabajo seleccionado en el Sprint Backlog durante el Sprint?",
-        type: "single_choice",
-        options: [
-            "El Product Owner",
-            "El Scrum Master",
-            "Los Desarrolladores",
-            "El Arquitecto Técnico Principal"
-        ],
-        correctAnswer: 2,
-        explanation: "Los Desarrolladores cuentan con autonomía absoluta; nadie más puede decirles cómo transformar los elementos del Product Backlog en Incrementos de valor."
-    },
-    {
-        question: "¿Cuál es la función del Sprint Goal?",
-        type: "single_choice",
-        options: [
-            "Garantizar que los Desarrolladores no cambien ninguna de las tareas estimadas",
-            "Proporcionar foco, un propósito claro y un marco de flexibilidad para el trabajo que se realiza durante el Sprint",
-            "Servir de métrica para evaluar el rendimiento individual de cada desarrollador",
-            "Fijar de forma inamovible el alcance exacto acordado en la planificación"
-        ],
-        correctAnswer: 1,
-        explanation: "El Sprint Goal es el único objetivo del Sprint. Brinda un propósito unificado al equipo y le ofrece flexibilidad en la ejecución técnica para alcanzarlo."
-    },
-    {
-        question: "¿Qué sucede con los elementos del Product Backlog que no se completaron al finalizar el Sprint?",
-        type: "single_choice",
-        options: [
-            "El Product Owner los acepta automáticamente como completados de manera parcial",
-            "Se trasladan al Sprint Backlog del siguiente ciclo sin necesidad de revisión",
-            "Se vuelven a estimar y regresan al Product Backlog general para que el Product Owner decida su prioridad futura",
-            "El Scrum Master penaliza la velocidad estimada del equipo de desarrollo"
-        ],
-        correctAnswer: 2,
-        explanation: "Cualquier trabajo incompleto que no cumpla con la Definición de Hecho no forma parte del Incremento; regresa al Product Backlog general para ser reestimado y repriorizado."
-    },
-    {
-        question: "¿Quién tiene la autoridad exclusiva para cancelar un Sprint antes de que expire su caja de tiempo?",
-        type: "single_choice",
-        options: [
-            "Los Desarrolladores en conjunto si encuentran un bloqueo técnico insuperable",
-            "El Scrum Master tras evaluar la baja moral del equipo",
-            "El Product Owner",
-            "La Dirección ejecutiva de la organización"
-        ],
-        correctAnswer: 2,
-        explanation: "Únicamente el Product Owner retiene la facultad de cancelar un Sprint de forma prematura si el objetivo del mismo (Sprint Goal) se vuelve obsoleto."
-    },
-    {
-        question: "¿Cuál es el propósito principal del evento Sprint Retrospective?",
-        type: "single_choice",
-        options: [
-            "Inspeccionar el incremento técnico con los Stakeholders externos para recibir feedback de mercado",
-            "Planificar las mejoras en la eficiencia, los procesos, las relaciones y las herramientas para el próximo Sprint",
-            "Presentar un informe analítico sobre el cumplimiento presupuestario del proyecto",
-            "Actualizar el Product Backlog con los nuevos requisitos de los clientes finales"
-        ],
-        correctAnswer: 1,
-        explanation: "La Retrospectiva es el espacio para que el Scrum Team se inspeccione a sí mismo e identifique mejoras concretas en su forma de trabajar que implementará en el ciclo venidero."
-    },
-    {
-        question: "¿Cuáles son los cinco valores de Scrum?",
-        type: "single_choice",
-        options: [
-            "Planificación, Transparencia, Inspección, Adaptación, Calidad",
-            "Compromiso, Foco, Apertura, Respeto, Coraje",
-            "Respeto, Colaboración, Entrega, Organización, Confianza",
-            "Velocidad, Calidad, Productividad, Transparencia, Eficiencia"
-        ],
-        correctAnswer: 1,
-        explanation: "Los miembros del Scrum Team viven y respiran cinco valores fundamentales: Compromiso, Foco, Apertura, Respeto y Coraje."
-    },
-    {
-        question: "¿Por qué Scrum define eventos con cajas de tiempo (timeboxes)?",
-        type: "single_choice",
-        options: [
-            "Para obligar al equipo a trabajar horas extra si no cumplen los plazos",
-            "Para crear regularidad, enfocar los esfuerzos y limitar el desperdicio o los riesgos asociados en entornos complejos",
-            "Para que la PMO tenga un control exacto de las horas trabajadas",
-            "Para impedir que el Product Owner cambie de opinión durante el año"
-        ],
-        correctAnswer: 1,
-        explanation: "Las cajas de tiempo restringen la duración máxima de los eventos para generar regularidad, maximizar el enfoque del equipo y mitigar riesgos e incertidumbre."
-    },
-    {
-        question: "¿Cuál es la duración máxima permitida para la reunión de Sprint Planning en un Sprint de un mes?",
-        type: "single_choice",
-        options: [
-            "2 horas",
-            "4 horas",
-            "8 horas",
-            "Toda la primera semana del Sprint"
-        ],
-        correctAnswer: 2,
-        explanation: "El Sprint Planning tiene un límite de tiempo máximo de 8 horas para un Sprint estándar de un mes (proporcionalmente menor para Sprints más cortos)."
-    },
-    {
-        question: "¿Qué es el Sprint Backlog?",
-        type: "single_choice",
-        options: [
-            "Una lista inmutable de tareas asignadas por el Product Owner al inicio del proyecto",
-            "El conjunto de elementos seleccionados del Product Backlog, junto con el Sprint Goal y un plan de acción detallado para entregar el Incremento",
-            "Un informe técnico que detalla la arquitectura del producto",
-            "La lista de errores detectados en producción que el equipo debe solucionar"
-        ],
-        correctAnswer: 1,
-        explanation: "El Sprint Backlog se compone del Sprint Goal (por qué), los elementos seleccionados (qué) y el plan entregable de los Desarrolladores (cómo)."
-    },
-    {
-        question: "¿Qué es el Incremento en Scrum?",
-        type: "single_choice",
-        options: [
-            "Un prototipo de diseño o maqueta no funcional que sirve para ilustrar una idea",
-            "Un paso concreto hacia el Objetivo del Producto, que representa una pieza de software utilizable y de valor real que cumple con Hecho",
-            "La suma total de todas las horas que los desarrolladores registraron en sus hojas de tiempo",
-            "Un documento técnico detallado que especifica los requisitos arquitectónicos del sistema"
-        ],
-        correctAnswer: 1,
-        explanation: "Cada Incremento se añade a los incrementos anteriores y se verifica minuciosamente, asegurando que todos funcionen juntos y aporten valor real alineado al Product Goal."
-    },
-    {
-        question: "¿Cuáles de los siguientes son artefactos oficiales en Scrum? Elige las tres mejores respuestas.",
-        type: "multiple_choice",
-        options: [
-            "Product Backlog",
-            "Sprint Backlog",
-            "Tablero Kanban",
-            "Incremento",
-            "Gráfico de Burndown",
-            "Definición de Hecho"
-        ],
-        correctAnswer: [0, 1, 3],
-        explanation: "El marco Scrum define únicamente tres artefactos oficiales para maximizar la transparencia: el Product Backlog, el Sprint Backlog y el Incremento."
-    },
-    {
-        question: "¿Qué rol tiene la obligación absoluta de asistir al Daily Scrum?",
-        type: "single_choice",
-        options: [
-            "El Product Owner",
-            "El Scrum Master",
-            "Los Desarrolladores",
-            "Todo el Scrum Team incluyendo a los Stakeholders interesados"
-        ],
-        correctAnswer: 2,
-        explanation: "El Daily Scrum es un evento exclusivo para los Desarrolladores. Si el PO o el SM tienen tareas técnicas asignadas en el backlog, asisten únicamente en su rol de desarrolladores."
-    },
-    {
-        question: "¿Qué resultado se espera obtener al finalizar el evento de Sprint Review?",
-        type: "single_choice",
-        options: [
-            "La firma contractual de un acta de aceptación formal por parte de los clientes",
-            "Un Product Backlog actualizado y ordenado que define los elementos probables para el próximo Sprint basándose en el feedback recibido",
-            "La evaluación de desempeño y rendimiento individual de cada desarrollador",
-            "La asignación detallada de tareas técnicas para las próximas dos semanas"
-        ],
-        correctAnswer: 1,
-        explanation: "El resultado de la Sprint Review es un Product Backlog revisado y adaptado empíricamente según las necesidades del mercado e interesados que asistieron."
-    },
-    {
-        question: "Si el Scrum Master no puede estar presente en el Daily Scrum, ¿qué debe suceder?",
-        type: "single_choice",
-        options: [
-            "El Daily Scrum se cancela hasta que el Scrum Master regrese",
-            "Los Desarrolladores continúan realizando el Daily Scrum de forma autónoma",
-            "El Product Owner dirige la reunión y asigna las tareas correspondientes",
-            "Se reprograma el evento para el final de la tarde"
-        ],
-        correctAnswer: 1,
-        explanation: "El Daily Scrum es de los Desarrolladores; el Scrum Master solo se asegura de que ocurra. Su ausencia física no impide que los desarrolladores se coordinen de forma autogestionada."
-    },
-    {
-        question: "¿Cuál es la función o propósito de la gestión organizacional externa (Management) en Scrum?",
-        type: "single_choice",
-        options: [
-            "Supervisar diariamente el progreso de las tareas de los Desarrolladores",
-            "Asignar los miembros a cada equipo y controlar sus horas de entrada",
-            "Apoyar al Product Owner con información estratégica y ayudar al Scrum Master a impulsar cambios organizacionales que fomenten el empirismo y la autogestión",
-            "Aprobar o rechazar el incremento técnico en lugar del Product Owner"
-        ],
-        correctAnswer: 2,
-        explanation: "El Management externo respalda el éxito de Scrum despejando el entorno organizacional para habilitar la agilidad, la inteligencia colectiva y el empirismo."
-    },
-    {
-        question: "¿Qué significa decir que un evento tiene una caja temporal (timebox)?",
-        type: "single_choice",
-        options: [
-            "Que el evento no puede durar más de un tiempo máximo establecido",
-            "Que el evento debe completarse exactamente en el tiempo promedio estimado",
-            "Que el evento tiene una duración fija que no puede acortarse aunque se cumpla el objetivo rápido",
-            "Que el evento debe ocurrir exactamente a la misma hora del día obligatoriamente"
-        ],
-        correctAnswer: 0,
-        explanation: "Un evento con caja de tiempo (timeboxed) significa que posee una duración máxima estricta; si el objetivo se logra antes, el evento concluye de forma inmediata."
-    },
-    {
-        question: "¿Cuándo pueden los desarrolladores estimar los artículos de rezago de producto? Selecciona las dos mejores respuestas.",
-        type: "multiple_choice",
-        options: [
-            "Scrum diario",
-            "Actividad de refinamiento del backlog de productos",
-            "Revisión de Sprint",
-            "Planificación de sprints"
-        ],
-        correctAnswer: [1, 3],
-        explanation: "La estimación suele ocurrir de manera continua durante la actividad de refinamiento del Product Backlog (Catálogo de Producto). Si es necesario, el Product Backlog también puede seguir refinándose y estimándose durante la reunión de planificación del sprint (Sprint Planning)."
-    },
-    {
-        question: "Al medir el Coste Total de Propiedad (TCO), el Product Owner puede saber si el producto está entregando valor o no.",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Falso. El coste puede afectar indirectamente la rentabilidad, pero mirar únicamente el TCO no permite establecer si el producto es exitoso o entrega valor real al mercado. Aunque un bajo TCO es deseable, simplemente tener un bajo coste no es suficiente para confirmar la generación de valor."
-    },
-    {
-        question: "El Product Owner puede delegar la responsabilidad de gestionar el Product Backlog a personas ajenas al equipo Scrum. ¿Verdadero o falso?",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "Verdadero. El Product Owner puede delegar tareas y trabajo relacionado con la gestión tanto a personas dentro como fuera del equipo Scrum. Sin embargo, incluso si delega el trabajo, el Product Owner sigue siendo el responsable final del resultado."
-    },
-    {
-        question: "El Product Owner acaba de tener una reunión productiva con los principales grupos de interés y recibió tres nuevas ideas para el producto. ¿Qué debería hacer el Product Owner a continuación? Selecciona la mejor respuesta.",
-        type: "single_choice",
-        options: [
-            "Informa al equipo Scrum",
-            "Añade las ideas a la lista de características del producto",
-            "Añade las ideas a Product Backlog",
-            "Envía las notas de la reunión a todos los interesados",
-            "Obtén la aprobación de los demás Stakeholders antes de añadir las nuevas ideas al Catálogo de Productos"
-        ],
-        correctAnswer: 2,
-        explanation: "Todos los requisitos del producto, incluyendo nuevas ideas, características solicitadas, defectos técnicos u otros requisitos futuros, deben almacenarse de forma centralizada en el Product Backlog (Catálogo de Productos)."
-    },
-    {
-        question: "El Product Owner ha solicitado a los desarrolladores un presupuesto respecto a un artículo de la lista de productos pendientes. Carla, una de las desarrolladoras, no está segura del valor de implementarlo y decide compartir sus preocupaciones con el resto del equipo Scrum. ¿Qué valores de Scrum ha demostrado Carla haciendo esto? Selecciona las dos mejores respuestas.",
-        type: "multiple_choice",
-        options: [
-            "Valor",
-            "Compromiso",
-            "Apertura",
-            "Integridad",
-            "Honestidad"
-        ],
-        correctAnswer: [0, 2],
-        explanation: "Carla demuestra el valor de \"Apertura\" al ser transparente con sus dudas sobre el valor del elemento, y el valor de \"Valor\" (Coraje/Courage) al atreverse a compartir de manera directa y honesta su preocupación con el resto del Scrum Team."
-    },
-    {
-        question: "Durante el Sprint, los desarrolladores trabajarán de forma oficial con los siguientes artefactos de Scrum: Selecciona todas las respuestas que correspondan.",
-        type: "multiple_choice",
-        options: [
-            "Incremento",
-            "Gráfico de quema",
-            "Lista de productos pendientes",
-            "Acumulación de sprints",
-            "Scrum board"
-        ],
-        correctAnswer: [0, 2, 3],
-        explanation: "Los únicos artefactos oficiales de Scrum con los que se trabaja activamente son el Incremento, la Lista de productos pendientes (Product Backlog) —que el PO actualiza y el equipo refina— y la Acumulación de sprints (Sprint Backlog), desde donde los desarrolladores gestionan el ciclo. Herramientas de métricas o tableros visuales no son artefactos oficiales del marco."
-    },
-    {
-        question: "Los desarrolladores utilizan los siguientes artefactos oficiales de Scrum durante el Sprint. Selecciona las dos mejores respuestas.",
-        type: "multiple_choice",
-        options: [
-            "Incremento",
-            "Plan de liberación",
-            "Scrum board",
-            "Plan de sprint",
-            "Acumulación de sprints",
-            "Plan de proyecto"
-        ],
-        correctAnswer: [0, 4],
-        explanation: "Los desarrolladores interactúan directamente con la Acumulación de sprints (Sprint Backlog) para gestionar y actualizar su plan de trabajo diario, y con el Incremento para asegurar que los elementos cumplan estrictamente con la Definición de Hecho (DoD). Elementos como planes de liberación o tableros complementarios no entran en la categoría de artefactos oficiales de Scrum."
-    },
-    {
-        question: "¿Qué ocurre cuando se cancela un Sprint? Selecciona tres.",
-        type: "multiple_choice",
-        options: [
-            "Se revisan elementos \"Hecho\"",
-            "Se incorporan artículos al Sprint",
-            "El Scrum Master determina quién es responsable",
-            "El Product Owner acepta trabajo liberable",
-            "Se reestiman artículos incompletos"
-        ],
-        correctAnswer: [0, 3, 4],
-        explanation: "Se revisan los elementos \"Hecho\", el PO acepta trabajo potencialmente liberable y los incompletos se reestiman y vuelven al Backlog."
-    },
-    {
-        question: "¿Qué incluye la gestión del Product Backlog? Selecciona los tres elementos más aplicables.",
-        type: "multiple_choice",
-        options: [
-            "Encargar artículos para objetivos",
-            "Asegurar visibilidad y transparencia",
-            "Presentar elementos a interesados",
-            "Trasladar elementos al Sprint Backlog",
-            "Optimizar el valor del trabajo"
-        ],
-        correctAnswer: [0, 1, 4],
-        explanation: "Incluye ordenar para lograr objetivos, asegurar visibilidad y optimizar el valor del trabajo."
-    },
-    {
-        question: "¿Qué categorías de KVA debería considerar el Product Owner para medir y rastrear la creación y entrega de valor?",
-        type: "multiple_choice",
-        options: [
-            "Tiempo de salida al mercado",
-            "Reducción de riesgos",
-            "Desarrollo de capacidades",
-            "Valor actual",
-            "Satisfacción empleados",
-            "Capacidad para innovar"
-        ],
-        correctAnswer: [0, 3, 5],
-        explanation: "Las categorías son: Valor actual, Tiempo de salida al mercado y Capacidad para innovar."
-    },
-    {
-        question: "¿Quién es responsable del retraso de productos?",
-        type: "single_choice",
-        options: [
-            "PO y Scrum Master",
-            "Scrum Master",
-            "Scrum Master y Equipo",
-            "PO y equipo",
-            "Product Owner",
-            "Equipo de desarrollo"
-        ],
-        correctAnswer: 4,
-        explanation: "El Product Owner es responsable del Backlog de Producto (contenido, disponibilidad y orden)."
-    },
-    {
-        question: "¿En qué reuniones se permite la participación de los Actores Clave?",
-        type: "single_choice",
-        options: [
-            "Retrospectiva",
-            "Daily Scrum",
-            "Revisión de Sprint",
-            "Planificación de sprints"
-        ],
-        correctAnswer: 2,
-        explanation: "Los actores clave solo participan oficialmente en la Revisión de Sprint."
-    },
-    {
-        question: "Cada artículo de Product Backlog debe ser creado personalmente por el Product Owner. ¿Cierto o Falso?",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Falso; el PO es responsable pero puede delegar la gestión al equipo."
-    },
-    {
-        question: "¿Quién hace seguimiento del trabajo total restante en el Sprint Backlog?",
-        type: "single_choice",
-        options: [
-            "Equipo de desarrollo",
-            "Equipo Scrum",
-            "Scrum Master",
-            "PO y equipo",
-            "Product Owner"
-        ],
-        correctAnswer: 0,
-        explanation: "El equipo de desarrollo registra este trabajo para gestionar su progreso."
-    },
-    {
-        question: "¿Quién puede participar en el Daily Scrum?",
-        type: "single_choice",
-        options: [
-            "Equipo de desarrollo",
-            "Product Owner",
-            "Scrum Master",
-            "Actores clave"
-        ],
-        correctAnswer: 0,
-        explanation: "Es una reunión interna exclusiva del equipo de desarrollo."
-    },
-    {
-        question: "Refinamiento del catálogo de productos... Selecciona los tres finales más apropiados.",
-        type: "multiple_choice",
-        options: [
-            "Ocurre 2-4 veces",
-            "Es añadir detalles y pedidos",
-            "No ocupa más del 10%",
-            "Limitado a 4 horas",
-            "Responde al cómo",
-            "Es un proceso continuo"
-        ],
-        correctAnswer: [1, 2, 5],
-        explanation: "Es un proceso continuo de añadir detalles/estimaciones que ocupa máximo el 10% de capacidad."
-    },
-    {
-        question: "¿Cuál podría ser la fuente de los requisitos para cambios en el producto?",
-        type: "single_choice",
-        options: [
-            "Product Backlog",
-            "Actores clave",
-            "CEO"
-        ],
-        correctAnswer: 0,
-        explanation: "El Product Backlog es la única fuente de requisitos para cambios en el producto."
-    },
-    {
-        question: "El Product Owner quiere aplicar requisitos no funcionales. ¿Cuál es la mejor manera?",
-        type: "single_choice",
-        options: [
-            "Crear nuevo artículo",
-            "Convertir en características",
-            "Añadirlos al DoD",
-            "No se pueden gestionar"
-        ],
-        correctAnswer: 2,
-        explanation: "La única forma es añadirlos al DoD y comprobar cada incremento."
-    },
-    {
-        question: "¿Quién es responsable de supervisar el progreso hacia objetivos de alto nivel?",
-        type: "single_choice",
-        options: [
-            "Scrum Master",
-            "Product Owner",
-            "PO y equipo",
-            "Equipo Scrum",
-            "SM y equipo",
-            "Equipo de desarrollo"
-        ],
-        correctAnswer: 1,
-        explanation: "El Product Owner registra el trabajo y compara el progreso hacia el objetivo."
-    },
-    {
-        question: "Cuando algo frustra al Product Owner, este puede delegar responsabilidades al Scrum Master.",
-        type: "true_false",
-        options: [
-            "Falso",
-            "Cierto"
-        ],
-        correctAnswer: 0,
-        explanation: "No es aceptable delegar funciones; el PO debe consultar al SM para implementar Scrum bien."
-    },
-    {
-        question: "¿Quién es responsable de todas las estimaciones en el Product Backlog?",
-        type: "single_choice",
-        options: [
-            "Scrum Master",
-            "PO y SM",
-            "Equipo de desarrollo",
-            "SM y equipo",
-            "Equipo Scrum",
-            "PO y equipo",
-            "Product Owner"
-        ],
-        correctAnswer: 2,
-        explanation: "El equipo de desarrollo realiza la estimación final."
-    },
-    {
-        question: "¿Cuáles son actividades típicas para un Product Owner en un Sprint? (elige dos)",
-        type: "multiple_choice",
-        options: [
-            "Refinamiento con desarrolladores",
-            "Asistir a Daily Scrum",
-            "Actualizar plan diario",
-            "Colaborar con interesados",
-            "Informes financieros"
-        ],
-        correctAnswer: [0, 3],
-        explanation: "El PO debe interactuar con interesados y colaborar en el refinamiento."
-    },
-    {
-        question: "El equipo Scrum debe incluir una mejora de procesos de la retrospectiva en el Sprint Backlog.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Falso; es una práctica opcional desde la actualización de 2020."
-    },
-    {
-        question: "¿Cómo sirve el Scrum Master para habilitar equipos efectivos? (elige dos)",
-        type: "multiple_choice",
-        options: [
-            "Facilitación",
-            "Mantener alto valor",
-            "Eliminar obstáculos",
-            "Empezar reuniones a tiempo"
-        ],
-        correctAnswer: [0, 2],
-        explanation: "Sirve mediante la facilitación y la eliminación de impedimentos."
-    },
-    {
-        question: "¿Quién crea la definición de Hecho?",
-        type: "single_choice",
-        options: [
-            "Equipo Scrum",
-            "Scrum Master",
-            "Equipo colaborativo",
-            "Product Owner"
-        ],
-        correctAnswer: 0,
-        explanation: "El equipo Scrum debe crear la Definición de Hecho si no hay un estándar organizativo."
-    },
-    {
-        question: "Durante un Sprint, si no se puede completar la previsión, ¿quién ajusta los elementos?",
-        type: "single_choice",
-        options: [
-            "PO y desarrolladores",
-            "SM, Gestor y desarrolladores",
-            "PO e interesados",
-            "Desarrolladores"
-        ],
-        correctAnswer: 0,
-        explanation: "El alcance se renegocia entre el PO y los desarrolladores."
-    },
-    {
-        question: "¿Quién es responsable de hacer el seguimiento del trabajo restante hacia el Sprint Goal?",
-        type: "single_choice",
-        options: [
-            "Los desarrolladores",
-            "El Jefe de Proyecto",
-            "El Product Owner",
-            "El Scrum Master"
-        ],
-        correctAnswer: 0,
-        explanation: "Los desarrolladores son responsables de gestionar su progreso hacia el objetivo del Sprint."
-    },
-    {
-        question: "¿Cuál es el intervalo de tiempo para el evento de Planificación de Sprints?",
-        type: "single_choice",
-        options: [
-            "Mensualmente",
-            "Cuando se termine",
-            "8 horas para un Sprint de un mes",
-            "4 horas para un Sprint de un mes"
-        ],
-        correctAnswer: 2,
-        explanation: "El timebox es de 8 horas para un Sprint de un mes, proporcional a la duración del mismo."
-    },
-    {
-        question: "¿Cómo minimizar el desperdicio en el Product Backlog? (Selecciona dos)",
-        type: "multiple_choice",
-        options: [
-            "Evitar distraer al equipo",
-            "Entregar la propiedad a otro",
-            "Eliminar elementos no abordados",
-            "Describir solo cuando sea probable la implementación"
-        ],
-        correctAnswer: [2, 3],
-        explanation: "Se recomienda eliminar lo antiguo y detallar solo lo próximo a implementar."
-    },
-    {
-        question: "¿Por qué necesitan los desarrolladores un objetivo de sprint?",
-        type: "single_choice",
-        options: [
-            "Da propósito al Sprint 0",
-            "No tienen valor",
-            "Todo se conoce del Product Backlog",
-            "Centrarse en un objetivo común y específico"
-        ],
-        correctAnswer: 3,
-        explanation: "Proporciona enfoque y alineación para colaborar eficazmente como equipo."
-    },
-    {
-        question: "Verdadero o falso: Un Scrum Master cumple el mismo papel que un Project Manager tradicional.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "El Scrum Master es un líder servidor, no gestiona el proyecto ni el alcance como un PM."
-    },
-    {
-        question: "¿Debe el Product Owner escribir todos los elementos del Backlog antes de entregarlos?",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Es una lista emergente; el PO puede involucrar a otros en su creación."
-    },
-    {
-        question: "Durante la retrospectiva, ¿qué hacer con las mejoras de proceso?",
-        type: "single_choice",
-        options: [
-            "Añadirlas al Sprint Backlog",
-            "Rechazarlas si todo va bien",
-            "Elegir una para el Product Backlog",
-            "Que el SM las elija"
-        ],
-        correctAnswer: 0,
-        explanation: "El equipo Scrum debe implementar mejoras identificadas en el próximo Sprint."
-    },
-    {
-        question: "¿De qué es responsable el Product Owner durante un Sprint? (Selecciona dos)",
-        type: "multiple_choice",
-        options: [
-            "Asistir a cada Daily",
-            "Informes financieros",
-            "Colaborar con interesados",
-            "Refinamiento del Backlog",
-            "Nada"
-        ],
-        correctAnswer: [2, 3],
-        explanation: "El PO colabora con interesados y trabaja en el refinamiento del Product Backlog."
-    },
-    {
-        question: "Verdadero o falso: El PO invita a interesados a la Retrospectiva.",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "La Retrospectiva es un evento interno exclusivo para el Equipo Scrum."
-    },
-    {
-        question: "¿Qué hacer si un stakeholder está descontento con la calidad? (Selecciona dos)",
-        type: "multiple_choice",
-        options: [
-            "Entrenar al PO",
-            "Esperar a la retrospectiva",
-            "Pedir a los testers",
-            "Incluir especificaciones en el Backlog",
-            "Llevar preocupación a testers"
-        ],
-        correctAnswer: [0, 3],
-        explanation: "El SM entrena al PO y este incluye especificaciones en el Backlog."
-    },
-    {
-        question: "¿Es el equipo Scrum responsable de crear un incremento valioso en cada Sprint?",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "Todo el equipo Scrum es responsable de entregar un incremento valioso y útil."
-    },
-    {
-        question: "¿Cuáles son ciertos sobre el Product Owner? (Selecciona dos)",
-        type: "multiple_choice",
-        options: [
-            "Es una sola persona",
-            "Puede haber varios PO",
-            "Puede ser un comité",
-            "Es responsable de pedir el Product Backlog"
-        ],
-        correctAnswer: [0, 3],
-        explanation: "El PO es una sola persona y responsable de ordenar el Backlog."
-    },
-    {
-        question: "¿Quién es responsable de crear un incremento valioso en cada Sprint?",
-        type: "single_choice",
-        options: [
-            "Los desarrolladores",
-            "El equipo Scrum",
-            "El Scrum Master",
-            "El Product Owner",
-            "El CEO"
-        ],
-        correctAnswer: 1,
-        explanation: "Todo el Equipo Scrum es responsable de crear un incremento valioso."
-    },
-    {
-        question: "¿Qué debe conocer un PO para maximizar el valor?",
-        type: "single_choice",
-        options: [
-            "Investigación competitiva",
-            "Comentarios de clientes",
-            "Visión del producto",
-            "Previsión y viabilidad",
-            "Todo lo anterior"
-        ],
-        correctAnswer: 4,
-        explanation: "El PO debe conocer el panorama completo para maximizar el valor."
-    },
-    {
-        question: "¿Todo equipo Scrum debe tener un Product Owner y un Scrum Master?",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "Ambos roles son esenciales y deben estar involucrados durante todo el Sprint."
-    },
-    {
-        question: "¿Quién es el dueño del Sprint Backlog?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master",
-            "El equipo Scrum",
-            "El Product Owner",
-            "Los desarrolladores"
-        ],
-        correctAnswer: 3,
-        explanation: "Los desarrolladores son los dueños y quienes actualizan el Sprint Backlog."
-    },
-    {
-        question: "¿Qué temas se tratan en la Revisión Sprint?",
-        type: "single_choice",
-        options: [
-            "Proceso Scrum",
-            "Prácticas de ingeniería",
-            "El Incremento del producto",
-            "Todo lo anterior"
-        ],
-        correctAnswer: 2,
-        explanation: "El tema central es la inspección del Incremento del producto."
-    },
-    {
-        question: "¿Quién decide cuándo actualizar el Sprint Backlog?",
-        type: "single_choice",
-        options: [
-            "El Jefe de Proyecto",
-            "El equipo Scrum",
-            "Los desarrolladores",
-            "El Product Owner"
-        ],
-        correctAnswer: 2,
-        explanation: "Los desarrolladores son los encargados de actualizar su plan durante el Sprint."
-    },
-    {
-        question: "¿De qué suele ser responsable un PO durante un Sprint? (Selecciona dos)",
-        type: "multiple_choice",
-        options: [
-            "Informes financieros",
-            "Colaborar con interesados",
-            "Actualizar plan",
-            "Refinamiento del Backlog",
-            "Nada"
-        ],
-        correctAnswer: [1, 3],
-        explanation: "El PO colabora con interesados y trabaja en el refinamiento del Backlog."
-    },
-    {
-        question: "¿Los equipos multifuncionales están optimizados para trabajar en un solo componente?",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Deben tener todas las habilidades para entregar valor completo."
-    },
-    {
-        question: "¿Se asegura el PO de que los desarrolladores seleccionen suficiente trabajo para satisfacer a los interesados?",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Los desarrolladores determinan cuánto trabajo pueden realizar en el Sprint."
-    },
-    {
-        question: "¿Quién crea la definición de Hecho?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master",
-            "El equipo Scrum",
-            "El Product Owner",
-            "Los desarrolladores"
-        ],
-        correctAnswer: 1,
-        explanation: "La crea el equipo Scrum para asegurar una comprensión compartida."
-    },
-    {
-        question: "¿Quién puede cancelar un Sprint?",
-        type: "single_choice",
-        options: [
-            "El equipo Scrum",
-            "El Scrum Master",
-            "El Product Owner",
-            "Los interesados"
-        ],
-        correctAnswer: 2,
-        explanation: "Solo el Product Owner tiene la autoridad para cancelar el Sprint."
-    },
-    {
-        question: "¿Qué ocurre si el equipo no completa el trabajo al final del Sprint?",
-        type: "single_choice",
-        options: [
-            "La duración no cambia",
-            "Se extiende el Sprint",
-            "Es temporal",
-            "Se aprenden lecciones"
-        ],
-        correctAnswer: 0,
-        explanation: "No se extiende; el trabajo pendiente vuelve al Product Backlog."
-    },
-    {
-        question: "¿Qué hacer si la carga de trabajo supera la capacidad? (Selecciona dos)",
-        type: "multiple_choice",
-        options: [
-            "Eliminar elementos",
-            "Informa y supervisa",
-            "Reclutar desarrolladores",
-            "Cancelar Sprint",
-            "Trabajar horas extra"
-        ],
-        correctAnswer: [0, 1],
-        explanation: "Los desarrolladores colaboran con el PO para ajustar el alcance."
-    },
-    {
-        question: "¿Un Product Owner es lo mismo que un Project Manager?",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Son roles distintos; el PO se enfoca en el valor, no en la gestión tradicional."
-    },
-    {
-        question: "¿Cómo debería ser la duración de un Sprint?",
-        type: "single_choice",
-        options: [
-            "Corto por riesgo",
-            "Sincronizado con eventos",
-            "No más de un mes",
-            "Todo lo anterior"
-        ],
-        correctAnswer: 3,
-        explanation: "Todas las opciones anteriores son correctas según Scrum."
-    },
-    {
-        question: "¿El PO debe crear criterios de aceptación claros antes de seleccionar un elemento?",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "No son obligatorios; pueden refinarse durante el proceso."
-    },
-    {
-        question: "¿Cuándo puede cancelarse un Sprint?",
-        type: "single_choice",
-        options: [
-            "Plan inviable",
-            "No terminado",
-            "Oportunidad de ventas",
-            "Objetivo obsoleto"
-        ],
-        correctAnswer: 3,
-        explanation: "Un Sprint solo se cancela si el objetivo del Sprint queda obsoleto."
-    },
-    {
-        question: "¿Qué ventajas tiene compartir un Objetivo de Producto claro? (Selecciona tres)",
-        type: "multiple_choice",
-        options: [
-            "Estimar fecha",
-            "No es obligatorio",
-            "No hay ventaja",
-            "Dirección general",
-            "Enfoque",
-            "Facilita inspección"
-        ],
-        correctAnswer: [3, 4, 5],
-        explanation: "Ayuda a la dirección, el enfoque y la inspección del progreso."
-    },
-    {
-        question: "¿Cuándo es responsable un desarrollador del valor del elemento seleccionado?",
-        type: "single_choice",
-        options: [
-            "Cuando hay espacio",
-            "En la planificación",
-            "Durante el Daily",
-            "Nieve",
-            "Todo el equipo"
-        ],
-        correctAnswer: 4,
-        explanation: "Todo el equipo Scrum es responsable colectivamente."
-    },
-    {
-        question: "¿Cuál es el propósito de una Revisión Sprint?",
-        type: "single_choice",
-        options: [
-            "Espíritu de equipo",
-            "Juzgar proyecto",
-            "Inspeccionar incremento",
-            "Revisar procesos"
-        ],
-        correctAnswer: 2,
-        explanation: "Inspeccionar el incremento con interesados y recopilar comentarios."
-    },
-    {
-        question: "¿Cuándo y quién refina el Product Backlog? (Selecciona dos)",
-        type: "multiple_choice",
-        options: [
-            "Equipo durante el Sprint",
-            "Analistas de negocio",
-            "PO en Sprint 0",
-            "PO entre Sprints",
-            "Equipo continuamente"
-        ],
-        correctAnswer: [0, 4],
-        explanation: "Es un proceso continuo que involucra a todo el equipo Scrum."
-    },
-    {
-        question: "¿Qué hacer si hay demasiado trabajo al inicio del Sprint?",
-        type: "single_choice",
-        options: [
-            "Dar trabajo a otro equipo",
-            "Trabajar con PO para eliminar elementos",
-            "Informa en la revisión",
-            "Reducir definición de hecho"
-        ],
-        correctAnswer: 1,
-        explanation: "Colaborar con el PO para negociar el alcance del Sprint Backlog."
-    },
-    {
-        question: "¿Cuál es el tiempo del Daily Scrum?",
-        type: "single_choice",
-        options: [
-            "4 horas",
-            "Misma hora diaria",
-            "2 minutos por persona",
-            "15 minutos"
-        ],
-        correctAnswer: 3,
-        explanation: "Es un evento con un tiempo límite de 15 minutos."
-    },
-    {
-        question: "¿Deben los PO especificar criterios de aceptación antes de la Planificación?",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "No tienen que especificarlos totalmente antes de la selección."
-    },
-    {
-        question: "¿Qué medidas aseguran que el Product Backlog sea transparente? (Selecciona dos)",
-        type: "multiple_choice",
-        options: [
-            "Está ordenado",
-            "Disponible para interesados",
-            "Prioridad MoSCoW",
-            "Trabajo de 2 sprints",
-            "Herramienta web"
-        ],
-        correctAnswer: [0, 1],
-        explanation: "El orden y la visibilidad para los interesados aseguran transparencia."
-    },
-    {
-        question: "¿Cómo dividir 100 personas en equipos Scrum?",
-        type: "single_choice",
-        options: [
-            "Matriz de habilidades",
-            "Consultar al jefe",
-            "Entendiendo producto y visión",
-            "No importa"
-        ],
-        correctAnswer: 2,
-        explanation: "Se debe basar en la visión del producto y las reglas de Scrum."
-    },
-    {
-        question: "¿Cuándo empieza el segundo Sprint?",
-        type: "single_choice",
-        options: [
-            "Tras pruebas",
-            "Tras arquitectura",
-            "Inmediatamente tras el primero",
-            "Tras seleccionar elementos"
-        ],
-        correctAnswer: 2,
-        explanation: "Un nuevo Sprint comienza inmediatamente después del anterior."
-    },
-    {
-        question: "¿Qué temas trata la Planificación de Sprints?",
-        type: "single_choice",
-        options: [
-            "Quiénes son",
-            "Condiciones",
-            "Qué y quién",
-            "Qué, cómo y por qué",
-            "Errores previos"
-        ],
-        correctAnswer: 3,
-        explanation: "Se define qué, cómo y por qué se hará el trabajo."
-    },
-    {
-        question: "¿Tiene Scrum un rol de Gestor de Proyecto?",
-        type: "true_false",
-        options: [
-            "Cierto",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Scrum no tiene el rol de Project Manager."
-    },
-    {
-        question: "¿Qué métricas indican valor? (Selecciona dos)",
-        type: "multiple_choice",
-        options: [
-            "Satisfacción cliente",
-            "Productividad",
-            "Velocidad",
-            "Tiempo salida mercado",
-            "Alcance"
-        ],
-        correctAnswer: [0, 3],
-        explanation: "La satisfacción del cliente y el tiempo de salida al mercado son clave."
-    },
-    {
-        question: "¿Cuándo se crea el Sprint Backlog?",
-        type: "single_choice",
-        options: [
-            "Antes planificación",
-            "Refinamiento",
-            "Retrospectiva",
-            "Planificación"
-        ],
-        correctAnswer: 3,
-        explanation: "Se crea durante la Planificación del Sprint."
-    },
-    {
-        question: "¿Qué debatir en la Retrospectiva? (Selecciona tres)",
-        type: "multiple_choice",
-        options: [
-            "Relaciones",
-            "Valor backlog",
-            "Cómo trabaja equipo",
-            "Definición Hecho",
-            "Organizar backlog"
-        ],
-        correctAnswer: [0, 2, 3],
-        explanation: "Se reflexiona sobre relaciones, procesos y la definición de Hecho."
-    },
-    {
-        question: "¿Qué hacer en el primer Sprint? (Selecciona dos)",
-        type: "multiple_choice",
-        options: [
-            "Plan proyecto",
-            "Arquitectura",
-            "Documentar",
-            "Construir funcionalidad",
-            "Crear incremento"
-        ],
-        correctAnswer: [3, 4],
-        explanation: "Se debe construir funcionalidad valiosa y crear un incremento."
-    },
-    {
-        question: "¿Cómo hacer visibles requisitos no funcionales? (Selecciona dos)",
-        type: "multiple_choice",
-        options: [
-            "Añadir al Backlog",
-            "Pruebas",
-            "Definición de Hecho",
-            "Lista aparte"
-        ],
-        correctAnswer: [0, 2],
-        explanation: "Añadiéndolos al Backlog o a la definición de Hecho."
-    },
-    {
-        question: "¿Qué preguntar al formar equipos de 45 personas?",
-        type: "single_choice",
-        options: [
-            "Senior/Junior",
-            "Expertos",
-            "Líderes",
-            "Experiencia adecuada"
-        ],
-        correctAnswer: 3,
-        explanation: "La clave es asegurar la experiencia adecuada en cada equipo."
-    },
-    {
-        question: "¿Cuándo pueden los desarrolladores cancelar un sprint?",
-        type: "single_choice",
-        options: [
-            "Expectativas",
-            "Inalcanzable",
-            "No pueden",
-            "Solo PO",
-            "Ausencia PO",
-            "Dependencia"
-        ],
-        correctAnswer: 2,
-        explanation: "Los desarrolladores no tienen autoridad para cancelar un sprint."
-    },
-    {
-        question: "¿Cuál es el artefacto que describe cómo es probable que crezca el producto?",
-        type: "single_choice",
-        options: [
-            "Sprint Backlog",
-            "Product Backlog",
-            "Roadmap del Producto",
-            "Project Charter"
-        ],
-        correctAnswer: 1,
-        explanation: "El Product Backlog es el artefacto que evoluciona y describe el crecimiento del producto."
-    },
-    {
-        question: "¿Qué es importante en todos los proyectos de Scrum?",
-        type: "multiple_choice",
-        options: [
-            "1, 2, 3 y 4",
-            "1, 3 y 4",
-            "1, 4",
-            "1, 2 y 3"
-        ],
-        correctAnswer: 1,
-        explanation: "La auto-organización, comunicación y mejora continua son pilares clave."
-    },
-    {
-        question: "¿Cuál de las siguientes NO es una responsabilidad del Product Owner?",
-        type: "single_choice",
-        options: [
-            "Garantizar el ROI",
-            "Ejecución de la Daily Scrum",
-            "Reunir los PBI",
-            "Inspección en el Sprint Review"
-        ],
-        correctAnswer: 1,
-        explanation: "La ejecución de la Daily Scrum es responsabilidad de los Developers."
-    },
-    {
-        question: "¿Qué son responsabilidades del Product Owner? (Selecciona dos)",
-        type: "multiple_choice",
-        options: [
-            "1 y 2",
-            "2 y 3",
-            "1 y 3",
-            "Todas"
-        ],
-        correctAnswer: 3,
-        explanation: "Expresar elementos, ordenarlos y entender la agilidad son sus funciones."
-    },
-    {
-        question: "¿Qué es cierto sobre el Project Charter en Scrum?",
-        type: "single_choice",
-        options: [
-            "Es contractual",
-            "Establece línea base",
-            "No está en la guía de Scrum",
-            "Da autoridad al PM"
-        ],
-        correctAnswer: 2,
-        explanation: "La Guía de Scrum no define el Project Charter."
-    },
-    {
-        question: "¿La liberación (release) de un producto terminado es responsabilidad del?",
-        type: "single_choice",
-        options: [
-            "Scrum Master",
-            "Product Owner",
-            "Scrum Team",
-            "Development Team"
-        ],
-        correctAnswer: 1,
-        explanation: "El Product Owner decide sobre la liberación del incremento."
-    },
-    {
-        question: "¿Puede el Scrum Master asumir el rol de Product Owner?",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "No se recomienda que la misma persona asuma ambos roles."
-    },
-    {
-        question: "¿Quiénes definen el Sprint Goal?",
-        type: "single_choice",
-        options: [
-            "Dev Team y SM",
-            "Scrum Team",
-            "SM y PO",
-            "PO y Dev Team"
-        ],
-        correctAnswer: 3,
-        explanation: "El PO y los Developers colaboran para definir el objetivo."
-    },
-    {
-        question: "¿Cómo deben ordenarse los elementos en el Product Backlog?",
-        type: "single_choice",
-        options: [
-            "Alfabéticamente",
-            "Necesidad/Cronología",
-            "Prioridad/Valor/Claridad",
-            "Cronológicamente"
-        ],
-        correctAnswer: 2,
-        explanation: "La prioridad basada en valor de negocio y claridad es fundamental."
-    },
-    {
-        question: "¿Qué son la DoD y los criterios de aceptación?",
-        type: "single_choice",
-        options: [
-            "Definidos por Dev",
-            "Deben ser iguales",
-            "Definidos por SM",
-            "Conceptos diferentes"
-        ],
-        correctAnswer: 3,
-        explanation: "Son conceptos distintos con propósitos diferentes."
-    },
-    {
-        question: "¿Debe el Product Owner participar en el Daily Meeting?",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "No es obligatorio que participe, es un evento de los Developers."
-    },
-    {
-        question: "¿Quién informa a los stakeholders sobre el progreso?",
-        type: "single_choice",
-        options: [
-            "Líder Dev",
-            "Project Manager",
-            "Product Owner",
-            "Scrum Master"
-        ],
-        correctAnswer: 2,
-        explanation: "Es una responsabilidad central del Product Owner."
-    },
-    {
-        question: "Duración máxima del Daily Standup (Sprint de un mes).",
-        type: "single_choice",
-        options: [
-            "10 min",
-            "20 min",
-            "Lo que decida SM",
-            "15 minutos"
-        ],
-        correctAnswer: 3,
-        explanation: "La guía establece un máximo de 15 minutos."
-    },
-    {
-        question: "¿Un Sprint corto tiene más riesgo que uno largo?",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Los Sprints cortos reducen el riesgo al permitir mayor feedback."
-    },
-    {
-        question: "Duración del Sprint Planning.",
-        type: "single_choice",
-        options: [
-            "8 horas siempre",
-            "8h para 1 mes, proporcional si es menor",
-            "Liderada por PO",
-            "Participa cliente"
-        ],
-        correctAnswer: 1,
-        explanation: "Es de 8 horas para un mes, y más corto si el Sprint lo es."
-    },
-    {
-        question: "¿Secuencia más común en un ciclo de vida Scrum?",
-        type: "single_choice",
-        options: [
-            "Daily, Plan, Retro, Review",
-            "Plan, Daily, Retro, Review",
-            "Plan, Daily, Review, Retro",
-            "Ninguna"
-        ],
-        correctAnswer: 2,
-        explanation: "El flujo lógico es Planificación, Daily, Revisión y Retrospectiva."
-    },
-    {
-        question: "¿El Product Owner preside el Sprint Planning?",
-        type: "single_choice",
-        options: [
-            "Participa Daily",
-            "Participa Cierre",
-            "Preside Planning",
-            "Ninguna"
-        ],
-        correctAnswer: 2,
-        explanation: "El PO colabora en la planificación, pero Scrum no tiene un rol de \"presidente\"."
-    },
-    {
-        question: "¿Scrum reconoce sub-equipos en el Development Team?",
-        type: "single_choice",
-        options: [
-            "PO",
-            "SM",
-            "Recursos Humanos",
-            "No reconoce"
-        ],
-        correctAnswer: 3,
-        explanation: "Scrum no fomenta sub-equipos especializados dentro del equipo."
-    },
-    {
-        question: "¿Duración del Backlog Refinement?",
-        type: "single_choice",
-        options: [
-            "4 horas max",
-            "5-10% proyecto",
-            "8-10% Sprint",
-            "Ninguna"
-        ],
-        correctAnswer: 2,
-        explanation: "Se recomienda dedicar aproximadamente 10% de la capacidad."
-    },
-    {
-        question: "¿Se recomienda tener dos Product Owners?",
-        type: "single_choice",
-        options: [
-            "Dos PO",
-            "Solo uno",
-            "PO y 2 SM",
-            "SM hace trabajo de PO"
-        ],
-        correctAnswer: 1,
-        explanation: "Se recomienda siempre un único Product Owner."
-    },
-    {
-        question: "¿Qué técnica se usa para estimar en Scrum?",
-        type: "single_choice",
-        options: [
-            "Asignadas SM",
-            "Grupales",
-            "Todas",
-            "Ninguna"
-        ],
-        correctAnswer: 3,
-        explanation: "Scrum no prescribe una técnica específica, pero suelen ser grupales."
-    },
-    {
-        question: "¿Si dos equipos trabajan en un producto, tienen backlogs distintos?",
-        type: "true_false",
-        options: [
-            "Si",
-            "No"
-        ],
-        correctAnswer: 1,
-        explanation: "Se utiliza un único Product Backlog para el producto."
-    },
-    {
-        question: "¿La suma de los Sprint Backlogs es el Product Backlog?",
-        type: "true_false",
-        options: [
-            "Si",
-            "No"
-        ],
-        correctAnswer: 0,
-        explanation: "El Sprint Backlog es un plan táctico extraído del Product Backlog."
-    },
-    {
-        question: "¿Qué hace el Development Team?",
-        type: "single_choice",
-        options: [
-            "Participa Daily",
-            "Levantamiento req",
-            "Kick-off",
-            "Ninguna"
-        ],
-        correctAnswer: 0,
-        explanation: "La participación en la Daily es una de sus actividades clave."
-    },
-    {
-        question: "¿El Product Increment debe entregarse siempre al cliente?",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "El incremento debe estar listo para entregarse al final del Sprint."
-    },
-    {
-        question: "¿Características de una User Story?",
-        type: "single_choice",
-        options: [
-            "Define PO",
-            "Se descompone en tareas",
-            "Criterios aceptación",
-            "Todas"
-        ],
-        correctAnswer: 0,
-        explanation: "Las historias de usuario son técnicas comunes, a menudo definidas por el PO."
-    },
-    {
-        question: "¿El Product Owner estima las User Stories?",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "La estimación es responsabilidad de los Developers."
-    },
-    {
-        question: "¿Solo el PO puede cancelar el Sprint con influencia de interesados?",
-        type: "true_false",
-        options: [
-            "Si",
-            "No"
-        ],
-        correctAnswer: 1,
-        explanation: "El PO puede cancelarlo, pero no es una cuestión de \"influencia\" de terceros."
-    },
-    {
-        question: "¿En qué se divide el Product Backlog?",
-        type: "single_choice",
-        options: [
-            "Nunca completo",
-            "Cambia constante",
-            "Evoluciona",
-            "Todas"
-        ],
-        correctAnswer: 3,
-        explanation: "El Product Backlog es dinámico y nunca está \"completo\"."
-    },
-    {
-        question: "¿Qué se crea en cada mitad del Sprint Planning?",
-        type: "single_choice",
-        options: [
-            "Prod/Sprint Backlog",
-            "Cartera/Tareas",
-            "Sprint Goal/Backlog",
-            "Burndown/Pila"
-        ],
-        correctAnswer: 2,
-        explanation: "Se define el objetivo (por qué) y el plan (qué/cómo)."
-    },
-    {
-        question: "¿Diferencia entre Product Backlog y Sprint Backlog?",
-        type: "single_choice",
-        options: [
-            "Igual",
-            "PB es subconjunto SB",
-            "SB es subconjunto PB",
-            "SB es respo PO"
-        ],
-        correctAnswer: 2,
-        explanation: "El Sprint Backlog contiene lo que se hará en el Sprint actual."
-    },
-    {
-        question: "¿Qué ocurre cuando el Sprint se cancela?",
-        type: "single_choice",
-        options: [
-            "Se disuelve",
-            "Vuelve a PB",
-            "Se descarta incompleto",
-            "Evaluación y retorno a PB"
-        ],
-        correctAnswer: 3,
-        explanation: "Los elementos terminados se revisan y los otros vuelven al Product Backlog."
-    },
-    {
-        question: "¿Quién determina cuándo actualizar el Sprint Backlog?",
-        type: "single_choice",
-        options: [
-            "PM",
-            "Scrum Team",
-            "Dev Team",
-            "PO"
-        ],
-        correctAnswer: 2,
-        explanation: "Los Developers gestionan su Sprint Backlog."
-    },
-    {
-        question: "¿El Sprint Goal se selecciona antes del Sprint Backlog?",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "El objetivo da contexto para crear el plan."
-    },
-    {
-        question: "¿Cuándo se puede cancelar un Sprint?",
-        type: "single_choice",
-        options: [
-            "Dev no cumple",
-            "Cambio mercado/tecnología",
-            "Nunca",
-            "Rumbo empresa"
-        ],
-        correctAnswer: 2,
-        explanation: "Si el objetivo del Sprint pierde sentido, el PO puede cancelarlo."
-    },
-    {
-        question: "¿Cuáles son los eventos en Scrum?",
-        type: "single_choice",
-        options: [
-            "Daily",
-            "Retro",
-            "Review y Planning",
-            "Todas"
-        ],
-        correctAnswer: 3,
-        explanation: "Todos los mencionados son eventos oficiales de Scrum."
-    },
-    {
-        question: "¿El Product Owner es el único responsable de gestionar el PB?",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "El PO es el único dueño, aunque otros puedan colaborar."
-    },
-    {
-        question: "¿Consumo del refinamiento?",
-        type: "single_choice",
-        options: [
-            "10%",
-            "20%",
-            "30%",
-            "40%"
-        ],
-        correctAnswer: 0,
-        explanation: "El refinamiento suele consumir alrededor del 10%."
-    },
-    {
-        question: "¿Propósito del Sprint?",
-        type: "single_choice",
-        options: [
-            "Entregar incremento",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "Entregar incrementos funcionales es el núcleo de Scrum."
-    },
-    {
-        question: "¿Cuáles son los artefactos de Scrum?",
-        type: "single_choice",
-        options: [
-            "PB, SB, Increment",
-            "SB, Incr, Sprint",
-            "Increment, PB, User Story"
-        ],
-        correctAnswer: 0,
-        explanation: "Los artefactos oficiales son Product Backlog, Sprint Backlog e Incremento."
-    },
-    {
-        question: "El Product Owner (Dueño del Producto) es una única persona, no un comité. El Product Owner podría representar los deseos de un comité en la Product Backlog, pero aquellos que quieran cambiar la prioridad de un elemento deben hacerlo a través del Product Owner.",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "El Product Owner es un rol individual responsable único del Product Backlog, garantizando una toma de decisiones ágil y centralizada."
-    },
-    {
-        question: "La velocidad es el factor que sirve para ver cuánto trabajo se entrega en cada Sprint. Si por ejemplo la velocidad de un Developer es de 15 PH, se puede interpretar como que este entrega 15 Historias de Usuario promedio en cada iteración.",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "La velocidad es una métrica colectiva que pertenece a todo el conjunto de los Developers, nunca se mide de forma individual por desarrollador ni equivale estrictamente a un número fijo de historias."
-    },
-    {
-        question: "Para que el Product Owner (Dueño del Producto) pueda hacer bien su trabajo, toda la organización debe respetar sus decisiones. Las decisiones del Product Owner se reflejan en el contenido y en la priorización de la Product Backlog.",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "El éxito del Product Owner depende de que toda la organización, incluidos directivos y clientes, respeten sus decisiones sobre el contenido y orden del Backlog."
-    },
-    {
-        question: "El Product Owner es la única persona responsable de gestionar la Product Backlog. La gestión de la Product Backlog incluye (marca 2):",
-        type: "multiple_choice",
-        options: [
-            "Asegurar que los objetivos, el alcance y el dominio del producto sean entendidos por todos en el Scrum Team",
-            "Expresar claramente los elementos de la Product Backlog y el Objetivo del Producto",
-            "Ordenar los elementos en la Product Backlog para alcanzar los objetivos de la mejor manera posible",
-            "Encontrar técnicas para gestionar la Product Backlog de manera efectiva"
-        ],
-        correctAnswer: [1, 2],
-        explanation: "Crear y comunicar con claridad los elementos del Backlog, así como ordenarlos para maximizar el valor, son funciones explícitas y fundamentales del Product Owner."
-    },
-    {
-        question: "Seleccione qué elementos se deben tener en cuenta para una Sprint Planning. Marque 3.",
-        type: "multiple_choice",
-        options: [
-            "Presentar los resultados del trabajo a los interesados clave",
-            "El Scrum Team crea este plan resultante mediante trabajo colaborativo",
-            "El Product Owner se asegura de que los asistentes estén preparados para discutir los elementos más importantes del Product Backlog y cómo se relacionan con el Objetivo del Producto",
-            "Identificar los cambios más útiles para mejorar la efectividad",
-            "Inicia el Sprint al establecer el trabajo que se realizará para el Sprint"
-        ],
-        correctAnswer: [1, 2, 4],
-        explanation: "La Sprint Planning da inicio al Sprint, requiere la participación colaborativa de todo el Scrum Team y se centra en los elementos de mayor prioridad previamente preparados por el PO."
-    },
-    {
-        question: "La Alta Gerencia desea auditar periódicamente si el Scrum Team está siguiendo las prácticas y principios de Scrum. ¿Quién está en la mejor posición para realizar tal auditoría?",
-        type: "single_choice",
-        options: [
-            "El Scrum Master",
-            "El Product Owner",
-            "Los Responsables de Pruebas",
-            "Los Developers"
-        ],
-        correctAnswer: 0,
-        explanation: "El Scrum Master es el responsable de adoptar y defender Scrum, guiando y ayudando a la organización a comprender su teoría, reglas y valores."
-    },
-    {
-        question: "El Product Owner es responsable de maximizar el valor del producto resultante del trabajo del Scrum Team. La forma en que esto se hace puede variar ampliamente entre organizaciones, Scrum Teams e individuos.",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "Maximizar el valor es la misión principal del Product Owner, y las dinámicas operativas para lograrlo se adaptan según el contexto de cada equipo."
-    },
-    {
-        question: "¿Cuáles de los siguientes eventos son definidos por el Framework Scrum? (Marca 3)",
-        type: "multiple_choice",
-        options: [
-            "Daily Sprint",
-            "Sprint Retrospective",
-            "Sprint Planning",
-            "Sprint Review"
-        ],
-        correctAnswer: [1, 2, 3],
-        explanation: "Los eventos oficiales contemplados en el marco Scrum son la Sprint Planning, la Daily Scrum, la Sprint Review y la Sprint Retrospective."
-    },
-    {
-        question: "El Daily Scrum es una reunión con tiempo prefijado de 5 a 15 minutos, dirigida por el Scrum Master y en ella cada miembro informa sobre lo realizado, lo que hará y los impedimentos.",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "El Daily Scrum es un evento de y para los Developers; el Scrum Master no lo dirige. Además, el formato estricto de las tres preguntas ya no es obligatorio según la guía actual."
-    },
-    {
-        question: "Un Scrum Master dirige la Sprint Planning para que no dure más de 8 horas para un Sprint de 1 mes. Debe evitar que los Developers comiencen a profundizar en trabajos de análisis o arquitectura propios del Sprint.",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "El Scrum Master actúa como facilitador, no dirige la sesión. Además, en el Tema 3 de la planificación, los Developers analizan el diseño técnico y la arquitectura necesaria para descomponer el trabajo del Sprint."
-    },
-    {
-        question: "El refinamiento del Product Backlog es el acto de dividir y definir elementos en otros más pequeños y precisos. Seleccione la respuesta correcta:",
-        type: "single_choice",
-        options: [
-            "Consume entre el 15% y el 20% del proyecto total",
-            "Menos del 20% del proyecto total",
-            "Consume aproximadamente el 20% del proyecto total",
-            "Es una actividad continua para agregar detalles como descripción, orden y tamaño"
-        ],
-        correctAnswer: 3,
-        explanation: "El refinamiento es un proceso continuo e interactivo dentro del Sprint en el que se detallan, dimensionan y estiman los elementos del Backlog."
-    },
-    {
-        question: "¿Cuáles de los siguientes roles no están definidos por el Framework Scrum? (Marque 3)",
-        type: "multiple_choice",
-        options: [
-            "Product Owner",
-            "Scrum Manager",
-            "QA Analyst Scrum",
-            "Project Manager",
-            "Scrum Master"
-        ],
-        correctAnswer: [1, 2, 3],
-        explanation: "Scrum no reconoce jerarquías ni puestos tradicionales como Project Manager o analistas especializados; solo define tres responsabilidades fundamentales: PO, SM y Developers."
-    },
-    {
-        question: "¿Cuáles son importantes en la implementación de Scrum? (Marca 4)",
-        type: "multiple_choice",
-        options: [
-            "Colaboración",
-            "Organización propia",
-            "Comunicación",
-            "Jerarquías claras en la empresa",
-            "Mejora continua"
-        ],
-        correctAnswer: [0, 1, 2, 4],
-        explanation: "Scrum prospera en entornos basados en colaboración, comunicación fluida, mejora continua y equipos autogestionados, alejándose de los esquemas jerárquicos rígidos."
-    },
-    {
-        question: "De los principios del Manifiesto Ágil, seleccione cuáles NO pertenecen (Marca 2)",
-        type: "multiple_choice",
-        options: [
-            "Construcción de proyectos en torno a individuos motivados",
-            "Entrega temprana y continua de documentación",
-            "Comunicación cara a cara es la más eficiente",
-            "Negocio y Developers trabajan juntos diariamente",
-            "La documentación exhaustiva es la principal medida de progreso"
-        ],
-        correctAnswer: [1, 4],
-        explanation: "El Manifiesto Ágil valora el software funcionando por encima de la documentación exhaustiva y establece que el producto útil es la métrica principal de avance."
-    },
-    {
-        question: "Un alto gerente del cliente puede forzar a los Developers a trabajar en elementos que no están en el Product Backlog.",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 1,
-        explanation: "Nadie externo puede asignar trabajo directo a los Developers; cualquier petición de alcance obligatoriamente debe pasar y ser evaluada por el Product Owner."
-    },
-    {
-        question: "Existen varias prácticas para pronosticar el progreso (burn-down, burn-up, cumulative flow). Seleccione la afirmación correcta:",
-        type: "single_choice",
-        options: [
-            "En entornos complejos, se conoce lo que sucederá",
-            "Si bien han demostrado su utilidad, no reemplazan la importancia del empirismo",
-            "Lo más importante es la representation del Burn-Down",
-            "Lo más importante es la representación del Burn-Up"
-        ],
-        correctAnswer: 1,
-        explanation: "En entornos complejos con alta incertidumbre, los gráficos de proyección son herramientas útiles, pero el principio del empirismo (tomar decisiones basadas en hechos reales) es lo primordial."
-    },
-    {
-        question: "Artefactos en el que se pueden encontrar las necesidades del cliente (Marque 2)",
-        type: "multiple_choice",
-        options: [
-            "Product Backlog",
-            "Sprint Backlog",
-            "Documento de procesos",
-            "Acta de Sprint Planning",
-            "Documento de requisitos"
-        ],
-        correctAnswer: [0, 4],
-        explanation: "El Product Backlog es el artefacto central de Scrum que aglutina las necesidades del cliente. En simuladores tradicionales, se suele vincular también al antiguo concepto de documento de requisitos."
-    },
-    {
-        question: "Elementos identificativos de una Sprint Review (Marque 3)",
-        type: "multiple_choice",
-        options: [
-            "Es una reunión informal",
-            "Se debe usar alguna herramienta para presentar resultados",
-            "El objetivo es ver el incremento realizado",
-            "Solo se ejecutan pruebas que funcionarán",
-            "Es una reunión informativa",
-            "El equipo guía al Product Owner en la comprobación"
-        ],
-        correctAnswer: [0, 2, 4],
-        explanation: "La Sprint Review se define como una sesión de trabajo informal para inspeccionar el incremento del Sprint, recopilar opiniones de los interesados e informar del progreso."
-    },
-    {
-        question: "Scrum se basa en el empirismo y Lean. Seleccione qué otros elementos se deben tener en cuenta según la teoría de Scrum (Marque 2)",
-        type: "multiple_choice",
-        options: [
-            "Scrum emplea un enfoque iterativo e incremental para optimizar previsibilidad y controlar riesgo",
-            "Los artefactos deben inspeccionarse cada semana",
-            "Los procesos deben ajustarse si las personas no están empoderadas",
-            "Scrum involucra grupos que colectivamente tienen todas las habilidades necesarias"
-        ],
-        correctAnswer: [0, 3],
-        explanation: "Scrum combines los ciclos iterativos e incrementales para controlar riesgos junto con equipos multidisciplinares capaces de entregar valor de forma autónoma."
-    },
-    {
-        question: "De los valores relacionados con el manifiesto ágil, seleccione cuáles pertenecen (Marque 4)",
-        type: "multiple_choice",
-        options: [
-            "Responder al cambio por encima de seguir un plan",
-            "Software funcionando por encima de documentación exhaustiva",
-            "Individuos e interacciones sobre procesos y herramientas",
-            "Colaboración con el cliente sobre negociación contractual",
-            "Procesos por encima de personas"
-        ],
-        correctAnswer: [0, 1, 2, 3],
-        explanation: "Estas cuatro directrices representan fielmente los pilares fundamentales expuestos y defendidos en el texto original del Manifiesto Ágil."
-    },
-    {
-        question: "Seleccione cuáles se consideran artefactos del Framework Scrum (Marque 3)",
-        type: "multiple_choice",
-        options: [
-            "Sprint Backlog",
-            "Sprint",
-            "Incremento",
-            "Product Backlog"
-        ],
-        correctAnswer: [0, 2, 3],
-        explanation: "Los tres artefactos formales que proveen transparencia y medición en Scrum son el Product Backlog, el Sprint Backlog y el Incremento. El Sprint es un evento contenedor."
-    },
-    {
-        question: "En una reunión Sprint Planning, se debe (Marque 2)",
-        type: "multiple_choice",
-        options: [
-            "Los Developers seleccionan elementos del Product Backlog mediante conversación con el Product Owner",
-            "El Product Owner propone cómo incrementar el valor del producto en el Sprint",
-            "Determinar la duración del Sprint y fecha de la Review",
-            "El Scrum Master propone soluciones"
-        ],
-        correctAnswer: [0, 1],
-        explanation: "El Product Owner define qué metas incrementarán el valor del producto mientras que los Developers seleccionan colaborativamente cuántos elementos pueden completar en el Sprint."
-    },
-    {
-        question: "Los tres pilares del empirismo en Scrum son (Marque 3)",
-        type: "multiple_choice",
-        options: [
-            "Inspección",
-            "Transparencia",
-            "Adaptación",
-            "Experimentación"
-        ],
-        correctAnswer: [0, 1, 2],
-        explanation: "El control de procesos empírico en Scrum se sustenta estrictamente sobre tres pilares inseparables: la Transparencia, la Inspección y la Adaptación."
-    },
-    {
-        question: "La Sprint Review consiste en inspeccionar el incremento generado y adaptar el Product Backlog si es necesario.",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "El propósito de la Sprint Review es inspeccionar el resultado del Sprint (el Incremento) junto con los stakeholders y ajustar el Product Backlog para el futuro."
-    },
-    {
-        question: "Scrum es un marco de trabajo que, al implementarse, permite el solapamiento de las fases del desarrollo (no secuencial) y una estrategia de desarrollo incremental a través de iteraciones (Sprints).",
-        type: "true_false",
-        options: [
-            "Verdadero",
-            "Falso"
-        ],
-        correctAnswer: 0,
-        explanation: "Scrum rompe el modelo clásico en cascada al implementar un desarrollo cíclico y flexible en el que el diseño, las pruebas y la programación ocurren de forma simultánea dentro de cada Sprint."
-    }
-];
+﻿const defaultQuestions = [
+  {
+    "question": "¿Quién crea la definición de 'hecho'?",
+    "type": "multiple_choice",
+    "options": [
+      "La organización de desarrollo.",
+      "El Equipo Scrum, en un esfuerzo colaborativo.",
+      "El Product Owner.",
+      "El Scrum Master."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Si la definición de 'Hecho' forma parte de los estándares de la organización, el equipo la sigue como mínimo, pero el equipo Scrum debe definirla o complementarla para su producto."
+  },
+  {
+    "question": "¿Debe estar presente el Product Owner en la retrospectiva de Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "Solo cuando es invitado por el Scrum Master.",
+      "Es obligatorio, es una oportunidad para que todo el equipo Scrum evalúe su rendimiento.",
+      "No está permitido."
+    ],
+    "correctAnswer": [1],
+    "explanation": "La Retrospectiva del Sprint es una oportunidad para que todo el equipo Scrum se inspeccione a sí mismo y cree un plan para las mejoras."
+  },
+  {
+    "question": "Los diagramas de Burn-down se usan para el seguimiento de:",
+    "type": "multiple_choice",
+    "options": [
+      "Una estimación del trabajo total restante para el Sprint.",
+      "Cuánto esfuerzo se ha puesto en un Sprint.",
+      "Cuántas horas ha trabajado cada miembro.",
+      "Cuántos artículos de Product Backlog quedan."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Un gráfico de burn-down representa el trabajo restante (esfuerzo) durante un periodo determinado, usualmente el Sprint."
+  },
+  {
+    "question": "¿Qué dos frases describen mejor la relación entre el Product Owner y el equipo de desarrollo?",
+    "type": "multiple_choice",
+    "options": [
+      "Deben trabajar separados para mantener separadas las preocupaciones.",
+      "Colaboran con frecuencia para equilibrar esfuerzo y valor del Product Backlog.",
+      "Colaboran con frecuencia para construir incrementos teniendo en cuenta a los usuarios.",
+      "No deberían compartir más que la reunión de Planificación y Revisión."
+    ],
+    "correctAnswer": [1, 2],
+    "explanation": "La colaboración constante es vital para que el equipo entienda los elementos y cree valor, equilibrando esfuerzo y necesidades del usuario."
+  },
+  {
+    "question": "¿Qué importancia tiene para un Product Owner pedir artículos de Product Backlog por puntos de valor?",
+    "type": "multiple_choice",
+    "options": [
+      "Es la forma definitiva para predecir el valor.",
+      "Es una buena práctica, teniendo en cuenta que la recepción del mercado es la mejor medida de valor."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Las indicaciones de valor son predicciones útiles, pero solo se validan realmente frente a usuarios y mercado."
+  },
+  {
+    "question": "¿Cuáles de las siguientes tres son responsabilidades de un equipo autoorganizado?",
+    "type": "multiple_choice",
+    "options": [
+      "Crea tareas para los elementos de Sprint Backlog.",
+      "Saca los artículos de Product Backlog para el próximo Sprint.",
+      "Estima la cantidad de trabajo de los nuevos elementos de Product Backlog.",
+      "Crea nuevos artículos de Product Backlog.",
+      "Informa del progreso a los interesados.",
+      "Reordenar el catálogo de productos."
+    ],
+    "correctAnswer": [0, 1, 2],
+    "explanation": "El equipo de desarrollo estima, selecciona los elementos para el Sprint y desglosa el trabajo en tareas."
+  },
+  {
+    "question": "Los elementos del Backlog de Producto en la parte inferior no son tan claros como los de la parte superior.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [0],
+    "explanation": "Al no ser prioritarios ni desarrollarse pronto, no hay necesidad de dedicarles mucho tiempo de detalle o planificación temprana."
+  },
+  {
+    "question": "La Revisión Sprint es el único momento en que se tiene en cuenta la retroalimentación de los interesados.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "El Product Owner interactúa activa y regularmente con los interesados, aunque la Revisión Sprint es el evento formal para ello."
+  },
+  {
+    "question": "Si varios equipos trabajan en el mismo producto, ¿quién debe asegurarse de que sus salidas puedan integrarse?",
+    "type": "multiple_choice",
+    "options": [
+      "El Scrum Master.",
+      "El Product Owner.",
+      "El equipo de melés.",
+      "Los desarrolladores."
+    ],
+    "correctAnswer": [3],
+    "explanation": "Depende de los desarrolladores asegurarse de que sus resultados creen un Incremento integrado."
+  },
+  {
+    "question": "¿Qué dos afirmaciones explican por qué la definición de 'hecho' es importante para el Product Owner?",
+    "type": "multiple_choice",
+    "options": [
+      "Asegura que el Incremento sea utilizable para decidir publicarlo.",
+      "Ayuda al Product Owner a seguir el trabajo abierto durante un Sprint.",
+      "Crea transparencia respecto al progreso dentro del equipo Scrum.",
+      "Identifica el trabajo no realizado que puede abordarse en un Sprint separado."
+    ],
+    "correctAnswer": [0, 2],
+    "explanation": "La definición de 'Hecho' garantiza transparencia y asegura que el incremento revisado sea utilizable para un posible lanzamiento."
+  },
+  {
+    "question": "¿Qué es un Product Backlog?",
+    "type": "multiple_choice",
+    "options": [
+      "Un artefacto vivo de requisitos que evoluciona mientras exista un producto.",
+      "Una lista formalmente aprobada de requisitos para un periodo determinado.",
+      "Una lista detallada que se complementa con un backlog tecnológico separado.",
+      "Una lista de referencias a documentos de casos de uso."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El Product Backlog es una lista ordenada de todo lo necesario para el producto y es la única fuente de requisitos."
+  },
+  {
+    "question": "¿Qué nos dice el 'Cono de la Incertidumbre' sobre los proyectos Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "La incertidumbre suele ser mayor en los primeros Sprints.",
+      "La incertidumbre suele ser mayor en los últimos Sprints.",
+      "La incertidumbre suele disminuir después de especificar los requisitos al inicio."
+    ],
+    "correctAnswer": [0],
+    "explanation": "La incertidumbre es mayor al inicio y se reduce a medida que se avanza en el proyecto."
+  },
+  {
+    "question": "¿Cómo puede un Product Owner utilizar los Sprints para obtener feedback?",
+    "type": "multiple_choice",
+    "options": [
+      "Con la garantía de que se termine todo el trabajo.",
+      "Mediante la entrega frecuente de incrementos al mercado.",
+      "Asegurando que el Sprint no pare hasta que todo sea verificado.",
+      "Al final de cada Sprint con un informe de pruebas."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Los sprints limitan el riesgo y permiten comparar el incremento con el mercado y usuarios de forma frecuente."
+  },
+  {
+    "question": "El Product Owner es responsable de preparar el objetivo del Sprint antes de la Planificación.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "El objetivo de Sprint se prepara durante la Planificación del Sprint por todo el equipo Scrum."
+  },
+  {
+    "question": "¿Qué condiciones previas deben cumplirse para comenzar la Planificación de Sprints?",
+    "type": "multiple_choice",
+    "options": [
+      "Un catálogo de productos totalmente refinado.",
+      "Aprobación formal del presupuesto.",
+      "Un objetivo claro e innegociable.",
+      "No existen condiciones previas."
+    ],
+    "correctAnswer": [3],
+    "explanation": "El plan se crea mediante el trabajo colaborativo de todo el equipo durante la misma reunión de planificación."
+  },
+  {
+    "question": "En cada Sprint se debe liberar un incremento de producto.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "El incremento debe ser utilizable, pero solo se libera si tiene sentido hacerlo."
+  },
+  {
+    "question": "¿Cuál es una forma clave para que un Product Owner aplique el 'aprendizaje validado'?",
+    "type": "multiple_choice",
+    "options": [
+      "Lanza un incremento al mercado para conocer las suposiciones empresariales.",
+      "Acepta un incremento en la revisión para conocer la funcionalidad desarrollada.",
+      "Establece el objetivo de Sprint para informarse sobre la productividad."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El aprendizaje se valida cuando las suposiciones se comparan con los usuarios y el mercado real."
+  },
+  {
+    "question": "¿Qué debería hacer el Product Owner si tiene dudas sobre la calidad de la definición de 'hecho'?",
+    "type": "multiple_choice",
+    "options": [
+      "Ajustarla inmediatamente.",
+      "Ajustarla al final del Sprint.",
+      "Señaladlo en la próxima Retrospectiva de Sprint.",
+      "Pedir al departamento de calidad que investigue."
+    ],
+    "correctAnswer": [2],
+    "explanation": "El responsable de la definición de 'Hecho' es el equipo de desarrollo, no el Product Owner."
+  },
+  {
+    "question": "¿Hasta qué punto la deuda técnica limita el valor que un Product Owner puede obtener? Marque 2",
+    "type": "multiple_choice",
+    "options": [
+      "Provoca que un mayor presupuesto se destine al mantenimiento.",
+      "No es una preocupación del Product Owner.",
+      "No influye en la entrega del valor.",
+      "Reduce la velocidad para crear nueva funcionalidad."
+    ],
+    "correctAnswer": [0, 3],
+    "explanation": "La deuda técnica ralentiza el progreso y dificulta las nuevas funcionalidades, además de incrementar los costes de mantenimiento."
+  },
+  {
+    "question": "¿Un Product Owner es esencialmente lo mismo que un Project Manager tradicional?",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "Son roles distintos; el Product Owner se centra en maximizar el valor del producto, mientras que el PM tradicional gestiona recursos, costes y ejecución."
+  },
+  {
+    "question": "El Product Owner puede pedir a los desarrolladores que ordenen los artículos del Product Backlog en lugar de él/ella.",
+    "type": "single_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "El Product Owner puede delegar tareas, pero sigue siendo el responsable final."
+  },
+  {
+    "question": "El Product Owner es responsable de la definición de 'hecho'.",
+    "type": "single_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "La responsabilidad de la definición de 'Hecho' recae en el equipo de desarrollo."
+  },
+  {
+    "question": "¿Quién puede cambiar el Sprint Backlog durante el Sprint?",
+    "type": "single_choice",
+    "options": [
+      "El equipo de desarrollo.",
+      "El Product Owner.",
+      "El equipo de desarrollo y el Product Owner juntos.",
+      "Nadie."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El equipo de desarrollo realiza cambios en las tareas del Sprint Backlog, aunque pueden consultar al Product Owner."
+  },
+  {
+    "question": "El Product Owner y el Scrum Master no deberían formar parte del equipo de desarrollo.",
+    "type": "single_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "La misma persona puede desempeñar más de un rol, aunque no es lo recomendado."
+  },
+  {
+    "question": "Más funciones siempre supondrán más valor.",
+    "type": "single_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "Más funciones pueden aumentar el coste de mantenimiento y reducir el valor si no son las adecuadas o llegan en el momento equivocado."
+  },
+  {
+    "question": "¿Cuáles son dos actividades típicas para un Product Owner en un Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "Asistir a cada Daily Scrum para responder preguntas.",
+      "Actualizar el plan de trabajo a diario.",
+      "Trabajar en el refinamiento del Product Backlog.",
+      "Elaborar informes financieros.",
+      "Colaborar con los grupos de interés."
+    ],
+    "correctAnswer": [2, 4],
+    "explanation": "El Product Owner colabora con los interesados y con el equipo en el refinamiento del backlog."
+  },
+  {
+    "question": "Un Product Owner puede posponer el inicio de un nuevo Sprint tras la conclusión del anterior.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "Un nuevo Sprint comienza inmediatamente después de la conclusión del anterior."
+  },
+  {
+    "question": "¿Qué debería hacer el Product Owner si el equipo no puede terminar todos los elementos del Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "Eliminar elementos del Sprint Backlog.",
+      "Cancelar el Sprint.",
+      "Ayudar a ajustar el trabajo para cumplir el objetivo del Sprint.",
+      "Pedir más recursos."
+    ],
+    "correctAnswer": [2],
+    "explanation": "El equipo recibe ayuda del Product Owner para ajustar las tareas y asegurar que se aporte el máximo valor posible al final del Sprint."
+  },
+  {
+    "question": "El conflicto debe evitarse a toda costa en los equipos Ágiles.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "Los conflictos bien gestionados pueden ser útiles para mejorar ideas y entender mejor los objetivos del proyecto."
+  },
+  {
+    "question": "¿Quién es responsable de estimar el esfuerzo de los elementos del Product Backlog?",
+    "type": "multiple_choice",
+    "options": [
+      "El equipo de desarrollo.",
+      "El PMO.",
+      "El Product Owner."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El equipo de desarrollo tiene la visión completa del trabajo necesario para transformar los elementos en incrementos."
+  },
+  {
+    "question": "¿Qué describe mejor la relación entre el Product Owner y los grupos de interés?",
+    "type": "multiple_choice",
+    "options": [
+      "El Product Owner redacta las historias tal cual las piden.",
+      "El Product Owner tiene la decisión final y debe implicarlos lo menos posible.",
+      "El Product Owner solicita activamente opinión para el Product Backlog.",
+      "El Product Owner entrega formularios de aceptación."
+    ],
+    "correctAnswer": [2],
+    "explanation": "El Product Owner representa a los interesados y solicita activamente su opinión para incorporarla al Product Backlog."
+  },
+  {
+    "question": "¿Qué ocurre con un elemento que no cumple la definición de 'Hecho' al final del Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "Se pone en el Product Backlog para que el PO decida.",
+      "Si los interesados están de acuerdo, se acepta.",
+      "No se incluye en el incremento.",
+      "Se crea una historia con el trabajo restante."
+    ],
+    "correctAnswer": [0, 2],
+    "explanation": "Cualquier trabajo incompleto vuelve al Product Backlog para ser repriorizado por el Product Owner."
+  },
+  {
+    "question": "El Product Owner puede delegar algunas de sus responsabilidades en el equipo de desarrollo.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [0],
+    "explanation": "Es posible delegar, pero el Product Owner sigue siendo el responsable final."
+  },
+  {
+    "question": "¿Qué afirmación es correcta cuando los desarrolladores trabajan en medio del Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "El alcance puede aclararse a medida que se aprenda más.",
+      "El Sprint Backlog se congela.",
+      "No se realizarán pruebas hasta el final."
+    ],
+    "correctAnswer": [0],
+    "explanation": "A medida que se aprende más, el alcance puede renegociarse entre el Product Owner y el equipo de desarrollo."
+  },
+  {
+    "question": "¿Quién debería saber más sobre el progreso hacia un objetivo empresarial?",
+    "type": "multiple_choice",
+    "options": [
+      "El Product Owner.",
+      "El equipo de desarrollo.",
+      "El Scrum Master.",
+      "El Jefe de Proyecto."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El Product Owner es responsable de maximizar el valor del trabajo y entender las necesidades del negocio."
+  },
+  {
+    "question": "Es obligatorio que el Product Owner comparta el progreso a través de:",
+    "type": "multiple_choice",
+    "options": [
+      "Gráfico de burn-down.",
+      "Gráfico de consumo de valor.",
+      "Diagrama de Gantt.",
+      "Cualquier práctica proyectiva.",
+      "No es obligatorio."
+    ],
+    "correctAnswer": [4],
+    "explanation": "Aunque existen herramientas útiles, ninguna práctica proyectiva es obligatoria en Scrum."
+  },
+  {
+    "question": "¿Cómo sabe una organización que un producto es exitoso?",
+    "type": "multiple_choice",
+    "options": [
+      "Al medir si la velocidad ha aumentado.",
+      "Publicando con frecuencia y actualizando indicadores de valor.",
+      "Midiendo el tiempo real vs estimado.",
+      "Cuando el PO acepta el incremento."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Publicar frecuentemente y medir indicadores de valor permite obtener retroalimentación real del mercado."
+  },
+  {
+    "question": "La responsabilidad del Product Owner se describe mejor como:",
+    "type": "multiple_choice",
+    "options": [
+      "Optimizando el valor del trabajo realizado.",
+      "Hacer planes a largo plazo.",
+      "Coordinando al equipo de desarrollo."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El objetivo principal es maximizar el valor del producto resultante del trabajo del equipo Scrum."
+  },
+  {
+    "question": "La autoridad del Product Owner para modificar el Product Backlog es ilimitada, salvo por:",
+    "type": "multiple_choice",
+    "options": [
+      "Decisiones del CFO o CEO.",
+      "Nada. Toda la organización debe respetar sus decisiones.",
+      "Trabajo técnico indicado por el arquitecto.",
+      "Cambios no aprobados."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Para que el Product Owner tenga éxito, la organización debe respetar sus decisiones."
+  },
+  {
+    "question": "Un 'Baselining' se llama:",
+    "type": "multiple_choice",
+    "options": [
+      "Acumulación de sprints.",
+      "Visión del producto.",
+      "No está establecido en Scrum.",
+      "Plan de liberación."
+    ],
+    "correctAnswer": [2],
+    "explanation": "El 'Baselining' es un término tradicional; no hay líneas de base ni planificación inicial rígida en Scrum."
+  },
+  {
+    "question": "El valor que aporta un producto solo puede determinarse por los ingresos.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "El valor varía dependiendo de la organización y el producto, no se limita solo a los ingresos."
+  },
+  {
+    "question": "El Product Owner quiere diseñar pruebas de aceptación para todos los artículos desde el principio. Respuesta del SM:",
+    "type": "multiple_choice",
+    "options": [
+      "Es una buena idea.",
+      "Es una buena idea si no son detalladas.",
+      "No es necesario, debe discutirse con más detalle antes del desarrollo."
+    ],
+    "correctAnswer": [2],
+    "explanation": "Scrum no utiliza diseño previo; la preparación se realiza de forma continua."
+  },
+  {
+    "question": "Un primer Sprint puede comenzar sin un Product Backlog completo y exhaustivo.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [0],
+    "explanation": "Solo se necesitan suficientes ideas para completar potencialmente un Sprint."
+  },
+  {
+    "question": "Si el equipo descubre que no van a construir todo lo previsto, el PO debería:",
+    "type": "multiple_choice",
+    "options": [
+      "Cancelar el Sprint.",
+      "Cambiar el objetivo.",
+      "Retrabajar los elementos con el equipo para cumplir el objetivo.",
+      "Saltar el refinamiento."
+    ],
+    "correctAnswer": [2],
+    "explanation": "El alcance puede aclararse y renegociarse entre el PO y el equipo a medida que se aprende más."
+  },
+  {
+    "question": "¿Pueden los requisitos de seguridad, rendimiento, funcionalidad y documentación formar parte del Product Backlog?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, es la lista única y completa de trabajo.",
+      "No, deben ser gestionados por separado."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Todo el trabajo necesario para el producto, sea funcional o técnico, debe estar en el Product Backlog."
+  },
+  {
+    "question": "¿Qué porcentaje del tiempo del PO debería dedicarse al equipo?",
+    "type": "multiple_choice",
+    "options": [
+      "Tanto como sea necesario para maximizar el valor.",
+      "100%.",
+      "Lo justo para el refinamiento.",
+      "Al menos el 50%."
+    ],
+    "correctAnswer": [0],
+    "explanation": "No es un trabajo a tiempo completo fijo; se dedica el tiempo necesario para cumplir sus responsabilidades."
+  },
+  {
+    "question": "¿Cuánto tiempo tarda la Planificación de Sprints en un proyecto con Sprints de tres semanas?",
+    "type": "multiple_choice",
+    "options": [
+      "8 horas.",
+      "6 horas.",
+      "3 horas.",
+      "4 horas."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Está limitada a un máximo de 8 horas para un sprint de un mes; para sprints más cortos, suele ser menos, pero 8 es el máximo permitido."
+  },
+  {
+    "question": "Para tomar decisiones de inversión, el PO tendrá en cuenta:",
+    "type": "multiple_choice",
+    "options": [
+      "El coste fijo por Sprint.",
+      "Todas las inversiones necesarias para concebir, desarrollar, operar y mantener el producto.",
+      "El coste acumulado sobre el valor ganado."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El PO es responsable de todo el ciclo de vida, incluyendo mantenimiento y operación."
+  },
+  {
+    "question": "¿Qué es lo mejor que puede hacer el PO cuando los desarrolladores tienen dificultades para entender las expectativas?",
+    "type": "multiple_choice",
+    "options": [
+      "Pedir al SM que facilite la interacción.",
+      "Asistir a sus Daily Scrums y eliminar impedimentos.",
+      "Pasar suficiente tiempo con el equipo para explicar todo.",
+      "Asistir a sus Daily Scrums y responder preguntas."
+    ],
+    "correctAnswer": [2],
+    "explanation": "El PO es responsable de pasar tiempo con los desarrolladores para asegurar claridad."
+  },
+  {
+    "question": "Consideraciones al formar varios equipos Scrum cohesionados (Marque 2):",
+    "type": "multiple_choice",
+    "options": [
+      "Mezcla eficaz de habilidades para evitar dependencias.",
+      "Tamaño adecuado en cada equipo.",
+      "Suficientes habilidades para la capa técnica.",
+      "Mezcla de niveles senior y junior."
+    ],
+    "correctAnswer": [0, 1],
+    "explanation": "Los equipos deben ser multifuncionales y tener un tamaño gestionable (10 o menos)."
+  },
+  {
+    "question": "¿Qué variables considera un PO al pedir el Product Backlog?",
+    "type": "multiple_choice",
+    "options": [
+      "Primero esfuerzo, luego valor.",
+      "Cohesión del desarrollo.",
+      "Menor coste de desarrollo.",
+      "Disponibilidad de recursos.",
+      "Lo apropiado para lograr los objetivos del producto y optimizar el valor."
+    ],
+    "correctAnswer": [4],
+    "explanation": "El PO ordena el Backlog para optimizar el valor recibido."
+  },
+  {
+    "question": "¿Qué descripción encaja mejor con el rol del PO?",
+    "type": "multiple_choice",
+    "options": [
+      "Gestor de Proyecto 2.0.",
+      "Maximizador de valor.",
+      "Recopilador de Requisitos.",
+      "Protector de mira.",
+      "Analista Jefe."
+    ],
+    "correctAnswer": [1],
+    "explanation": "La responsabilidad central es maximizar el valor del producto."
+  },
+  {
+    "question": "Depende del equipo decidir qué eventos de Scrum son necesarios durante el Sprint.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "Todos los eventos de Scrum son necesarios y no deben ser retirados."
+  },
+  {
+    "question": "¿Qué se debe hacer si el PO no está disponible?",
+    "type": "multiple_choice",
+    "options": [
+      "El equipo toma las mejores decisiones y se realinea después.",
+      "Debería haber un equipo de Product Owners.",
+      "Es necesario nombrar a uno nuevo, el desarrollo sin PO no es Scrum.",
+      "El desarrollo se detiene."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El rol de PO es esencial en Scrum; sin él, no se puede realizar la rendición de cuentas ni maximizar el valor."
+  },
+  {
+    "question": "¿De qué es responsable el PO?",
+    "type": "multiple_choice",
+    "options": [
+      "Describir el incremento en la planificación.",
+      "Crear y mantener un Backlog que maximice el valor.",
+      "Refinar elementos hasta que estén listos.",
+      "Escribir historias para los interesados."
+    ],
+    "correctAnswer": [1],
+    "explanation": "La herramienta principal es el Product Backlog para maximizar el valor del producto y del trabajo del equipo."
+  },
+  {
+    "question": "Varios equipos trabajando en el mismo producto. ¿Cada uno debe tener su propia definición de 'Hecho'?",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "Pueden usar la misma o tener distintas, siempre que sean compatibles y permitan crear incrementos integrados."
+  },
+  {
+    "question": "¿Cuándo se puede actualizar el Product Backlog?",
+    "type": "multiple_choice",
+    "options": [
+      "Solo después de la revisión.",
+      "Solo durante sesiones de refinamiento.",
+      "Nunca.",
+      "En cualquier momento por el PO."
+    ],
+    "correctAnswer": [3],
+    "explanation": "El Backlog es dinámico y puede ser actualizado en cualquier momento por el Product Owner."
+  },
+  {
+    "question": "Ante una velocidad menor a la estimada y dificultades en las pruebas: ¿Cómo recuperarse?",
+    "type": "multiple_choice",
+    "options": [
+      "Esforzarse por completar el 90% y posponer el resto.",
+      "El equipo informa que el incremento no es liberable, se reestima el esfuerzo para hacerlo real y el PO decide continuar o cancelar.",
+      "El SM gestiona el backlog y asigna tareas para máxima utilización."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Scrum requiere un incremento 'Hecho' y utilizable; es responsabilidad del PO tomar decisiones basadas en la realidad técnica."
+  },
+  {
+    "question": "¿Cuáles son dos formas en que el PO toma la iniciativa en la inspección?",
+    "type": "multiple_choice",
+    "options": [
+      "Compartir el estado del Backlog en la Revisión Sprint.",
+      "Inspeccionar el burn-down en el Daily Scrum.",
+      "Verificar el backlog de Sprint al final de la planificación.",
+      "Invitar a interesados a la Sprint Review."
+    ],
+    "correctAnswer": [0, 3],
+    "explanation": "El PO utiliza la Sprint Review y la actualización del Backlog para mantener la transparencia y optimizar el valor."
+  },
+  {
+    "question": "¿Qué ocurre con el Product Backlog cuando las necesidades cambian?",
+    "type": "multiple_choice",
+    "options": [
+      "Evoluciona para reflejar los cambios.",
+      "No tiene efecto.",
+      "Se archiva y reemplaza."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El Product Backlog es dinámico y cambia constantemente para reflejar comentarios y entorno."
+  },
+  {
+    "question": "¿Qué dos cosas ayudan al PO a gestionar el valor?",
+    "type": "multiple_choice",
+    "options": [
+      "Value Poker.",
+      "Cálculo neutral.",
+      "El orden del catálogo.",
+      "Validando suposiciones mediante publicaciones frecuentes."
+    ],
+    "correctAnswer": [2, 3],
+    "explanation": "El orden del catálogo y la validación frente al mercado son fundamentales para la gestión del valor."
+  },
+  {
+    "question": "Los interesados deberían reordenar el Backlog de Producto en la reunión de Revisión Sprint.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "El Product Owner es el único con la última palabra sobre el orden del Product Backlog."
+  },
+  {
+    "question": "¿Quién forma parte del Scrum Team?",
+    "type": "multiple_choice",
+    "options": [
+      "Equipo de desarrollo.",
+      "Scrum Master.",
+      "Líder de equipo.",
+      "Gestor de proyecto.",
+      "Product Owner."
+    ],
+    "correctAnswer": [0, 1, 4],
+    "explanation": "El equipo Scrum está formado por el Product Owner, el Scrum Master y los desarrolladores."
+  },
+  {
+    "question": "Los Hardening Sprints son útiles.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "No existen 'Hardening Sprints' en Scrum; todos los sprints deben crear incrementos 'hechos'."
+  },
+  {
+    "question": "Sprint cancelado: ¿qué ocurre con los elementos 'Hechos'?",
+    "type": "multiple_choice",
+    "options": [
+      "Vuelven a la lista de productos.",
+      "Revisados y aceptados por el PO si pueden lanzarse.",
+      "Se mueven al siguiente Sprint."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El PO revisa y acepta lo que esté 'hecho' tras una cancelación."
+  },
+  {
+    "question": "Equipo listo para primer Sprint pero Backlog incompleto. ¿Qué hacer?",
+    "type": "multiple_choice",
+    "options": [
+      "Hacer un Sprint 0.",
+      "Ayudar a perfeccionar el Backlog en lugar de empezar.",
+      "Aclarar solo los elementos del primer Sprint y empezar."
+    ],
+    "correctAnswer": [2],
+    "explanation": "No es necesario tener todo definido; solo lo suficiente para el objetivo actual de Sprint."
+  },
+  {
+    "question": " (Marque 3):",
+    "type": "multiple_choice",
+    "options": [
+      "Lista de tareas para desarrolladores.",
+      "Guía para pronosticar el Sprint Backlog.",
+      "Orientación sobre el trabajo restante.",
+      "Crea transparencia y comprensión común del estado del incremento.",
+      "Ayuda a decidir cuánto tiempo falta."
+    ],
+    "correctAnswer": [1, 3, 4],
+    "explanation": "Proporciona orientación y una comprensión compartida para garantizar transparencia."
+  },
+  {
+    "question": "Usar gráficos de burn-up en lugar de burn-down:",
+    "type": "multiple_choice",
+    "options": [
+      "No hay nada malo en ello.",
+      "Deberían ser reemplazados."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Ninguna herramienta es obligatoria; el PO puede usar otras técnicas."
+  },
+  {
+    "question": "El PO considera que es mejor delegar la estimación al equipo.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "La estimación es responsabilidad del equipo de desarrollo por defecto; no es algo que el PO decida delegar."
+  },
+  {
+    "question": "¿Quién actualiza el trabajo restante durante el Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "El Product Owner.",
+      "El equipo de desarrollo.",
+      "El Scrum Master.",
+      "El Jefe de Proyecto."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El equipo de desarrollo rastrea el trabajo restante del Sprint."
+  },
+  {
+    "question": "3 actividades responsabilidad del PO:",
+    "type": "multiple_choice",
+    "options": [
+      "Tomar decisiones técnicas.",
+      "Priorizar el backlog.",
+      "Diseñar software.",
+      "Crear historias de usuario.",
+      "Dividir historias épicas.",
+      "Proporcionar presupuestos."
+    ],
+    "correctAnswer": [1, 3, 4],
+    "explanation": "Priorizar, crear y desglosar historias son labores del PO; diseño técnico y estimación son del equipo."
+  },
+  {
+    "question": "Para iniciar el primer Sprint, Scrum solo requiere un Product Owner...",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "Se requiere un Scrum Team completo."
+  },
+  {
+    "question": "Marque 2 elementos sobre la reunión retrospectiva de Sprint:",
+    "type": "multiple_choice",
+    "options": [
+      "Es una oportunidad para inspección y adaptación.",
+      "Son tres horas en un sprint de un mes.",
+      "Es la única vez que se planifican mejoras.",
+      "Sucede antes de la revisión.",
+      "El PO no tiene por qué estar."
+    ],
+    "correctAnswer": [0, 1],
+    "explanation": "Es el último evento, incluye a todo el equipo y busca mejoras."
+  },
+  {
+    "question": "Para el PO, es importante estar al tanto de la deuda técnica:",
+    "type": "multiple_choice",
+    "options": [
+      "No es su preocupación.",
+      "Porque aumenta el coste total de propiedad.",
+      "Porque aumenta el valor."
+    ],
+    "correctAnswer": [1],
+    "explanation": "La deuda técnica aumenta el coste de mantenimiento y los riesgos futuros."
+  },
+  {
+    "question": "El Product Owner puede delegar algunas de sus responsabilidades en el equipo de desarrollo.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [0],
+    "explanation": "Delegar es posible, pero la responsabilidad permanece en el PO."
+  },
+  {
+    "question": "El refinamiento del Product Backlog no debe ocupar más del 10% del tiempo del PO.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "Esta regla del 10% suele aplicarse al tiempo de los desarrolladores; el PO dedica el tiempo necesario."
+  },
+  {
+    "question": "Dos escenarios que representan un desarrollo autoorganizado:",
+    "type": "multiple_choice",
+    "options": [
+      "Centrarse en su función y transferir trabajo.",
+      "La dirección trabaja con el SM.",
+      "Seleccionar y replanificar trabajo colaborativamente.",
+      "Invitar a externos a la planificación.",
+      "Crear su propio Sprint Backlog."
+    ],
+    "correctAnswer": [2, 4],
+    "explanation": "Un equipo autoorganizado gestiona su trabajo y planifica cómo realizarlo."
+  },
+  {
+    "question": "Mayor velocidad = mayor valor generado.",
+    "type": "multiple_choice",
+    "options": [
+      "Cierto",
+      "Falso"
+    ],
+    "correctAnswer": [1],
+    "explanation": "Velocidad y valor no están directamente relacionados; los elementos de alto valor suelen entregarse primero."
+  },
+  {
+    "question": "Cuando un producto se vuelve demasiado grande para un solo equipo Scrum y se forma un equipo nuevo adicional, ¿quién es responsable de crear un Backlog de Producto para el nuevo equipo Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "El Scrum Master.",
+      "El Product Owner del nuevo equipo Scrum.",
+      "No es necesario un nuevo retraso de producto."
+    ],
+    "correctAnswer": [2],
+    "explanation": "Un producto tiene un único Product Backlog y, por lo tanto, un único Product Owner. Varios equipos deben trabajar sobre el mismo backlog para mantener la coherencia."
+  },
+  {
+    "question": "¿Una dirección curiosa debería seguir el progreso de Sprint a través de qué solución?",
+    "type": "multiple_choice",
+    "options": [
+      "El Scrum Master tiene que enviar un informe cada día.",
+      "El Product Owner tiene que enviar un informe cada día.",
+      "La dirección puede asistir a la Revisión Sprint y puede visitar el Sprint Backlog y el gráfico de burndown en cualquier momento.",
+      "La dirección debería asistir al Daily Scrum todos los días."
+    ],
+    "correctAnswer": [2],
+    "explanation": "Scrum fomenta la transparencia mediante artefactos visibles. La dirección debe consultar el Sprint Backlog o asistir a la Sprint Review, no mediante informes burocráticos ni interrumpiendo el Daily Scrum."
+  },
+  {
+    "question": "¿Quién es responsable de eliminar los impedimentos?",
+    "type": "multiple_choice",
+    "options": [
+      "El Product Owner",
+      "El Gestor de Proyecto",
+      "El Scrum Master",
+      "El Líder del Equipo"
+    ],
+    "correctAnswer": [2],
+    "explanation": "El Scrum Master es el servidor líder encargado de eliminar los impedimentos que bloquean el progreso del equipo."
+  },
+  {
+    "question": "¿En qué puede confiar el Product Owner para maximizar el valor del producto?",
+    "type": "multiple_choice",
+    "options": [
+      "Análisis coste/beneficio, directivas de gestión, eliminación de residuos",
+      "Capacidad, velocidad, retorno de la inversión",
+      "Visión del producto, investigación, feedback de los clientes"
+    ],
+    "correctAnswer": [2],
+    "explanation": "La maximización del valor se basa en la visión del producto y en el aprendizaje empírico obtenido mediante la investigación y el feedback directo de los usuarios."
+  },
+  {
+    "question": "Si 'Hecho' para un incremento no es una convención de la organización de desarrollo, ¿quién debe definir una definición de Hecho para el producto?",
+    "type": "multiple_choice",
+    "options": [
+      "El Scrum Master",
+      "El equipo de melé (Equipo Scrum)",
+      "El Product Owner",
+      "El Scrum Master y los Desarrolladores"
+    ],
+    "correctAnswer": [1],
+    "explanation": "Todo el Equipo Scrum es responsable de establecer la 'Definición de Hecho' si no existe una estándar organizacional, asegurando la calidad del incremento."
+  },
+  {
+    "question": "¿Qué debería hacer el Product Owner durante el Sprint? Elige las dos mejores respuestas.",
+    "type": "multiple_choice",
+    "options": [
+      "Colaborar con los grupos de interés y recopilar comentarios de los usuarios.",
+      "Redactar historias de usuario y criterios de aceptación.",
+      "Participar en el refinamiento del backlog e interactúa con los desarrolladores según sea necesario.",
+      "Asistir a Daily Scrums y responder a cualquier pregunta.",
+      "Actualizar el plan del proyecto.",
+      "El Product Owner no tuvo nada que ver durante el Sprint."
+    ],
+    "correctAnswer": [0, 2],
+    "explanation": "El PO debe gestionar el backlog (refinamiento) y colaborar con interesados/usuarios para asegurar que el equipo entregue valor."
+  },
+  {
+    "question": "Tras una reunión con el equipo de ciberseguridad, el Product Owner identificó un par de nuevos requisitos no funcionales. ¿Qué debería hacer con ellos?",
+    "type": "multiple_choice",
+    "options": [
+      "Déjalo en manos de los desarrolladores.",
+      "Añádelos a la lista de productos pendientes. El Backlog de Producto es una lista de todo... y deberían implementarse como cualquier otro contenido.",
+      "Añádelos a la lista de productos pendientes. El refinamiento eliminará si debe formar parte de la 'Definición de Hecho' o implementarse como otros objetos.",
+      "Pide a los desarrolladores que los añadan a la definición de 'Hecho'."
+    ],
+    "correctAnswer": [2],
+    "explanation": "Todo el trabajo va al Product Backlog. Durante el refinamiento, se decide si es un criterio de calidad permanente (Definition of Done) o un elemento de trabajo puntual."
+  },
+  {
+    "question": "¿Quién es responsable de gestionar el Backlog de Producto?",
+    "type": "multiple_choice",
+    "options": [
+      "Los desarrolladores",
+      "El Product Owner",
+      "El Gestor de Proyecto",
+      "El Scrum Master"
+    ],
+    "correctAnswer": [1],
+    "explanation": "El Product Owner es el único responsable de la gestión, orden y transparencia del Product Backlog."
+  },
+  {
+    "question": "¿Cuál es el principal beneficio de tener un objetivo de sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "Nada en particular, pero sin ello los interesados no tendrían una agenda para la Revisión Sprint.",
+      "Ayuda a los desarrolladores a mantenerse concentrados durante la construcción del Incremento.",
+      "La dirección entiende en qué está trabajando el equipo."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El Sprint Goal da enfoque y propósito, ayudando a los desarrolladores a tomar decisiones alineadas durante el Sprint."
+  },
+  {
+    "question": "Cuando se usan las palabras 'desarrollar' y 'desarrollo' en la Guía Scrum, ¿a qué se refieren?",
+    "type": "multiple_choice",
+    "options": [
+      "Se refiere a cualquier tipo de trabajo complejo que contribuya a la construcción de un Incremento.",
+      "Significa programar con tareas adicionales como la gestión de repositorios.",
+      "Desarrollo se refiere a la programación, prueba y mantenimiento de todo el marco de integración continua."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Scrum utiliza una definición amplia e inclusiva para cualquier disciplina necesaria para crear un incremento, no solo programación."
+  },
+  {
+    "question": "¿Verdadero o falso? Es posible implementar Scrum usando solo algunos de los roles, eventos y artefactos.",
+    "type": "multiple_choice",
+    "options": [
+      "Falso",
+      "Cierto"
+    ],
+    "correctAnswer": [0],
+    "explanation": "Scrum es un marco integral. Si se omiten componentes, no se está practicando Scrum y se pierden sus beneficios."
+  },
+  {
+    "question": "Los eventos de Scrum son:",
+    "type": "multiple_choice",
+    "options": [
+      "Planificación de iteraciones, stand-up, arreglo personal, demos, retro",
+      "Planificación de proyectos, informe diario, revisión de sprint, retrospectiva de sprint",
+      "Planificación de sprints, Scrum diario, Sprint Review, Sprint Retrospective",
+      "Planificación de sprints, monólogos diarios, demo de sprint, retrospectiva de sprint"
+    ],
+    "correctAnswer": [2],
+    "explanation": "La Guía Scrum define formalmente estos 5 eventos (Sprint, Planning, Daily, Review y Retrospective)."
+  },
+  {
+    "question": "¿Cuál es la duración máxima de un Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "Un mes.",
+      "Dos semanas.",
+      "Seis semanas.",
+      "No tiene duración máxima."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Según la Guía de Scrum, un Sprint es un evento de duración fija de un mes o menos para crear consistencia."
+  },
+  {
+    "question": "¿Qué sucede al finalizar el Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "El equipo se toma una semana de vacaciones.",
+      "El incremento se entrega a producción obligatoriamente.",
+      "El incremento debe estar 'terminado' según la Definición de 'Hecho'.",
+      "Se hace una auditoría externa."
+    ],
+    "correctAnswer": [2],
+    "explanation": "Un incremento terminado debe cumplir con la Definición de 'Hecho' al final de cada Sprint."
+  },
+  {
+    "question": "¿Qué debe hacer el equipo si el Sprint Goal se vuelve obsoleto?",
+    "type": "multiple_choice",
+    "options": [
+      "Continuar con el trabajo original.",
+      "Cancelar el Sprint.",
+      "El Product Owner puede cancelar el Sprint.",
+      "Esperar a la retrospectiva."
+    ],
+    "correctAnswer": [2],
+    "explanation": "Solo el Product Owner tiene la autoridad para cancelar el Sprint si el objetivo pierde su sentido."
+  },
+  {
+    "question": "¿Quién decide qué elementos del Product Backlog entran en el Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "El Product Owner.",
+      "El Scrum Master.",
+      "Los Desarrolladores.",
+      "El equipo completo en consenso."
+    ],
+    "correctAnswer": [3],
+    "explanation": "El Sprint Planning es un evento colaborativo; el PO propone y los Desarrolladores determinan cuánto pueden realizar."
+  },
+  {
+    "question": "¿Cuál es la responsabilidad principal del Scrum Master hacia la organización?",
+    "type": "multiple_choice",
+    "options": [
+      "Liderar, entrenar y capacitar a la organización en Scrum.",
+      "Escribir los requisitos de negocio.",
+      "Supervisar el rendimiento individual de los desarrolladores.",
+      "Contratar personal."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El SM es un líder servicial que ayuda a la organización a adoptar Scrum y entender su valor."
+  },
+  {
+    "question": "¿Qué es el 'Backlog de Producto'?",
+    "type": "multiple_choice",
+    "options": [
+      "Una lista de tareas de los desarrolladores.",
+      "Un plan de proyecto detallado con fechas.",
+      "Una lista emergente y ordenada de lo que se necesita para mejorar el producto.",
+      "Una lista de errores pendientes."
+    ],
+    "correctAnswer": [2],
+    "explanation": "Es la única fuente de trabajo para el equipo, es dinámico y se ordena para maximizar el valor."
+  },
+  {
+    "question": "¿Cómo se mide el progreso hacia el Objetivo del Producto?",
+    "type": "multiple_choice",
+    "options": [
+      "Mediante el seguimiento del Product Backlog.",
+      "Mediante el presupuesto gastado.",
+      "Mediante la velocidad de los desarrolladores.",
+      "Mediante la opinión de los jefes."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El progreso se mide viendo el estado de los elementos del Product Backlog hacia el cumplimiento del Objetivo."
+  },
+  {
+    "question": "¿Puede un equipo Scrum tener más de un Product Owner?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, dependiendo de la complejidad.",
+      "No, solo uno.",
+      "Sí, uno por cada funcionalidad."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El Product Owner es una persona, no un comité."
+  },
+  {
+    "question": "¿Quién debe participar en la Sprint Retrospective?",
+    "type": "multiple_choice",
+    "options": [
+      "Solo los desarrolladores.",
+      "El equipo Scrum completo.",
+      "El Product Owner y los interesados.",
+      "El Scrum Master y los desarrolladores."
+    ],
+    "correctAnswer": [1],
+    "explanation": "La Retrospectiva es para que todo el Equipo Scrum inspeccione su proceso y mejore."
+  },
+  {
+    "question": "¿Qué sucede si el trabajo del Sprint no se completa?",
+    "type": "multiple_choice",
+    "options": [
+      "Se despide a los desarrolladores responsables.",
+      "El Sprint se extiende automáticamente.",
+      "El trabajo inacabado vuelve al Product Backlog.",
+      "El Product Owner cancela el producto."
+    ],
+    "correctAnswer": [2],
+    "explanation": "El trabajo que no cumple con la Definición de 'Hecho' vuelve al Product Backlog para ser reevaluado."
+  },
+  {
+    "question": "¿Cuál es la función del 'Sprint Backlog'?",
+    "type": "multiple_choice",
+    "options": [
+      "Una lista inmutable de tareas.",
+      "Un plan creado por y para los desarrolladores para el Sprint.",
+      "Un documento legal de compromiso.",
+      "Una lista de todas las tareas futuras del año."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Es un plan altamente visible, en tiempo real, del trabajo que los desarrolladores planean realizar para cumplir el Sprint Goal."
+  },
+  {
+    "question": "¿Qué es el 'Incremento'?",
+    "type": "multiple_choice",
+    "options": [
+      "Una demo de lo que se hará.",
+      "Un paso concreto hacia el Objetivo del Producto.",
+      "La documentación final del proyecto.",
+      "La lista de errores resueltos."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Cada incremento es un paso que debe estar 'terminado' y añadir valor real al producto."
+  },
+  {
+    "question": "¿Cuánto debe durar el Daily Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "30 minutos máximo.",
+      "60 minutos.",
+      "15 minutos máximo.",
+      "Depende del tamaño del equipo."
+    ],
+    "correctAnswer": [2],
+    "explanation": "Es un evento de 15 minutos para sincronizar el trabajo y planificar las próximas 24 horas."
+  },
+  {
+    "question": "¿Quién facilita los eventos de Scrum si es necesario?",
+    "type": "multiple_choice",
+    "options": [
+      "El Product Owner.",
+      "El Scrum Master.",
+      "El Líder Técnico.",
+      "El cliente."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El Scrum Master se asegura de que los eventos se lleven a cabo y sean productivos."
+  },
+  {
+    "question": "¿Puede el Product Backlog estar vacío?",
+    "type": "multiple_choice",
+    "options": [
+      "No, debe tener al menos un elemento.",
+      "Sí, al inicio.",
+      "Sí, si el producto está terminado."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El Product Backlog es una lista viva que evoluciona, pero nunca está 'terminada' mientras el producto exista."
+  },
+  {
+    "question": "¿Qué es la 'auto-gestión' en el equipo Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "El equipo decide quién hace qué y cómo.",
+      "El jefe decide qué hace el equipo.",
+      "El Scrum Master asigna las tareas.",
+      "Cada uno trabaja en lo que quiere."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Los equipos Scrum son responsables de gestionar su propio trabajo interno."
+  },
+  {
+    "question": "¿Cuál de estos es un pilar del empirismo?",
+    "type": "multiple_choice",
+    "options": [
+      "Planificación detallada.",
+      "Transparencia.",
+      "Jerarquía.",
+      "Velocidad."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Los tres pilares son Transparencia, Inspección y Adaptación."
+  },
+  {
+    "question": "¿Qué es el 'Objetivo del Producto'?",
+    "type": "multiple_choice",
+    "options": [
+      "El presupuesto anual.",
+      "La descripción de un estado futuro del producto.",
+      "La suma de todas las horas trabajadas.",
+      "Un hito de gestión."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Es el compromiso del Product Backlog; ayuda al equipo a saber por qué están construyendo el producto."
+  },
+  {
+    "question": "¿El Sprint Planning es obligatorio?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí.",
+      "No, es opcional.",
+      "Solo si el cliente lo pide."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Todos los eventos definidos en la Guía Scrum son obligatorios."
+  },
+  {
+    "question": "¿Qué es la 'transparencia' en Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "Decirle al cliente solo lo bueno.",
+      "Hacer que el proceso y el progreso sean visibles para los responsables del resultado.",
+      "Publicar el sueldo de los desarrolladores."
+    ],
+    "correctAnswer": [1],
+    "explanation": "La transparencia permite que se detecten desviaciones significativas a tiempo."
+  },
+  {
+    "question": "¿Quién puede cancelar un Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "Solo el Product Owner.",
+      "Los desarrolladores por mayoría.",
+      "El CEO de la empresa.",
+      "El cliente."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Es una prerrogativa exclusiva del Product Owner."
+  },
+  {
+    "question": "¿El Sprint Review es una presentación de diapositivas?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, obligatoriamente.",
+      "No, es un evento de colaboración.",
+      "Solo si el equipo quiere."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Es una sesión de trabajo, no una presentación de ventas o una reunión de estatus."
+  },
+  {
+    "question": "¿Qué es el 'refinamiento' del backlog?",
+    "type": "multiple_choice",
+    "options": [
+      "La aprobación final del cliente.",
+      "Acto de añadir detalle, estimaciones y orden a los elementos.",
+      "Borrar elementos antiguos."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Es el proceso de desglosar y definir el trabajo para que esté 'listo' para futuros Sprints."
+  },
+  {
+    "question": "¿Quién crea el plan del Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "El Product Owner.",
+      "El Scrum Master.",
+      "Los Desarrolladores."
+    ],
+    "correctAnswer": [2],
+    "explanation": "Los desarrolladores son responsables de crear el plan durante el Sprint Planning."
+  },
+  {
+    "question": "¿Los equipos Scrum tienen roles jerárquicos internos?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, el líder manda.",
+      "No, es una unidad cohesiva de profesionales.",
+      "Sí, hay un jefe de equipo."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Scrum se basa en la responsabilidad compartida y la falta de jerarquías internas."
+  },
+  {
+    "question": "¿Qué es el 'Incremento' terminado?",
+    "type": "multiple_choice",
+    "options": [
+      "Algo que el desarrollador cree que está listo.",
+      "Algo que cumple la Definición de 'Hecho'.",
+      "Algo que pasó las pruebas pero no el despliegue."
+    ],
+    "correctAnswer": [1],
+    "explanation": "La Definición de 'Hecho' es el estándar de calidad compartido."
+  },
+  {
+    "question": "¿El Scrum Master puede hacer tareas de desarrollo?",
+    "type": "multiple_choice",
+    "options": [
+      "No, está prohibido.",
+      "Sí, si el equipo lo necesita y no impide sus funciones.",
+      "Solo si el Product Owner lo ordena."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Si bien es posible, su enfoque principal debe ser la efectividad del equipo Scrum."
+  },
+  {
+    "question": "¿Qué ocurre en la 'Inspección' de Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "Se juzga a los individuos.",
+      "Se examinan los artefactos y el progreso hacia el objetivo.",
+      "Se redactan contratos nuevos."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Se deben inspeccionar los artefactos de Scrum y el progreso hacia los objetivos acordados."
+  },
+  {
+    "question": "¿Es necesario que el Product Backlog sea transparente?",
+    "type": "multiple_choice",
+    "options": [
+      "Solo para el Product Owner.",
+      "Sí, debe ser visible para todos los que participan en el proceso.",
+      "No, debe mantenerse confidencial para la competencia."
+    ],
+    "correctAnswer": [1],
+    "explanation": "La transparencia es un pilar de Scrum; los artefactos deben estar visibles para quienes los crean y quienes los utilizan."
+  },
+  {
+    "question": "¿Qué sucede con el Product Backlog cuando un elemento se completa?",
+    "type": "multiple_choice",
+    "options": [
+      "Se elimina permanentemente del sistema.",
+      "Se mueve al historial del equipo.",
+      "Se considera terminado y ya no forma parte del Product Backlog activo como trabajo pendiente."
+    ],
+    "correctAnswer": [2],
+    "explanation": "Una vez completado, el elemento ya no es 'pendiente' y se convierte en parte del Incremento."
+  },
+  {
+    "question": "¿Qué debe hacer el equipo si el cliente no asiste a la Sprint Review?",
+    "type": "multiple_choice",
+    "options": [
+      "Cancelar la Review.",
+      "Hacer la Review de todos modos, ya que es un evento para el equipo y los interesados.",
+      "Reprogramarla indefinidamente."
+    ],
+    "correctAnswer": [1],
+    "explanation": "La Review es un evento de colaboración para inspeccionar el incremento; aunque la presencia de los interesados es vital, el equipo Scrum debe proceder para mantener el ritmo y la inspección."
+  },
+  {
+    "question": "¿Qué es el 'Empirismo' en Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "Basarse en planes a largo plazo.",
+      "Basarse en la experiencia, la observación y la evidencia.",
+      "Basarse en la jerarquía corporativa."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Scrum se fundamenta en el empirismo: el conocimiento proviene de la experiencia y de tomar decisiones basadas en lo que se conoce."
+  },
+  {
+    "question": "¿Puede un equipo Scrum trabajar en varios productos a la vez?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, es lo ideal para la productividad.",
+      "No, el equipo Scrum se enfoca en un único Producto.",
+      "Solo si el Scrum Master lo permite."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Un equipo Scrum tiene un solo Product Backlog y un solo Objetivo del Producto, lo que implica foco en un solo producto."
+  },
+  {
+    "question": "¿Qué es la 'Adaptación' en Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "Cambiar el alcance del proyecto arbitrariamente.",
+      "Ajustar el proceso o el producto si se detecta una desviación significativa.",
+      "Seguir el plan original a toda costa."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Si un aspecto del producto o proceso se desvía de los límites aceptables, el proceso o el material deben ajustarse inmediatamente."
+  },
+  {
+    "question": "¿El equipo Scrum debe ser multifuncional?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, deben tener todas las habilidades necesarias para crear un incremento.",
+      "No, es mejor tener especialistas aislados.",
+      "Solo en grandes empresas."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Los desarrolladores deben ser multifuncionales para poder entregar un incremento terminado sin depender de terceros externos al equipo."
+  },
+  {
+    "question": "¿Quién es responsable de la calidad del producto?",
+    "type": "multiple_choice",
+    "options": [
+      "Solo los testers.",
+      "Solo el equipo de calidad.",
+      "Todo el Equipo Scrum."
+    ],
+    "correctAnswer": [2],
+    "explanation": "La calidad es responsabilidad colectiva; se formaliza mediante la 'Definición de Hecho'."
+  },
+  {
+    "question": "¿Qué es un Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "Un periodo de trabajo de 2 semanas exactas.",
+      "El corazón de Scrum, un evento de duración fija.",
+      "Una reunión de planificación."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Es un contenedor de todos los demás eventos, de duración fija, donde se genera valor."
+  },
+  {
+    "question": "¿Qué es el 'Backlog de Sprint'?",
+    "type": "multiple_choice",
+    "options": [
+      "Una lista de tareas de todo el año.",
+      "El plan para el Sprint actual, que incluye el Objetivo, los elementos elegidos y el plan de trabajo.",
+      "Un documento de requisitos."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Es la representación visible del trabajo que los desarrolladores planean completar en el Sprint."
+  },
+  {
+    "question": "¿El Scrum Master debe asignar tareas a los desarrolladores?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, para ser eficiente.",
+      "No, el equipo es autogestionado.",
+      "Solo a los nuevos miembros."
+    ],
+    "correctAnswer": [1],
+    "explanation": "La asignación de tareas contradice el principio de autogestión de los desarrolladores."
+  },
+  {
+    "question": "¿Qué es un 'Incremento'?",
+    "type": "multiple_choice",
+    "options": [
+      "Una suma de valor que es un paso hacia el Objetivo del Producto.",
+      "Una subida de sueldo.",
+      "Un informe de progreso."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Es un paso concreto y utilizable hacia el objetivo final."
+  },
+  {
+    "question": "¿Pueden los desarrolladores cambiar el plan durante el Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "No, está prohibido.",
+      "Sí, siempre que sea necesario para alcanzar el objetivo.",
+      "Solo con permiso del cliente."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El alcance puede aclararse y renegociarse con el PO a medida que se aprende más, siempre que no afecte el Sprint Goal."
+  },
+  {
+    "question": "¿Qué sucede con el Product Backlog si el mercado cambia drásticamente?",
+    "type": "multiple_choice",
+    "options": [
+      "Se mantiene igual para no perder el enfoque.",
+      "Se reordena y ajusta para reflejar la nueva realidad.",
+      "Se cierra el producto."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Es un artefacto dinámico que debe adaptarse a los cambios del mercado."
+  },
+  {
+    "question": "¿El Scrum Master es un jefe de equipo?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, tiene autoridad sobre los desarrolladores.",
+      "No, es un líder servicial.",
+      "Sí, pero solo sobre el Product Owner."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El Scrum Master no tiene autoridad jerárquica sobre los miembros del equipo."
+  },
+  {
+    "question": "¿Es necesario el consenso para la Definición de Hecho?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, todo el equipo debe estar de acuerdo.",
+      "No, lo decide el Product Owner.",
+      "No, lo decide el jefe técnico."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Debe haber una comprensión común de lo que significa 'terminado' para garantizar la calidad."
+  },
+  {
+    "question": "¿Qué debe hacer el equipo durante la Sprint Review?",
+    "type": "multiple_choice",
+    "options": [
+      "Presentar el trabajo hecho a los interesados.",
+      "Discutir conflictos interpersonales.",
+      "Planificar el próximo Sprint."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El propósito es mostrar lo que se ha logrado y colaborar en los próximos pasos del producto."
+  },
+  {
+    "question": "¿Quién es el dueño del Objetivo del Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "El Product Owner.",
+      "El equipo Scrum en conjunto.",
+      "El cliente."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Aunque el PO define el valor, el equipo se compromete con el objetivo durante el Sprint Planning."
+  },
+  {
+    "question": "¿Qué es la 'deuda técnica' en Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "Una deuda bancaria.",
+      "Trabajo no terminado o de baja calidad que afecta al incremento.",
+      "Una característica nueva."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Es trabajo acumulado que debe gestionarse para no comprometer la calidad del incremento futuro."
+  },
+  {
+    "question": "¿El Daily Scrum sirve para informar al Scrum Master?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, es un informe de estatus.",
+      "No, es para que los desarrolladores sincronicen su trabajo.",
+      "Sí, sirve para que él actualice el plan."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El Daily es para los desarrolladores, no para el Scrum Master o el PO."
+  },
+  {
+    "question": "¿Qué es lo más importante en la Sprint Retrospective?",
+    "type": "multiple_choice",
+    "options": [
+      "Asignar culpas por los errores cometidos.",
+      "Identificar mejoras en la forma de trabajar del equipo.",
+      "Calcular la productividad exacta de cada individuo."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El propósito es inspeccionar el proceso y acordar mejoras accionables para el siguiente Sprint."
+  },
+  {
+    "question": "¿Qué sucede si un miembro del equipo Scrum es poco eficiente?",
+    "type": "multiple_choice",
+    "options": [
+      "El Scrum Master lo sustituye de inmediato.",
+      "El equipo debe autogestionarse para apoyarlo o resolver el problema.",
+      "El Product Owner le asigna menos tareas."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Scrum se basa en la autogestión y el apoyo mutuo dentro de un equipo cohesionado."
+  },
+  {
+    "question": "¿Quién puede decidir la cancelación del Product Backlog?",
+    "type": "multiple_choice",
+    "options": [
+      "Nadie, el producto solo se termina si el valor cae a cero o el cliente lo decide.",
+      "El Scrum Master.",
+      "Los desarrolladores."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Un Product Backlog existe mientras exista el producto. No se 'cancela' a menos que el producto sea retirado."
+  },
+  {
+    "question": "¿El Sprint Backlog puede cambiar durante el Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "Nunca.",
+      "Sí, a medida que los desarrolladores aprenden más sobre el trabajo necesario.",
+      "Solo si el Product Owner lo autoriza por escrito."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El plan es dinámico y los desarrolladores pueden ajustarlo durante el Sprint para alcanzar el objetivo."
+  },
+  {
+    "question": "¿Qué es la 'Velocidad'?",
+    "type": "multiple_choice",
+    "options": [
+      "Un indicador oficial exigido por la Guía Scrum.",
+      "Una métrica empírica que el equipo puede usar, pero no obligatoria en Scrum.",
+      "La medida de la calidad del código."
+    ],
+    "correctAnswer": [1],
+    "explanation": "La velocidad no es un concepto definido en la Guía Scrum oficial, aunque muchos equipos la utilizan voluntariamente."
+  },
+  {
+    "question": "¿Qué rol es el responsable de asegurar que los eventos sean positivos y productivos?",
+    "type": "multiple_choice",
+    "options": [
+      "El Product Owner.",
+      "El Scrum Master.",
+      "Los desarrolladores."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El Scrum Master es responsable de la efectividad del equipo y de que los eventos se desarrollen correctamente."
+  },
+  {
+    "question": "¿Cuándo se debe realizar la Retrospectiva?",
+    "type": "multiple_choice",
+    "options": [
+      "Antes de la Sprint Review.",
+      "Al finalizar el Sprint, después de la Review y antes del siguiente Planning.",
+      "Cada vez que el equipo sienta que hay un conflicto."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Es el último evento del Sprint (antes del siguiente Planning)."
+  },
+  {
+    "question": "¿Puede un equipo Scrum ser de más de 10 personas?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, el tamaño no importa.",
+      "Generalmente no; se recomienda un equipo pequeño (10 o menos) para mantener la agilidad.",
+      "Solo si el proyecto es muy grande."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Equipos grandes generan demasiada complejidad de comunicación; la Guía recomienda 10 o menos."
+  },
+  {
+    "question": "¿Es el 'Sprint Goal' un artefacto?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí.",
+      "No, es el compromiso del Sprint Backlog.",
+      "Es un evento."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El Sprint Goal es el compromiso del Sprint Backlog, tal como el Incremento es el compromiso de la Definición de Hecho."
+  },
+  {
+    "question": "¿Quién debe asistir al Sprint Planning?",
+    "type": "multiple_choice",
+    "options": [
+      "Solo el equipo Scrum.",
+      "Todo el equipo Scrum y, opcionalmente, personas externas para asesorar.",
+      "El jefe de la empresa."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El evento es para el equipo Scrum, pero pueden invitar a expertos para facilitar la planificación."
+  },
+  {
+    "question": "¿El incremento debe ser entregable al final de cada Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, obligatoriamente.",
+      "Solo si el cliente está disponible.",
+      "No, solo al final del proyecto."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El objetivo del Sprint es producir un incremento utilizable ('terminado')."
+  },
+  {
+    "question": "¿Quién es responsable de la visión del producto?",
+    "type": "multiple_choice",
+    "options": [
+      "El Product Owner.",
+      "El Scrum Master.",
+      "El equipo de ventas."
+    ],
+    "correctAnswer": [0],
+    "explanation": "La visión y el valor son responsabilidad central del Product Owner."
+  },
+  {
+    "question": "¿Qué significa que un equipo sea 'multifuncional'?",
+    "type": "multiple_choice",
+    "options": [
+      "Que tienen los recursos necesarios para crear un incremento sin ayuda externa.",
+      "Que todos saben hacer todo a la perfección.",
+      "Que tienen muchas herramientas instaladas."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Significa no depender de especialistas de fuera del equipo Scrum."
+  },
+  {
+    "question": "¿Se deben incluir los requisitos de rendimiento en el Product Backlog?",
+    "type": "multiple_choice",
+    "options": [
+      "No, solo características funcionales.",
+      "Sí, todos los requisitos que afecten al producto.",
+      "Se deben poner en un documento aparte."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Todo el trabajo va al Product Backlog para su visibilidad y priorización."
+  },
+  {
+    "question": "¿Qué pasa si el Scrum Master se ausenta durante el Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "El Sprint se cancela.",
+      "El equipo debe buscar la forma de seguir siendo autogestionado.",
+      "El equipo debe dejar de trabajar hasta que vuelva."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El equipo Scrum es autogestionado y debe mantener el flujo."
+  },
+  {
+    "question": "¿Es la 'reunión de estado' un evento Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, el Daily Scrum es una reunión de estado.",
+      "No, el Daily Scrum es para sincronización y planificación.",
+      "Sí, es la Sprint Review."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El Daily no es para dar reportes al jefe, sino para sincronizar el trabajo de los desarrolladores."
+  },
+  {
+    "question": "¿El Product Owner tiene que estar en el Daily Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, es obligatorio.",
+      "Solo si es desarrollador.",
+      "No, no es necesario."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Solo los desarrolladores son obligatorios; otros pueden asistir si no interrumpen."
+  },
+  {
+    "question": "¿Quién decide qué técnica de desarrollo usar?",
+    "type": "multiple_choice",
+    "options": [
+      "El Scrum Master.",
+      "Los desarrolladores.",
+      "El Product Owner."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Los desarrolladores deciden el 'cómo' construir el incremento."
+  },
+  {
+    "question": "¿Puede el Product Owner cambiar la prioridad del Backlog en medio del Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, pero no debe afectar al Sprint Goal actual.",
+      "No, nunca.",
+      "Sí, puede cambiar todo el Sprint."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Los cambios no deben comprometer el objetivo del Sprint actual, pero el Backlog sí puede reordenarse."
+  },
+  {
+    "question": "¿Es Scrum un método de desarrollo de software?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, es una metodología rígida.",
+      "No, es un marco de trabajo (framework) para resolver problemas complejos.",
+      "Es un software de gestión."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Scrum es un marco de trabajo ligero para generar valor a través de soluciones adaptativas para problemas complejos."
+  },
+  {
+    "question": "¿Quién crea la definición de \"hecho\"?",
+    "type": "multiple_choice",
+    "options": ["La organización de desarrollo.", "El Equipo Scrum, en un esfuerzo colaborativo.", "El Product Owner.", "El Scrum Master."],
+    "correctAnswer": [1],
+    "explanation": "Si la definición no es un estándar de la organización, el equipo Scrum debe definirla colaborativamente para asegurar la calidad del incremento."
+  },
+  {
+    "question": "¿Debe estar presente el Product Owner en la retrospectiva de Sprint?",
+    "type": "multiple_choice",
+    "options": ["Solo si es invitado.", "Es obligatorio, es una oportunidad para todo el equipo.", "No está permitido."],
+    "correctAnswer": [1],
+    "explanation": "La Retrospectiva es una oportunidad para que todo el equipo Scrum, incluido el Product Owner, inspeccione el proceso y mejore."
+  },
+  {
+    "question": "¿Cuál es la función principal de los gráficos de tipo 'Burn-down' dentro de un proyecto que utiliza Scrum?",
+    "type": "multiple_choice",
+    "options": ["Determinar el sueldo de los miembros del equipo según su rendimiento.", "Visualizar la cantidad de trabajo pendiente frente al tiempo disponible en el Sprint actual.", "Hacer un inventario de los materiales y equipos técnicos utilizados en el desarrollo.", "Calcular el número total de errores detectados en la fase de control de calidad."],
+    "correctAnswer": [1],
+    "explanation": "El gráfico de burn-down muestra la tendencia del trabajo restante a lo largo del tiempo durante el Sprint."
+  },
+  {
+    "question": "¿Qué dinámicas definen mejor la colaboración entre el Product Owner y el equipo de desarrollo?",
+    "type": "multiple_choice",
+    "options": ["Una relación de supervisión donde el PO da órdenes directas.", "Una colaboración constante para equilibrar el esfuerzo técnico y la entrega de valor al usuario.", "Una comunicación limitada para no interrumpir el trabajo de programación.", "Trabajar de forma totalmente aislada para evitar conflictos de intereses."],
+    "correctAnswer": [1],
+    "explanation": "La colaboración constante es esencial para que los desarrolladores entiendan las necesidades de valor y los usuarios reales."
+  },
+  {
+    "question": "¿Por qué se considera una buena práctica que el Product Owner ordene el Product Backlog basándose en el valor?",
+    "type": "multiple_choice",
+    "options": ["Porque los puntos de valor son una métrica absoluta que nunca cambia.", "Porque es una forma de alinear el desarrollo con lo que el mercado realmente necesita.", "Porque los puntos de valor definen la complejidad técnica del sistema.", "Porque el reglamento de Scrum lo exige como requisito obligatorio para cualquier proyecto."],
+    "correctAnswer": [1],
+    "explanation": "Las estimaciones de valor son predicciones; el valor real se confirma únicamente mediante el uso y feedback real del mercado."
+  },
+  {
+    "question": "¿Qué responsabilidades recaen específicamente sobre un equipo de desarrollo que se autogestiona?",
+    "type": "multiple_choice",
+    "options": ["Decidir el orden de prioridad del Product Backlog.", "Contratar o despedir a miembros del equipo según sea necesario.", "Estimar el esfuerzo técnico y desglosar el trabajo en tareas ejecutables.", "Definir los objetivos de negocio y financieros del producto."],
+    "correctAnswer": [2],
+    "explanation": "El equipo de desarrollo se autogestiona para decidir cómo realizar el trabajo, estimarlo y desglosarlo en tareas."
+  },
+  {
+    "question": "¿Cómo es el nivel de detalle de los elementos del Product Backlog según su posición en la lista?",
+    "type": "multiple_choice",
+    "options": ["Todos los elementos deben tener siempre el mismo nivel de detalle, sin importar su prioridad.", "Los elementos inferiores tienen menos detalle porque están más alejados en el tiempo.", "Los elementos de abajo deben estar más detallados para no olvidarlos después.", "El nivel de detalle no importa, solo importa la fecha de creación del elemento."],
+    "correctAnswer": [1],
+    "explanation": "Los elementos menos prioritarios se detallan menos hasta que se acercan a la parte superior del backlog."
+  },
+  {
+    "question": "¿Es correcto afirmar que la Revisión del Sprint es el único momento para recibir feedback de los interesados?",
+    "type": "multiple_choice",
+    "options": ["Sí, es la única forma de evitar que los interesados interrumpan el flujo de trabajo.", "No, el feedback es continuo y la Revisión es solo un evento formal de inspección.", "Sí, Scrum prohíbe el contacto con interesados fuera de este evento.", "No, el feedback se debe recoger únicamente mediante encuestas digitales automatizadas."],
+    "correctAnswer": [1],
+    "explanation": "El Product Owner interactúa con los interesados continuamente; la Revisión es solo un evento formal de inspección."
+  },
+  {
+    "question": "Cuando existen varios equipos trabajando sobre el mismo producto, ¿quién es responsable de que sus entregas sean compatibles?",
+    "type": "multiple_choice",
+    "options": ["El equipo de control de calidad o QA de forma externa.", "Los equipos de desarrollo mediante la coordinación de su trabajo técnico.", "El Product Owner actuando como el único integrador técnico.", "El Scrum Master, quien debe realizar la integración de código."],
+    "correctAnswer": [1],
+    "explanation": "Es responsabilidad de los equipos de desarrollo integrar su trabajo en un único incremento utilizable."
+  },
+  {
+    "question": "¿Por qué es fundamental para un Product Owner que exista una 'Definición de Hecho' clara?",
+    "type": "multiple_choice",
+    "options": ["Para saber exactamente qué tareas están pendientes de ser asignadas.", "Para asegurar que el incremento cumple con los estándares de calidad necesarios para ser publicado.", "Para controlar las horas exactas de trabajo de cada desarrollador.", "Para que el equipo tenga una lista de excusas si no terminan el trabajo a tiempo."],
+    "correctAnswer": [1],
+    "explanation": "La definición asegura que el incremento cumpla con el estándar de calidad necesario para su lanzamiento y visibilidad."
+  },
+  {
+    "question": "¿Cómo se describiría de forma más precisa qué es un Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["Es un conjunto de documentos legales que definen el contrato del proyecto.", "Es una lista estática de tareas que no puede ser alterada una vez iniciada.", "Es un artefacto vivo y dinámico con todo lo necesario para la evolución del producto.", "Es un informe de errores y fallos reportados por los usuarios finales."],
+    "correctAnswer": [2],
+    "explanation": "El Product Backlog es la lista única y dinámica de todo lo necesario para evolucionar el producto."
+  },
+  {
+    "question": "¿Qué explica el fenómeno conocido como el 'Cono de la Incertidumbre' en el desarrollo de software?",
+    "type": "multiple_choice",
+    "options": ["Que al inicio de un proyecto se tiene menos información y, por tanto, mayor incertidumbre.", "Que la incertidumbre aumenta a medida que el equipo adquiere más conocimiento del producto.", "Que el éxito del proyecto depende totalmente de la capacidad de adivinación del Product Owner.", "Que la incertidumbre se mantiene igual desde el primer día hasta la entrega final."],
+    "correctAnswer": [0],
+    "explanation": "Al inicio del proyecto hay menos información, por lo que la incertidumbre es más alta."
+  },
+  {
+    "question": "¿Cuál es la ventaja de que el Product Owner utilice Sprints cortos?",
+    "type": "multiple_choice",
+    "options": ["Permite tener un control jerárquico más estricto sobre el personal.", "Facilita la entrega frecuente de incrementos para probar hipótesis en el mercado real.", "Obliga al equipo a trabajar más rápido sin descanso.", "Es la mejor forma de evitar que el cliente cambie de opinión."],
+    "correctAnswer": [1],
+    "explanation": "La entrega frecuente de incrementos permite probar hipótesis frente al mercado real en cada ciclo."
+  },
+  {
+    "question": "¿Quién es el responsable de definir el objetivo del Sprint antes de comenzar la reunión de Planificación?",
+    "type": "multiple_choice",
+    "options": ["El Scrum Master como facilitador del evento.", "El Product Owner como único dueño de la visión.", "Nadie, el objetivo se define de forma colaborativa durante la reunión de Planificación.", "El equipo de desarrollo basándose exclusivamente en sus preferencias técnicas."],
+    "correctAnswer": [2],
+    "explanation": "El objetivo del Sprint se define de manera colaborativa durante la Sprint Planning."
+  },
+  {
+    "question": "¿Qué requisitos previos deben cumplirse obligatoriamente para iniciar la reunión de Planificación del Sprint?",
+    "type": "multiple_choice",
+    "options": ["Tener un documento de especificaciones técnicas completo.", "No existen condiciones previas obligatorias más allá de tener el equipo preparado.", "Tener el Backlog perfectamente refinado al 100%.", "Haber realizado una presentación ante todos los directivos de la empresa."],
+    "correctAnswer": [1],
+    "explanation": "Scrum es flexible; el equipo se reúne y define el trabajo para el Sprint durante el evento mismo."
+  },
+  {
+    "question": "¿Es obligatorio publicar un incremento de producto al finalizar cada Sprint?",
+    "type": "multiple_choice",
+    "options": ["Sí, es la única forma de demostrar progreso a la empresa.", "No, la decisión de liberar depende de factores comerciales y estratégicos.", "Sí, si no se publica, el Sprint se considera un fracaso.", "No, porque los incrementos solo se publican una vez al año."],
+    "correctAnswer": [1],
+    "explanation": "El incremento debe ser 'terminado' (utilizable), pero la decisión de liberarlo al mercado depende de factores comerciales."
+  },
+  {
+    "question": "¿Qué significa aplicar el concepto de 'aprendizaje validado' en el trabajo diario?",
+    "type": "multiple_choice",
+    "options": ["Que los desarrolladores deben estudiar nuevas tecnologías constantemente.", "Que la validación solo ocurre mediante exámenes de certificación profesional.", "Que se debe lanzar funcionalidad para medir la reacción real del mercado y ajustar el producto.", "Que el Product Owner debe aprobar todo basándose únicamente en su intuición."],
+    "correctAnswer": [2],
+    "explanation": "Validamos el aprendizaje al exponer el incremento al mercado y medir su reacción."
+  },
+  {
+    "question": "¿Cómo debe actuar el Product Owner si considera que la definición de 'Hecho' necesita una mejora?",
+    "type": "multiple_choice",
+    "options": ["Debe cambiarla él mismo sin consultar a nadie.", "Debe plantearlo en la Retrospectiva para que el equipo lo discuta.", "Debe exigir al equipo que trabaje de forma diferente a partir de mañana.", "Debe ignorar el tema para no causar malestar en el equipo."],
+    "correctAnswer": [1],
+    "explanation": "La definición de hecho pertenece al equipo de desarrollo; cualquier cambio debe discutirse en la retrospectiva."
+  },
+  {
+    "question": "¿Cómo impacta la deuda técnica en el trabajo de un Product Owner?",
+    "type": "multiple_choice",
+    "options": ["Aumenta los costos de mantenimiento y reduce la velocidad para nuevas funciones.", "No tiene impacto alguno, ya que es un tema puramente técnico del equipo.", "Hace que el producto sea imposible de vender en el mercado.", "Simplifica el proceso de trabajo al no tener que preocuparse por la calidad."],
+    "correctAnswer": [0],
+    "explanation": "La deuda técnica ralentiza la capacidad de entrega futura y aumenta el costo de operar el sistema."
+  },
+  {
+    "question": "¿Es el Product Owner lo mismo que un Project Manager en la gestión tradicional?",
+    "type": "multiple_choice",
+    "options": ["Sí, ambos gestionan plazos, presupuestos y personas.", "No, el Product Owner se enfoca en el valor del producto, mientras que el PM tradicional gestiona recursos.", "Sí, es simplemente un cambio de nombre en las metodologías ágiles.", "No, porque el Product Owner no tiene ninguna responsabilidad en el proyecto."],
+    "correctAnswer": [1],
+    "explanation": "El PO se enfoca en el valor del producto, mientras que el PM tradicional suele gestionar recursos, plazos y jerarquías."
+  },
+  {
+    "question": "¿Puede el Product Owner delegar en otras personas la tarea de ordenar el Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["No, es una tarea que debe realizar él solo sin ayuda.", "Sí, puede delegar el trabajo de gestión siempre que mantenga la visión final.", "Sí, pero solo si el equipo de desarrollo es muy pequeño.", "No, porque el Scrum Master es el único autorizado para tocar el Backlog."],
+    "correctAnswer": [1],
+    "explanation": "Aunque es responsable, puede delegar tareas de gestión mientras mantenga la propiedad final."
+  },
+  {
+    "question": "¿Quién tiene la autoridad final para decidir qué constituye la definición de 'Hecho'?",
+    "type": "multiple_choice",
+    "options": ["El Product Owner.", "El equipo de desarrollo.", "El Scrum Master.", "La gerencia de la empresa."],
+    "correctAnswer": [1],
+    "explanation": "Es responsabilidad exclusiva del equipo de desarrollo, ya que ellos realizan el trabajo técnico."
+  },
+  {
+    "question": "¿Quién tiene la autoridad para modificar el Sprint Backlog una vez iniciado el Sprint?",
+    "type": "multiple_choice",
+    "options": ["El equipo de desarrollo.", "El Product Owner.", "El Scrum Master.", "Los interesados del negocio."],
+    "correctAnswer": [0],
+    "explanation": "Solo los desarrolladores pueden modificar el plan de trabajo interno durante el Sprint."
+  },
+  {
+    "question": "¿Es recomendable que el Product Owner y el Scrum Master pertenezcan al equipo de desarrollo?",
+    "type": "multiple_choice",
+    "options": ["Sí, es la configuración obligatoria en Scrum.", "No, sus roles siempre deben estar fuera del equipo técnico.", "No es lo ideal, pero pueden desempeñar múltiples roles si el contexto lo requiere.", "Sí, para que puedan controlar mejor todo el trabajo."],
+    "correctAnswer": [2],
+    "explanation": "Aunque no es lo ideal, pueden desempeñar múltiples roles simultáneamente si el contexto lo requiere."
+  },
+  {
+    "question": "¿Es cierto que incluir más funciones en un producto siempre añade más valor?",
+    "type": "multiple_choice",
+    "options": ["Sí, a mayor cantidad de funciones, más valor para el usuario.", "No, el valor proviene de resolver problemas, no de añadir complejidad innecesaria.", "Sí, porque los usuarios siempre piden más botones y opciones.", "No, solo añade valor si las funciones tienen un color atractivo."],
+    "correctAnswer": [1],
+    "explanation": "El valor proviene de resolver problemas, no de la cantidad de funciones, que pueden añadir complejidad innecesaria."
+  },
+  {
+    "question": "¿Cuáles son algunas actividades típicas de un Product Owner durante el transcurso de un Sprint?",
+    "type": "multiple_choice",
+    "options": ["Realizar el refinamiento del Backlog y colaborar con los interesados.", "Supervisar las horas exactas de trabajo de cada desarrollador.", "Escribir personalmente el código de todo el producto.", "Gestionar las vacaciones y salarios del personal."],
+    "correctAnswer": [0],
+    "explanation": "El PO dedica tiempo a mantener el backlog claro y a entender las necesidades del negocio/interesados."
+  },
+  {
+    "question": "¿Puede el Product Owner posponer el inicio de un nuevo Sprint?",
+    "type": "multiple_choice",
+    "options": ["Sí, si el Backlog no está completamente listo.", "No, los Sprints son consecutivos y deben comenzar uno tras otro.", "Sí, para que el equipo pueda tomarse un descanso.", "No, solo si el cliente final lo autoriza."],
+    "correctAnswer": [1],
+    "explanation": "Los Sprints son consecutivos; uno comienza inmediatamente después del otro."
+  },
+  {
+    "question": "¿Qué debe hacer el Product Owner si observa que el equipo no terminará los elementos del Sprint?",
+    "type": "multiple_choice",
+    "options": ["Ajustar el alcance de forma colaborativa para mantener la calidad.", "Cancelar el Sprint inmediatamente.", "Forzar al equipo a trabajar horas extra.", "Eliminar los elementos de la lista sin consultar."],
+    "correctAnswer": [0],
+    "explanation": "El PO colabora para ajustar el alcance de forma que se pueda cumplir con el objetivo del Sprint de forma realista."
+  },
+  {
+    "question": "¿Se debe evitar el conflicto dentro de un equipo Scrum a toda costa?",
+    "type": "multiple_choice",
+    "options": ["Sí, es una señal de falta de profesionalismo.", "No, el conflicto constructivo ayuda a explorar ideas y alinear objetivos.", "Sí, un equipo debe estar siempre de acuerdo en todo.", "No, el conflicto sirve para demostrar quién tiene más autoridad."],
+    "correctAnswer": [1],
+    "explanation": "El conflicto constructivo ayuda a explorar ideas y alinear los objetivos del producto."
+  },
+  {
+    "question": "¿Quién tiene la responsabilidad principal de estimar el esfuerzo del Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["El equipo de desarrollo.", "El Product Owner.", "El Scrum Master.", "Los interesados."],
+    "correctAnswer": [0],
+    "explanation": "Los desarrolladores son los únicos que conocen la complejidad técnica necesaria para realizar el trabajo."
+  },
+  {
+    "question": "¿Cuál es la actitud correcta del Product Owner ante los grupos de interés?",
+    "type": "multiple_choice",
+    "options": ["Solicitar feedback activo para entender qué necesitan.", "Aceptar sin cuestionar todas las peticiones que hagan.", "Limitar la comunicación a una vez al mes.", "Delegar la relación con ellos al Scrum Master."],
+    "correctAnswer": [0],
+    "explanation": "El PO debe ser proactivo en recolectar información y feedback de los interesados para maximizar el valor."
+  },
+  {
+    "question": "¿Qué ocurre con los elementos que no cumplen la definición de 'Hecho' al final de un Sprint?",
+    "type": "multiple_choice",
+    "options": ["Deben volver al Product Backlog para ser reevaluados y priorizados.", "Se consideran automáticamente completados al siguiente Sprint.", "Se descartan permanentemente del producto.", "Se lanzan al mercado como una versión beta."],
+    "correctAnswer": [0],
+    "explanation": "Cualquier trabajo inacabado debe reevaluarse y priorizarse de nuevo en el backlog."
+  },
+  {
+    "question": "¿Puede el Product Owner delegar algunas de sus responsabilidades?",
+    "type": "multiple_choice",
+    "options": ["Sí, aunque la rendición de cuentas final sigue siendo del PO.", "No, bajo ninguna circunstancia.", "Sí, pero pierde su autoridad frente al equipo.", "No, porque es un rol técnico puro."],
+    "correctAnswer": [0],
+    "explanation": "Delegar tareas es posible, pero la rendición de cuentas sigue siendo del PO."
+  },
+  {
+    "question": "¿Qué sucede con el alcance del trabajo mientras el equipo desarrolla el Sprint?",
+    "type": "multiple_choice",
+    "options": ["El alcance se aclara a medida que hay más información.", "El alcance se bloquea y es inamovible.", "El alcance debe crecer obligatoriamente cada día.", "El alcance desaparece porque el equipo trabaja a ciegas."],
+    "correctAnswer": [0],
+    "explanation": "A medida que el equipo aprende, el alcance se refina para mejorar el producto."
+  },
+  {
+    "question": "¿Quién está mejor posicionado para conocer el progreso empresarial del producto?",
+    "type": "multiple_choice",
+    "options": ["El Product Owner, por su enlace directo con el negocio.", "El equipo de desarrollo por la cantidad de código escrito.", "El Scrum Master, al ser el observador del proceso.", "El cliente, mediante el pago de facturas."],
+    "correctAnswer": [0],
+    "explanation": "El PO es el enlace directo con el negocio y debe entender las metas financieras y estratégicas."
+  },
+  {
+    "question": "¿Cuáles son las prácticas obligatorias de seguimiento de progreso en Scrum?",
+    "type": "multiple_choice",
+    "options": ["Uso obligatorio de gráficas Burn-down.", "Uso obligatorio de reportes de Velocity.", "No existen prácticas obligatorias de progreso; el equipo elige lo que les da transparencia.", "Uso obligatorio de seguimiento por horas por persona."],
+    "correctAnswer": [2],
+    "explanation": "Scrum no obliga al uso de gráficos específicos; el equipo elige lo que les dé transparencia."
+  },
+  {
+    "question": "¿Cómo determina una organización si está teniendo éxito con su producto?",
+    "type": "multiple_choice",
+    "options": ["Por el número de funciones entregadas al mes.", "Por la entrega constante de valor real probada por el feedback del mercado.", "Por la velocidad técnica registrada en los reportes.", "Por la cantidad de horas extras que realiza el equipo."],
+    "correctAnswer": [1],
+    "explanation": "El éxito se mide mediante la entrega de valor real probada por métricas y feedback tras el lanzamiento."
+  },
+  {
+    "question": "¿Cuál es la responsabilidad principal del Product Owner?",
+    "type": "multiple_choice",
+    "options": ["Maximizar el valor del producto y el retorno de la inversión.", "Coordinar todas las tareas técnicas del equipo.", "Escribir toda la documentación técnica detallada.", "Asegurarse de que el equipo no tenga días de descanso."],
+    "correctAnswer": [0],
+    "explanation": "El foco principal del PO es el retorno de la inversión y la maximización del valor del producto."
+  },
+  {
+    "question": "¿Cómo debe ser vista la autoridad del Product Owner sobre el Backlog?",
+    "type": "multiple_choice",
+    "options": ["Debe ser respetada por toda la organización.", "Debe ser siempre validada por un comité.", "Es solo una sugerencia para el equipo técnico.", "Es inexistente, ya que el equipo manda."],
+    "correctAnswer": [0],
+    "explanation": "La autoridad del PO debe ser respetada por toda la organización para que sus decisiones tengan efecto real."
+  },
+  {
+    "question": "¿Cuál es el enfoque de Scrum sobre las 'líneas base' (baselining) estáticas?",
+    "type": "multiple_choice",
+    "options": ["Scrum las evita, prefiriendo la adaptación constante.", "Son obligatorias al inicio del proyecto.", "Se deben actualizar cada mes por la gerencia.", "Son la única forma de medir el éxito."],
+    "correctAnswer": [0],
+    "explanation": "Scrum evita las líneas base estáticas, prefiriendo la adaptación constante."
+  },
+  {
+    "question": "¿Es el valor del producto algo que se mide exclusivamente a través de los ingresos económicos?",
+    "type": "multiple_choice",
+    "options": ["Sí, es la única métrica válida.", "No, el valor incluye satisfacción, cuota de mercado, ahorro de costos, aprendizaje, etc.", "Sí, el resto son métricas subjetivas.", "No, el valor no se puede medir bajo ninguna circunstancia."],
+    "correctAnswer": [1],
+    "explanation": "El valor puede ser cuota de mercado, satisfacción, ahorro de costos, aprendizaje, etc."
+  },
+  {
+    "question": "¿Es necesario diseñar todas las pruebas de aceptación antes de comenzar el desarrollo?",
+    "type": "multiple_choice",
+    "options": ["Sí, si no se hace así, hay riesgo de errores.", "No, Scrum fomenta el refinamiento Just-in-Time.", "Sí, forma parte de los requisitos de calidad.", "No, el desarrollo no requiere pruebas de aceptación."],
+    "correctAnswer": [1],
+    "explanation": "Scrum fomenta el refinamiento Just-in-Time; no es necesario diseñar todo al principio."
+  },
+  {
+    "question": "¿Se puede empezar el primer Sprint sin tener el Product Backlog completo?",
+    "type": "multiple_choice",
+    "options": ["Sí, solo se requiere suficiente detalle para empezar.", "No, es imposible empezar sin todo definido.", "Sí, siempre y cuando el equipo acepte trabajar gratis.", "No, el Backlog debe ser perfecto desde el día uno."],
+    "correctAnswer": [0],
+    "explanation": "Solo se requiere suficiente detalle para empezar el primer Sprint; el backlog crece y evoluciona."
+  },
+  {
+    "question": "¿Qué debe hacer el Product Owner si el equipo no puede terminar el trabajo del Sprint?",
+    "type": "multiple_choice",
+    "options": ["Cancelar el Sprint de inmediato.", "Ajustar el alcance de manera honesta y realista.", "Pedir al equipo que trabaje en sus casas.", "Ignorar el tema y presionar por más velocidad."],
+    "correctAnswer": [1],
+    "explanation": "Se debe colaborar para salvar el objetivo del Sprint o renegociar el alcance de forma honesta."
+  },
+  {
+    "question": "¿Se permiten requisitos técnicos dentro del Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["Sí, cualquier trabajo necesario para el producto pertenece al Backlog.", "No, los requisitos técnicos deben ir en un documento aparte.", "Sí, pero solo si no son importantes.", "No, el Backlog es exclusivo para funcionalidades de usuario."],
+    "correctAnswer": [0],
+    "explanation": "Cualquier trabajo necesario para el producto, técnico o funcional, pertenece al Product Backlog."
+  },
+  {
+    "question": "¿Cuánto tiempo debe pasar el Product Owner con el equipo de desarrollo?",
+    "type": "multiple_choice",
+    "options": ["Todo el tiempo que sea necesario para asegurar el éxito.", "Un porcentaje fijo del 100% sin excepciones.", "Lo menos posible para no distraerlos.", "Solo el tiempo estipulado en las ceremonias."],
+    "correctAnswer": [0],
+    "explanation": "El PO debe estar disponible tanto como requiera el equipo para asegurar el éxito, no un porcentaje fijo."
+  },
+  {
+    "question": "¿Cuál es el tiempo máximo de duración de la reunión de Planificación para un Sprint de 3 semanas?",
+    "type": "multiple_choice",
+    "options": ["8 horas.", "4 horas.", "6 horas.", "12 horas."],
+    "correctAnswer": [2],
+    "explanation": "El límite máximo es de 8 horas para un Sprint de un mes; para Sprints menores, es proporcional."
+  },
+  {
+    "question": "¿Qué inversiones debe considerar un Product Owner al evaluar su producto?",
+    "type": "multiple_choice",
+    "options": ["Solo el costo de desarrollo.", "El costo total de propiedad (desarrollo y mantenimiento).", "Solo los costos de comercialización.", "Solo el costo de los salarios mensuales."],
+    "correctAnswer": [1],
+    "explanation": "El PO considera el coste total de propiedad y el valor de operar y mantener el producto."
+  },
+  {
+    "question": "¿Qué debe hacer el Product Owner si el equipo no entiende las expectativas de un elemento?",
+    "type": "multiple_choice",
+    "options": ["Dedicar tiempo a explicar y aclarar los elementos.", "Pedir al Scrum Master que se encargue del equipo.", "Dejar que el equipo interprete a su manera.", "Sancionar al equipo por no entender."],
+    "correctAnswer": [0],
+    "explanation": "Es responsabilidad directa del PO asegurar que los desarrolladores comprendan los elementos del backlog."
+  },
+  {
+    "question": "¿Qué tipo de estructura fomenta la formación de equipos de trabajo cohesionados?",
+    "type": "multiple_choice",
+    "options": ["Equipos con habilidades mixtas y multifuncionales.", "Equipos formados exclusivamente por especialistas técnicos.", "Equipos jerárquicos donde cada uno tiene un jefe.", "Equipos que cambian cada Sprint."],
+    "correctAnswer": [0],
+    "explanation": "Los equipos deben ser multifuncionales y capaces de completar trabajo sin dependencias."
+  },
+  {
+    "question": "¿Qué variables son fundamentales para el Product Owner al ordenar el Backlog?",
+    "type": "multiple_choice",
+    "options": ["Valor y objetivos de negocio.", "La disponibilidad de los mejores empleados.", "La facilidad técnica.", "Las preferencias personales de los clientes."],
+    "correctAnswer": [0],
+    "explanation": "El orden se basa en lo que aporte más valor para lograr el objetivo del producto."
+  },
+  {
+    "question": "¿Cuál es el rol fundamental que define a un Product Owner?",
+    "type": "multiple_choice",
+    "options": ["Ser el maximizador de valor del producto.", "Ser el analista jefe de sistemas.", "Ser el gestor de recursos del equipo.", "Ser el coordinador de pruebas."],
+    "correctAnswer": [0],
+    "explanation": "La función principal es ser el dueño de la visión y maximizador de valor del producto."
+  },
+  {
+    "question": "¿Son obligatorios todos los eventos definidos en Scrum?",
+    "type": "multiple_choice",
+    "options": ["Sí, son obligatorios.", "No, el equipo puede elegir cuáles ignorar.", "Solo los que el jefe de proyecto indique.", "Son opcionales."],
+    "correctAnswer": [0],
+    "explanation": "Todos los eventos son obligatorios para garantizar la transparencia y el empirismo."
+  },
+  {
+    "question": "¿Qué sucede si el Product Owner no está disponible para el equipo?",
+    "type": "multiple_choice",
+    "options": ["El equipo pierde dirección y capacidad de tomar decisiones sobre el producto.", "Es necesario nombrar a alguien más de inmediato.", "El trabajo se detiene por completo.", "El Scrum Master debe hacer todo el trabajo del PO."],
+    "correctAnswer": [0],
+    "explanation": "El rol es crítico; si no hay PO, el equipo pierde dirección y capacidad de tomar decisiones sobre el producto."
+  },
+  {
+    "question": "¿Cuál es la responsabilidad central del Product Owner hacia el equipo?",
+    "type": "multiple_choice",
+    "options": ["Maximizar el valor del trabajo del equipo Scrum.", "Escribir historias de usuario de forma tediosa.", "Coordinar las reuniones sociales del equipo.", "Controlar el rendimiento individual de cada desarrollador."],
+    "correctAnswer": [0],
+    "explanation": "Su foco es maximizar el valor del trabajo del equipo Scrum mediante un Product Backlog eficiente."
+  },
+  {
+    "question": "¿Cómo se gestiona la 'Definición de Hecho' cuando trabajan varios equipos a la vez?",
+    "type": "multiple_choice",
+    "options": ["Deben ser compatibles entre ellos para un incremento integrado.", "Cada equipo decide la suya sin mirar a los demás.", "Solo importa la definición del equipo más antiguo.", "Todos los equipos deben tener exactamente la misma definición sin cambios."],
+    "correctAnswer": [0],
+    "explanation": "Diferentes equipos pueden tener diferentes definiciones, pero deben ser compatibles para crear un incremento integrado."
+  },
+  {
+    "question": "¿Cada cuánto tiempo se debe actualizar el Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["En cualquier momento que aparezca nueva información.", "Solo durante las sesiones formales de refinamiento.", "Solo cuando un jefe da la orden.", "Una vez al año."],
+    "correctAnswer": [0],
+    "explanation": "El Backlog es dinámico y se ajusta continuamente cuando hay nueva información."
+  },
+  {
+    "question": "¿Cómo se debe actuar ante una baja velocidad o errores en el desarrollo?",
+    "type": "multiple_choice",
+    "options": ["Gestionar la realidad siendo transparente y no liberando trabajo incompleto.", "Cancelar el Sprint sin dar explicaciones.", "Ocultar la información a los interesados.", "Aumentar la presión sobre el equipo."],
+    "correctAnswer": [0],
+    "explanation": "Se debe ser transparente: si el incremento no es 'Hecho', no se puede liberar y se debe gestionar esa realidad."
+  },
+  {
+    "question": "¿Cómo utiliza el Product Owner la inspección durante el Sprint?",
+    "type": "multiple_choice",
+    "options": ["Revisión del Sprint y reuniones con interesados.", "Revisando el código línea por línea.", "Invitando a interesados a ver el progreso.", "Todas las anteriores."],
+    "correctAnswer": [0, 2],
+    "explanation": "El PO usa estos foros para inspeccionar el avance y recolectar feedback de los grupos de interés."
+  },
+  {
+    "question": "¿Qué ocurre con el Product Backlog cuando las necesidades del mercado cambian?",
+    "type": "multiple_choice",
+    "options": ["El Backlog evoluciona constantemente.", "El Backlog se mantiene sin cambios.", "El producto debe cerrarse.", "El equipo ignora los cambios."],
+    "correctAnswer": [0],
+    "explanation": "El Backlog refleja el estado actual de las necesidades del mercado."
+  },
+  {
+    "question": "¿Cuáles son las formas principales en las que un PO asegura la creación de valor?",
+    "type": "multiple_choice",
+    "options": ["Orden del Backlog y publicaciones frecuentes.", "Solo aceptando funcionalidad.", "Escribiendo documentación.", "Controlando a los desarrolladores."],
+    "correctAnswer": [0],
+    "explanation": "Priorizar el backlog y probar en el mercado son las formas principales de asegurar la creación de valor."
+  },
+  {
+    "question": "¿Pueden los interesados decidir el orden del Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["No, el Product Owner tiene la decisión final.", "Sí, si son los que pagan el proyecto.", "Sí, siempre.", "No, el equipo técnico es quien decide."],
+    "correctAnswer": [0],
+    "explanation": "Los interesados pueden opinar, pero el PO es el único con la decisión final sobre el orden del backlog."
+  },
+  {
+    "question": "¿Quiénes forman parte del Equipo Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "Product Owner",
+      "Scrum Master",
+      "Desarrolladores",
+      "Project Manager"
+    ],
+    "correctAnswer": [0, 1, 2],
+    "explanation": "El equipo Scrum está compuesto únicamente por Product Owner, Scrum Master y Desarrolladores."
+  },
+  {
+    "question": "¿Son útiles los Hardening Sprints (Sprints de estabilización)?",
+    "type": "multiple_choice",
+    "options": [
+      "Falso.",
+      "Cierto.",
+      "Depende del proyecto.",
+      "Solo al final del producto."
+    ],
+    "correctAnswer": [0],
+    "explanation": "En Scrum cada Sprint debe entregar un incremento terminado, por lo que no se necesitan Sprints de estabilización."
+  },
+  {
+    "question": "Si se cancela un Sprint, ¿qué ocurre con los elementos que están terminados?",
+    "type": "multiple_choice",
+    "options": [
+      "Son evaluados y aceptados por el Product Owner.",
+      "Se descartan automáticamente.",
+      "Se dejan para el siguiente Sprint sin revisión.",
+      "Se eliminan del backlog."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Los elementos terminados pueden ser aceptados si cumplen la definición de Hecho."
+  },
+  {
+    "question": "Si el backlog no está completo al inicio del primer Sprint, ¿qué se debe hacer?",
+    "type": "multiple_choice",
+    "options": [
+      "Aclarar los elementos necesarios para el primer Sprint.",
+      "Realizar un Sprint 0 obligatorio.",
+      "Esperar a completar todo el backlog.",
+      "Cancelar el inicio del proyecto."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Solo se necesita suficiente claridad para comenzar el trabajo del primer Sprint."
+  },
+  {
+    "question": "¿Cuál es el propósito de la definición de 'Hecho' (Definition of Done)?",
+    "type": "multiple_choice",
+    "options": [
+      "Aportar transparencia.",
+      "Servir como guía para el equipo.",
+      "Reducir documentación.",
+      "Evitar revisiones."
+    ],
+    "correctAnswer": [0, 1],
+    "explanation": "Define qué significa que un incremento esté completo y garantiza entendimiento común."
+  },
+  {
+    "question": "¿Se puede usar un gráfico Burn-up en lugar de Burn-down?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, no hay problema.",
+      "No, es obligatorio usar Burn-down.",
+      "Solo el Scrum Master puede decidirlo.",
+      "Depende del cliente."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Scrum no prescribe herramientas específicas, solo transparencia."
+  },
+  {
+    "question": "¿El Product Owner puede delegar la estimación del trabajo?",
+    "type": "multiple_choice",
+    "options": [
+      "No, es responsabilidad del equipo de desarrollo.",
+      "Sí, siempre.",
+      "Solo al Scrum Master.",
+      "Solo a los stakeholders."
+    ],
+    "correctAnswer": [0],
+    "explanation": "La estimación es una actividad técnica que corresponde al equipo de desarrollo."
+  },
+  {
+    "question": "¿Quién actualiza el trabajo restante durante el Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "Equipo de desarrollo.",
+      "Product Owner.",
+      "Scrum Master.",
+      "Stakeholders."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Los desarrolladores gestionan y actualizan su plan de trabajo."
+  },
+  {
+    "question": "¿Qué actividades son responsabilidad del Product Owner?",
+    "type": "multiple_choice",
+    "options": [
+      "Priorizar el Product Backlog.",
+      "Desglosar historias o elementos.",
+      "Asignar tareas al equipo.",
+      "Controlar horarios del equipo."
+    ],
+    "correctAnswer": [0, 1],
+    "explanation": "El PO gestiona el valor mediante el orden y claridad del backlog."
+  },
+  {
+    "question": "¿Cuáles son los requisitos mínimos para iniciar el primer Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "Proyecto completamente planificado.",
+      "Equipo Scrum completo (PO, SM y desarrolladores).",
+      "Solo el Product Owner.",
+      "Solo el equipo de desarrollo."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Sin el equipo Scrum completo no se puede aplicar Scrum."
+  },
+  {
+    "question": "¿Cuál es el objetivo principal de la Sprint Retrospective?",
+    "type": "multiple_choice",
+    "options": [
+      "Inspeccionar y mejorar el proceso.",
+      "Definir requisitos.",
+      "Planificar el siguiente Sprint.",
+      "Evaluar rendimiento individual."
+    ],
+    "correctAnswer": [0],
+    "explanation": "La retrospectiva busca mejorar continuamente la forma de trabajar."
+  },
+  {
+    "question": "Respecto al tiempo de la Sprint Retrospective:",
+    "type": "multiple_choice",
+    "options": [
+      "Máximo 3 horas para un Sprint de un mes.",
+      "Siempre 1 hora.",
+      "No tiene límite.",
+      "Depende del Product Owner."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Está time-boxed a 3 horas en un Sprint de un mes."
+  },
+  {
+    "question": "¿Cómo afecta la deuda técnica al Product Owner?",
+    "type": "multiple_choice",
+    "options": [
+      "Aumenta el coste total del producto.",
+      "No tiene impacto.",
+      "Reduce el alcance.",
+      "Mejora la calidad."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Incrementa el coste de mantenimiento y reduce la capacidad futura."
+  },
+  {
+    "question": "¿Puede el Product Owner delegar responsabilidades?",
+    "type": "multiple_choice",
+    "options": [
+      "Sí, pero mantiene la responsabilidad final.",
+      "No, nunca.",
+      "Solo al Scrum Master.",
+      "Solo al equipo técnico."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Puede delegar tareas, pero no la responsabilidad final."
+  },
+  {
+    "question": "¿El Product Owner dedica un porcentaje fijo (ej. 10%) al refinamiento?",
+    "type": "multiple_choice",
+    "options": [
+      "No, dedica el tiempo necesario.",
+      "Sí, siempre el 10%.",
+      "Sí, solo al inicio.",
+      "Depende del Scrum Master."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El refinamiento no tiene un porcentaje fijo para el PO."
+  },
+  {
+    "question": "Un equipo autoorganizado durante el Sprint:",
+    "type": "multiple_choice",
+    "options": [
+      "Replanifica colaborativamente.",
+      "Crea el Sprint Backlog.",
+      "Depende completamente del PO.",
+      "No puede cambiar el plan."
+    ],
+    "correctAnswer": [0, 1],
+    "explanation": "El equipo gestiona su propio trabajo y planificación."
+  },
+  {
+    "question": "¿Existe una relación directa entre velocidad y valor?",
+    "type": "multiple_choice",
+    "options": [
+      "No necesariamente.",
+      "Sí, más velocidad siempre es más valor.",
+      "Solo en proyectos grandes.",
+      "Depende del Scrum Master."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El valor depende de hacer lo correcto, no solo rápido."
+  },
+  {
+    "question": "¿Cuál es el tamaño recomendado de un equipo Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "10 o menos personas.",
+      "Sin límite.",
+      "Más de 15 personas.",
+      "Exactamente 5 personas."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Equipos pequeños favorecen la comunicación y eficiencia."
+  },
+  {
+    "question": "¿Quién es responsable del Product Backlog?",
+    "type": "multiple_choice",
+    "options": [
+      "Product Owner.",
+      "Scrum Master.",
+      "Equipo de desarrollo.",
+      "Stakeholders."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El Product Owner es el único responsable del backlog."
+  },
+  {
+    "question": "Si un elemento del Sprint Backlog no puede terminarse antes de que termine el Sprint, el Sprint se cancela.",
+    "type": "multiple_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "El Sprint solo se cancela en caso de que el Sprint Goal quede obsoleto. Si no se podía realizar algún trabajo, el Sprint Backlog debería renegociarse entre el Product Owner y el equipo de desarrollo."
+  },
+  {
+    "question": "El equipo de Scrum está formado por:",
+    "type": "multiple_choice",
+    "options": ["El Product Owner", "Los principales actores", "El Scrum Master", "El equipo de desarrollo"],
+    "correctAnswer": [0, 2, 3],
+    "explanation": "El equipo Scrum está formado por un Product Owner, el equipo de desarrollo y un Scrum Master."
+  },
+  {
+    "question": "¿Qué compone Scrum? (seleccionar cuatro)",
+    "type": "multiple_choice",
+    "options": ["Roles", "Informes", "Listas de quemado", "Eventos", "Artefactos", "Reglas"],
+    "correctAnswer": [0, 3, 4, 5],
+    "explanation": "El marco Scrum consta de los equipos Scrum y sus roles, eventos, artefactos y reglas asociados."
+  },
+  {
+    "question": "¿Quién puede hacer cambios en el Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["Cualquiera", "El Product Owner", "El Scrum Master", "Los principales actores", "El equipo de desarrollo, pero con permiso del Product Owner"],
+    "correctAnswer": [1, 4],
+    "explanation": "El Product Owner es la única persona responsable del Product Backlog, aunque puede delegar parte del trabajo al equipo de desarrollo."
+  },
+  {
+    "question": "¿Quién es responsable de supervisar el progreso hacia objetivos de alto nivel?",
+    "type": "multiple_choice",
+    "options": ["El Scrum Master y el Equipo de Desarrollo", "El Scrum Master", "El Product Owner y el equipo de desarrollo", "El equipo de melé", "El equipo de desarrollo", "El Product Owner"],
+    "correctAnswer": [5],
+    "explanation": "El Product Owner registra el trabajo total restante al menos en cada revisión de Sprint para evaluar el progreso hacia la finalización."
+  },
+  {
+    "question": "Al final de la Planificación del Sprint, el equipo de desarrollo debería ser capaz de explicar al Product Owner y al Scrum Master cómo pretende trabajar como un equipo autoorganizado.",
+    "type": "multiple_choice",
+    "options": ["Falso", "Cierto"],
+    "correctAnswer": [1],
+    "explanation": "Al final de la Planificación, el equipo debe poder explicar cómo logrará el Sprint Goal y crear el Incremento previsto."
+  },
+  {
+    "question": "¿Qué es el Sprint Backlog?",
+    "type": "multiple_choice",
+    "options": ["Los elementos de Product Backlog seleccionados para este Sprint", "El plan para entregar los artículos de Product Backlog", "Los artículos de Product Backlog seleccionados para este Sprint más el plan para su entrega", "Los elementos de Product Backlog seleccionados para este Sprint más los elementos de Team Backlog"],
+    "correctAnswer": [2],
+    "explanation": "El Backlog de Sprint es el conjunto de elementos de Product Backlog seleccionados, además de un plan para entregar el Incremento y alcanzar el objetivo."
+  },
+  {
+    "question": "Revisa todas las oportunidades formales para inspeccionar y adaptarse.",
+    "type": "multiple_choice",
+    "options": ["El Sprint", "La Revisión de Sprint", "El Daily Scrum", "La retrospectiva del sprint", "La planificación del sprint"],
+    "correctAnswer": [1, 2, 3, 4],
+    "explanation": "Aparte del Sprint (contenedor), cada evento en Scrum es una oportunidad formal para inspeccionar y adaptar algo."
+  },
+  {
+    "question": "¿Qué debe tenerse en cuenta para la definición de \"hecho\"?",
+    "type": "multiple_choice",
+    "options": ["Experiencia del Product Owner", "Definición de \"Hecho\" de otros equipos Scrum trabajando en el mismo producto", "Definición de \"Hecho\" de otros equipos Scrum trabajando en otros productos", "Convenciones, normas y directrices de la Organización", "Consejo del Scrum Master"],
+    "correctAnswer": [1, 3],
+    "explanation": "Los equipos deben seguir las convenciones de la organización; si varios equipos trabajan en el mismo producto, deben definir mutuamente la definición de 'Hecho'."
+  },
+  {
+    "question": "¿Cómo sirve el Scrum Master a la organización?",
+    "type": "multiple_choice",
+    "options": ["Planificación de implementaciones de Scrum dentro de la organización", "Combinar desarrolladores experimentados y especialistas junior", "Asegurarse de que los principales interesados estén invitados a todas las revisiones", "Liderar y entrenar a la organización en su adopción de Scrum", "Colaborando con otros Scrum Masters para aumentar la eficacia de la aplicación de Scrum"],
+    "correctAnswer": [0, 3, 4],
+    "explanation": "El Scrum Master lidera la adopción, planifica implementaciones y colabora con otros Scrum Masters."
+  },
+  {
+    "question": "¿Qué es el Incremento?",
+    "type": "multiple_choice",
+    "options": ["La suma de todos los elementos del Product Backlog completados durante el Sprint y el valor de los incrementos de todos los Sprints anteriores", "La suma de todos los elementos del Product Backlog completados durante el Sprint", "Todos los elementos del Sprint Backlog que podrían ser publicados", "Todos los elementos \"Hechos\" en el Backlog de Sprint"],
+    "correctAnswer": [0],
+    "explanation": "El incremento es la suma de los elementos completados en el Sprint y el valor de los incrementos de Sprints anteriores."
+  },
+  {
+    "question": "¿Qué muestra el Cono de Incertidumbre?",
+    "type": "multiple_choice",
+    "options": ["Dependencias", "Jerarquía de tareas", "Cuánto trabajo queda", "Cuánto se sabe sobre el Producto a lo largo del tiempo"],
+    "correctAnswer": [3],
+    "explanation": "El Cono de Incertidumbre describe la evolución de la cantidad de incertidumbre durante un proyecto."
+  },
+  {
+    "question": "¿Qué incluye la gestión del Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["Asegurarse de que sea visible, transparente y claro", "Trasladar los elementos al backlog de Sprint", "Presentar los elementos a los Principales Interesados", "Optimizar el valor del trabajo del Equipo de Desarrollo", "Encargar los artículos para lograr mejor los objetivos"],
+    "correctAnswer": [0, 3, 4],
+    "explanation": "La gestión incluye optimizar el valor, asegurar la visibilidad y transparencia, y encargar artículos para lograr objetivos."
+  },
+  {
+    "question": "La definición de Hecho puede revisarse y adaptarse en cada Sprint Retrospective.",
+    "type": "multiple_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Durante cada retrospectiva, el equipo planifica formas de mejorar procesos o adaptar la definición de 'Hecho' si es apropiado."
+  },
+  {
+    "question": "¿Dónde se puede usar Scrum?",
+    "type": "multiple_choice",
+    "options": ["Gestión del funcionamiento de una organización", "Investigación e identificación de mercados", "Entornos operativos en la nube", "Desarrollo de productos y mejoras", "Desarrollo de software y hardware", "Casi todo lo que usamos en la vida diaria"],
+    "correctAnswer": [0, 1, 2, 3, 4, 5],
+    "explanation": "Scrum se ha utilizado en casi todo lo que usamos en nuestra vida diaria, desde hardware hasta gobierno y marketing."
+  },
+  {
+    "question": "¿Podría terminarse la planificación del Sprint si solo el trabajo planificado para los primeros días está descompuesto en unidades de un día o menos?",
+    "type": "multiple_choice",
+    "options": ["Sí, si también se estima el trabajo restante", "No, todos los elementos deben descomponerse"],
+    "correctAnswer": [0],
+    "explanation": "La Guía Scrum requiere que solo el trabajo para los primeros días se descomponga al final de la Planificación."
+  },
+  {
+    "question": "¿Cuáles son las preguntas que responde la Planificación de Sprints?",
+    "type": "multiple_choice",
+    "options": ["¿Qué se puede ofrecer en el Incremento?", "¿Cómo se logrará el trabajo?", "¿Cuál es el tamaño de la Deuda Técnica?", "¿Qué nuevas tecnologías usar?", "¿Quién será responsable?"],
+    "correctAnswer": [0, 1],
+    "explanation": "Sprint Planning responde: ¿Qué se puede ofrecer en el próximo Incremento? y ¿Cómo se logrará el trabajo?."
+  },
+  {
+    "question": "¿Cuáles son los cuadros de tiempo para la Sprint Review y la Sprint Retrospective?",
+    "type": "multiple_choice",
+    "options": ["4 horas para cada una", "3 y 4 horas respectivamente", "3 horas para cada una", "4 y 3 horas respectivamente"],
+    "correctAnswer": [3],
+    "explanation": "La Revisión del Sprint es, como mucho, una reunión de cuatro horas; la Retrospectiva es de tres horas, para Sprints de un mes."
+  },
+  {
+    "question": "¿Cuánto debería durar la Planificación del Sprint?",
+    "type": "multiple_choice",
+    "options": ["No más de 8 horas", "Hasta que todos los elementos se descomponen", "No más de 4 horas", "No más del 10% de la capacidad"],
+    "correctAnswer": [0],
+    "explanation": "La planificación está limitada a un máximo de ocho horas para un Sprint de un mes."
+  },
+  {
+    "question": "¿Quién es responsable de todas las estimaciones en el Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["El equipo de desarrollo", "El Product Owner", "El equipo de melé", "El Product Owner y el Scrum Master", "El equipo de desarrollo y el Product Owner", "El Scrum Master"],
+    "correctAnswer": [0],
+    "explanation": "El equipo de desarrollo es responsable de todas las estimaciones, aunque el Product Owner puede ayudar a entender los intercambios."
+  },
+  {
+    "question": "¿Se permite saltarse el Daily Scrum si no hay nada interesante de qué hablar?",
+    "type": "multiple_choice",
+    "options": ["Sí", "No"],
+    "correctAnswer": [1],
+    "explanation": "No incluir eventos resulta en una menor transparencia y es una oportunidad perdida para inspeccionar y adaptarse."
+  },
+  {
+    "question": "El propósito de la Retrospectiva Sprint es:",
+    "type": "multiple_choice",
+    "options": ["Identificar mejoras", "Crear un plan de mejoras", "Observar el Sprint pasado", "Obtener asesoramiento técnico", "Recibir comentarios de interesados"],
+    "correctAnswer": [0, 1, 2],
+    "explanation": "El propósito es inspeccionar el Sprint (personas, relaciones, procesos), identificar mejoras y crear un plan para implementarlas."
+  },
+  {
+    "question": "La caja de tiempo de Daily Scrum depende del tamaño del equipo de desarrollo.",
+    "type": "multiple_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "El Daily Scrum es un evento de 15 minutos con tiempo limitado para el equipo de desarrollo de cualquier tamaño."
+  },
+  {
+    "question": "¿Podrían el Product Owner y el Scrum Master formar parte del equipo de desarrollo?",
+    "type": "multiple_choice",
+    "options": ["No", "Sí"],
+    "correctAnswer": [1],
+    "explanation": "Scrum no lo prohíbe, aunque no es la mejor práctica por posible conflicto de intereses."
+  },
+  {
+    "question": "¿Quién tiene autoridad para cancelar el Sprint?",
+    "type": "multiple_choice",
+    "options": ["El Scrum Master", "El equipo de desarrollo", "Los principales actores", "El Product Owner y el Scrum Master", "El Product Owner"],
+    "correctAnswer": [4],
+    "explanation": "Solo el Product Owner tiene la autoridad para cancelar el Sprint."
+  },
+  {
+    "question": "Solo el Product Owner y el equipo de desarrollo participan en la planificación del sprint. No hay nada que hacer para el Scrum Master.",
+    "type": "multiple_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "El plan se crea gracias al trabajo colaborativo de todo el equipo Scrum."
+  },
+  {
+    "question": "¿Qué son los artefactos Scrum?",
+    "type": "multiple_choice",
+    "options": ["La lista de impedimentos", "Catálogo de productos", "Lista de Sprint", "El objetivo del sprint", "Incremento"],
+    "correctAnswer": [1, 2, 4],
+    "explanation": "Los artefactos son Product Backlog, Sprint Backlog e Increment."
+  },
+  {
+    "question": "El equipo de desarrollo prohíbe añadir nuevo trabajo al Sprint Backlog después de la Planificación.",
+    "type": "multiple_choice",
+    "options": ["Falso", "Cierto"],
+    "correctAnswer": [0],
+    "explanation": "El equipo de desarrollo modifica el Backlog de Sprint a lo largo del Sprint a medida que aprende más."
+  },
+  {
+    "question": "¿Cuáles son las dos características esenciales que debe poseer un equipo de scrum?",
+    "type": "multiple_choice",
+    "options": ["Competencias necesarias sin depender de otros", "Flexible para completar trabajo incluso si hay vacaciones", "Elegir cómo realizar el trabajo", "Utilizar herramientas aprobadas"],
+    "correctAnswer": [0, 2],
+    "explanation": "Los equipos Scrum son autoorganizados (eligen cómo realizar su trabajo) y multifuncionales (tienen las competencias necesarias)."
+  },
+  {
+    "question": "Imagina que eres un Scrum Master con 10 desarrolladores. ¿Cómo pueden dividirse en equipos?",
+    "type": "multiple_choice",
+    "options": ["2 equipos de 6 y 4 (con equipo de QA)", "3 equipos de 4, 3 y 3 (multifuncionales)", "1 equipo de 10", "2 equipos de 6 y 4 (decisión del equipo)"],
+    "correctAnswer": [1, 3],
+    "explanation": "El tamaño óptimo es pequeño (menos de 3 disminuye productividad, más de 9 requiere demasiada coordinación) y los equipos deben ser multifuncionales."
+  },
+  {
+    "question": "¿Qué muestra el Burn-down Chart?",
+    "type": "multiple_choice",
+    "options": ["Dependencias", "Cuánto trabajo queda hasta el final del Sprint", "Jerarquía de tareas", "La evolución de la incertidumbre"],
+    "correctAnswer": [1],
+    "explanation": "El gráfico muestra la evolución del esfuerzo restante contra el tiempo."
+  },
+  {
+    "question": "¿Quién participa en la Sprint Review?",
+    "type": "multiple_choice",
+    "options": ["CEO", "Principales actores", "Product Owner", "Equipo de desarrollo", "Scrum Master"],
+    "correctAnswer": [1, 2, 3, 4],
+    "explanation": "El equipo Scrum y las partes interesadas colaboran durante la Revisión del Sprint."
+  },
+  {
+    "question": "¿Cuál es el horario del Daily Scrum?",
+    "type": "multiple_choice",
+    "options": ["25 minutos", "20 minutos", "No limitado", "15 minutos"],
+    "correctAnswer": [3],
+    "explanation": "El Daily Scrum es un evento de 15 minutos con caja de tiempo."
+  },
+  {
+    "question": "¿Cuál podría ser la fuente de los requisitos para cambios en el producto?",
+    "type": "multiple_choice",
+    "options": ["El Product Backlog", "El CEO", "Los principales actores"],
+    "correctAnswer": [0],
+    "explanation": "El Product Backlog es la única fuente de requisitos para cualquier cambio que se deba realizar en el producto."
+  },
+  {
+    "question": "¿En qué reuniones se permite la participación de los Actores Clave?",
+    "type": "multiple_choice",
+    "options": ["Retrospectiva", "Revisión de Sprint", "Planificación", "Daily Scrum"],
+    "correctAnswer": [1],
+    "explanation": "Los Principales Actores solo pueden participar en la reunión de Revisión Sprint."
+  },
+  {
+    "question": "La definición de \"Hecho\" se crea durante el primer Sprint y permanece sin cambios hasta el lanzamiento.",
+    "type": "multiple_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "Durante cada retrospectiva, el equipo planifica formas de aumentar la calidad adaptando la definición de 'Hecho' según corresponda."
+  },
+  {
+    "question": "¿Cuáles son las características de un equipo de desarrollo?",
+    "type": "multiple_choice",
+    "options": ["No reconoce subequipos", "Responsabilidad del equipo en su conjunto", "Ingeniero de pruebas obligatorio", "No reconoce títulos", "Scrum Master como desarrollador a tiempo parcial"],
+    "correctAnswer": [0, 1, 3],
+    "explanation": "Los equipos son multifuncionales, no tienen subequipos, no tienen títulos y la responsabilidad es del equipo en su conjunto."
+  },
+  {
+    "question": "El Scrum Master se centra principalmente en el Scrum Team y normalmente no le importan los que están fuera.",
+    "type": "multiple_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "El Scrum Master ayuda a quienes están fuera del equipo a entender sus interacciones para maximizar el valor."
+  },
+  {
+    "question": "¿Qué significa la palabra \"desarrollo\" en Scrum?",
+    "type": "multiple_choice",
+    "options": ["Desarrollo de software y hardware", "Desarrollo, lanzamiento y mantenimiento", "Trabajo complejo que incluye todas las opciones y más", "Investigación de mercados", "Desarrollo de entorno operativo"],
+    "correctAnswer": [2],
+    "explanation": "Se refiere a trabajos complejos que incluyen todo lo sugerido y más."
+  },
+  {
+    "question": "¿Cuál es la entrada a la planificación de los sprints?",
+    "type": "multiple_choice",
+    "options": ["El último Increment", "Capacidad proyectada", "El Product Backlog", "Comentarios de actores", "Comentarios del CEO", "Rendimiento previo"],
+    "correctAnswer": [0, 1, 2, 5],
+    "explanation": "La entrada es el Backlog de Producto, el último incremento, la capacidad proyectada y el rendimiento pasado."
+  },
+  {
+    "question": "Es buena práctica tener de vez en cuando un Sprint técnico para eliminar deuda sin implementar funcionalidades.",
+    "type": "multiple_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "Está prohibido; cada Sprint debe ofrecer incrementos de funcionalidades potencialmente liberables."
+  },
+  {
+    "question": "¿Qué pertenece exclusivamente al equipo de desarrollo?",
+    "type": "multiple_choice",
+    "options": ["El Incremento", "El Product Backlog", "El Sprint Backlog", "La definición de hecho"],
+    "correctAnswer": [2],
+    "explanation": "El Sprint Backlog es una imagen del trabajo planeado y pertenece exclusivamente al equipo de desarrollo."
+  },
+  {
+    "question": "¿Quién es responsable de hacer un seguimiento del trabajo total restante en el Sprint Backlog?",
+    "type": "multiple_choice",
+    "options": ["Product Owner y equipo", "Equipo de desarrollo", "Product Owner", "Equipo de melé", "Scrum Master"],
+    "correctAnswer": [1],
+    "explanation": "El equipo de desarrollo registra este trabajo al menos para cada Daily Scrum para proyectar su probabilidad de éxito."
+  },
+  {
+    "question": "Todos los equipos de desarrollo que trabajan en el mismo producto deben usar el mismo backlog de productos.",
+    "type": "multiple_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Varios equipos Scrum trabajan en el mismo producto usando un único Backlog de Producto."
+  },
+  {
+    "question": "¿Quién es responsable del Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["Product Owner y equipo", "Product Owner y Scrum Master", "Equipo de desarrollo", "Product Owner", "Scrum Master y Equipo", "Scrum Master"],
+    "correctAnswer": [3],
+    "explanation": "El Product Owner es responsable del Backlog de Producto, incluyendo contenido, disponibilidad y pedidos."
+  },
+  {
+    "question": "¿Quién puede participar en el Daily Scrum?",
+    "type": "multiple_choice",
+    "options": ["Actores clave", "Scrum Master", "Equipo de desarrollo", "Product Owner"],
+    "correctAnswer": [2],
+    "explanation": "El Daily Scrum es una reunión interna del equipo de desarrollo."
+  },
+  {
+    "question": "¿Quién es responsable de gestionar el Backlog de Producto?",
+    "type": "multiple_choice",
+    "options": ["Scrum Master", "Product Owner", "Equipo de desarrollo", "Actores clave"],
+    "correctAnswer": [1],
+    "explanation": "El Product Owner es la única persona responsable de gestionar el Product Backlog."
+  },
+  {
+    "question": "¿Quién puede cambiar el backlog del Sprint durante el Sprint?",
+    "type": "multiple_choice",
+    "options": ["Equipo de desarrollo", "Scrum Master", "Equipo de desarrollo y PO", "Product Owner", "Equipo de melé"],
+    "correctAnswer": [0],
+    "explanation": "Solo el equipo de desarrollo puede modificar su Backlog de Sprint durante un Sprint."
+  },
+  {
+    "question": "El Daily Scrum siempre debe durar 15 minutos. Si termina en 5, debes usar los 10 restantes para algo útil.",
+    "type": "multiple_choice",
+    "options": ["Falso", "Cierto"],
+    "correctAnswer": [0],
+    "explanation": "Cada evento tiene una duración máxima; la Guía no requiere una duración mínima."
+  },
+  {
+    "question": "¿Cuál es el orden de los artículos en el catálogo de productos?",
+    "type": "multiple_choice",
+    "options": ["Menos valiosos al final", "Elementos menos claros en la parte superior", "Recientes en la parte superior", "Alfabético"],
+    "correctAnswer": [0],
+    "explanation": "El Product Owner es responsable de colocar los elementos más valiosos y claros en la parte superior."
+  },
+  {
+    "question": "¿Quién es responsable de la creación de la definición de \"hecho\"?",
+    "type": "multiple_choice",
+    "options": ["Equipo de melé", "Scrum Master", "Equipo de desarrollo", "Product Owner"],
+    "correctAnswer": [2],
+    "explanation": "Si no es una convención de la organización, el equipo de desarrollo debe definirla."
+  },
+  {
+    "question": "Todos los equipos Scrum que trabajan en el mismo producto deberían tener la misma duración de Sprint.",
+    "type": "multiple_choice",
+    "options": ["Falso", "Cierto"],
+    "correctAnswer": [0],
+    "explanation": "Scrum no requiere tener Sprints alineados para varios equipos."
+  },
+  {
+    "question": "Selecciona los cinco Valores Scrum.",
+    "type": "multiple_choice",
+    "options": ["Respeto", "Apertura", "Efectividad", "Enfoque", "Autoorganización", "Compromiso", "Agilidad", "Valor"],
+    "correctAnswer": [0, 1, 3, 5, 7],
+    "explanation": "Los Valores Scrum son: compromiso, coraje, enfoque, apertura y respeto."
+  },
+  {
+    "question": "Selecciona las dos reuniones en las que se permite la participación de personas fuera del Equipo Scrum.",
+    "type": "multiple_choice",
+    "options": ["Retrospectiva", "Daily Scrum", "Revisión de Sprint", "Planificación"],
+    "correctAnswer": [2, 3],
+    "explanation": "El equipo de desarrollo puede invitar a otros a la Planificación para asesoramiento; el Product Owner invita a actores clave a la Revisión."
+  },
+  {
+    "question": "¿Cómo sirve el Scrum Master al equipo de desarrollo?",
+    "type": "multiple_choice",
+    "options": ["Ayudar a crear productos de alto valor", "Añadir o eliminar desarrolladores", "Coaching en autoorganización", "Eliminación de obstáculos", "Ayudar como líder del equipo"],
+    "correctAnswer": [0, 2, 3],
+    "explanation": "El SM ayuda formando en autoorganización, ayudando a crear productos de alto valor y eliminando obstáculos."
+  },
+  {
+    "question": "¿Qué son las características del Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["Nunca está completo", "Podría cerrarse", "Es dinámico", "Se descarta al finalizar el producto", "Existe mientras exista el producto"],
+    "correctAnswer": [0, 2, 4],
+    "explanation": "Nunca se completa, es dinámico y existe mientras el producto exista."
+  },
+  {
+    "question": "¿Cuáles son los tres pilares que sostienen el Scrum?",
+    "type": "multiple_choice",
+    "options": ["Inspección", "Transparencia", "Funcionalidad cruzada", "Autoorganización", "Agilidad", "Adaptación"],
+    "correctAnswer": [0, 1, 5],
+    "explanation": "Los tres pilares son transparencia, inspección y adaptación."
+  },
+  {
+    "question": "Cómo ayuda la definición de \"Hecho\" al equipo de scrum?",
+    "type": "multiple_choice",
+    "options": ["Ayuda en la inspección y adaptación", "Guía para saber cuántos elementos seleccionar", "Evaluar cuándo se completó el trabajo", "Garantiza transparencia", "Ayuda a calcular velocidad"],
+    "correctAnswer": [1, 2, 3],
+    "explanation": "Se usa para evaluar cuándo se terminó el trabajo, guía la selección de elementos en la planificación y garantiza la transparencia."
+  },
+  {
+    "question": "¿Quién crea el incremento?",
+    "type": "multiple_choice",
+    "options": ["Product Owner", "Equipo de melé", "Equipo de desarrollo y PO", "Scrum Master", "Equipo de desarrollo"],
+    "correctAnswer": [4],
+    "explanation": "Solo los miembros del equipo de desarrollo crean el Incremento."
+  },
+  {
+    "question": "¿Qué es Scrum?",
+    "type": "multiple_choice",
+    "options": ["Proceso de diseño secuencial", "Marco para abordar problemas adaptativos complejos", "Metodología para mejorar calidad"],
+    "correctAnswer": [1],
+    "explanation": "Es un marco dentro del cual las personas pueden abordar problemas adaptativos complejos, mientras entregan productos valiosos."
+  },
+  {
+    "question": "¿Quién es responsable de promover y apoyar Scrum?",
+    "type": "multiple_choice",
+    "options": ["Scrum Master", "Equipo de desarrollo", "Equipo de melé", "Product Owner", "Scrum Master y PO"],
+    "correctAnswer": [0],
+    "explanation": "El Scrum Master es responsable de promover y apoyar Scrum según la Guía Scrum."
+  },
+  {
+    "question": "¿Qué ocurre durante el Sprint?",
+    "type": "multiple_choice",
+    "options": ["No se hacen cambios que pongan en peligro el Sprint Goal", "Objetivos de calidad no disminuyen", "El Objetivo de Sprint cambia frecuentemente", "El alcance puede aclararse y renegociarse", "El alcance no puede cambiarse"],
+    "correctAnswer": [0, 1, 3],
+    "explanation": "No se realizan cambios que pongan en peligro el objetivo, la calidad no disminuye y el alcance puede renegociarse."
+  },
+  {
+    "question": "¿Quién es responsable de elaborar el Objetivo de Sprint en la Planificación de Sprint?",
+    "type": "multiple_choice",
+    "options": ["Scrum Master", "Equipo de desarrollo", "Principales actores", "Equipo de melé", "Product Owner"],
+    "correctAnswer": [3],
+    "explanation": "Después de la estimación del equipo, todo el equipo Scrum elabora el objetivo para el Sprint."
+  },
+  {
+    "question": "¿Cuáles son las tres características más aplicables del Product Owner?",
+    "type": "multiple_choice",
+    "options": ["Maximizador de valor", "Evangelista de Scrum", "Facilitador de actores clave", "Facilitador de eventos", "Experto en el mercado"],
+    "correctAnswer": [0, 2, 4],
+    "explanation": "Las características son maximizador de valor, facilitador principal de actores clave y experto en el mercado."
+  },
+  {
+    "question": "¿Qué parte de la capacidad del equipo de desarrollo suele consumir el refinamiento del Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["No está autorizado", "10%", "20%", "5%"],
+    "correctAnswer": [1],
+    "explanation": "El refinamiento normalmente no consume más del 10% de la capacidad del equipo."
+  },
+  {
+    "question": "¿Quién es responsable de afrontar la transparencia incompleta de los artefactos?",
+    "type": "multiple_choice",
+    "options": ["Scrum Master", "Equipo de desarrollo", "Equipo de melé", "Product Owner"],
+    "correctAnswer": [0],
+    "explanation": "El trabajo del Scrum Master es colaborar con el equipo y la organización para aumentar la transparencia."
+  },
+  {
+    "question": "Es normal tener un Sprint de \"endurecimiento\" para eliminar deuda y preparar el producto para su lanzamiento.",
+    "type": "multiple_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "No es normal; los equipos entregan un incremento utilizable en cada sprint."
+  },
+  {
+    "question": "Es buena práctica tener al menos dos Product Owners en proyectos grandes.",
+    "type": "multiple_choice",
+    "options": ["Falso", "Cierto"],
+    "correctAnswer": [0],
+    "explanation": "El Product Owner es una sola persona, no un comité."
+  },
+  {
+    "question": "En la retrospectiva, el equipo identificó mejoras. ¿Qué debería hacer el Scrum Team?",
+    "type": "multiple_choice",
+    "options": ["Asignar responsables para cada mejora", "Asignar responsable para al menos una", "Incluir todas en el próximo Sprint Backlog", "Incluir al menos una mejora de proceso de alta prioridad"],
+    "correctAnswer": [3],
+    "explanation": "Para garantizar la mejora continua, el equipo incluye al menos una mejora de procesos de alta prioridad en el próximo Sprint Backlog."
+  },
+  {
+    "question": "¿Cuál es la esencia de Scrum?",
+    "type": "multiple_choice",
+    "options": ["El equipo de desarrollo", "La Guía de la melé", "El Scrum Master y el Product Owner", "Un equipo pequeño de personas, muy flexible y adaptable"],
+    "correctAnswer": [3],
+    "explanation": "La esencia es un equipo pequeño de personas, muy flexible y adaptable."
+  },
+  {
+    "question": "¿Con qué frecuencia deberían los usuarios de Scrum inspeccionar artefactos y avanzar hacia un objetivo de Sprint?",
+    "type": "multiple_choice",
+    "options": ["Después del Daily", "En la Revisión", "Con frecuencia, pero sin interferir", "Tan a menudo como sea posible"],
+    "correctAnswer": [2],
+    "explanation": "Deben inspeccionar con frecuencia, pero no tanto como para interferir con el trabajo."
+  },
+  {
+    "question": "Scrum recomienda usar solo aquellos componentes y reglas de Scrum que más se adapten a un proyecto en particular.",
+    "type": "multiple_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "Cada componente dentro del marco cumple un propósito específico y es esencial para el éxito."
+  },
+  {
+    "question": "¿Cuáles son las tres preguntas que da la Guía de Scrum como ejemplo que pueden usarse en el Daily Scrum?",
+    "type": "multiple_choice",
+    "options": ["¿Le expliqué problemas al PO?", "¿Qué haré hoy para alcanzar el objetivo?", "¿Veo algún impedimento?", "¿Qué hice ayer que ayudó al objetivo?", "¿Tengo comprensión completa?"],
+    "correctAnswer": [1, 2, 3],
+    "explanation": "El ejemplo de preguntas es: ¿Qué hice ayer?, ¿Qué haré hoy?, ¿Veo impedimentos?."
+  },
+  {
+    "question": "El Scrum Master realiza lo siguiente respecto al Scrum Diario:",
+    "type": "multiple_choice",
+    "options": ["Es responsable de llevarlo a cabo", "Asegura que no interrumpan si hay otros presentes", "Garantiza que el equipo tenga la reunión", "Enseña al equipo a mantenerlo en 15 minutos"],
+    "correctAnswer": [1, 2, 3],
+    "explanation": "El SM garantiza que se tenga la reunión, enseña a mantener los 15 minutos y asegura que otros no interrumpan."
+  },
+  {
+    "question": "¿Qué guía al equipo de desarrollo sobre por qué está construyendo el Incremento?",
+    "type": "multiple_choice",
+    "options": ["Scrum Master", "Objetivo del sprint", "Product Owner", "Retraso en Sprint"],
+    "correctAnswer": [1],
+    "explanation": "El objetivo del Sprint proporciona orientación al equipo sobre por qué está construyendo el Incremento."
+  },
+  {
+    "question": "¿Qué ocurre cuando se cancela un Sprint?",
+    "type": "multiple_choice",
+    "options": ["Se revisan elementos completados", "Si es liberable el PO lo acepta", "SM determina responsables", "Artículos incompletos se reestiman", "Artículos de Product Backlog reemplazan obsoletos"],
+    "correctAnswer": [0, 1, 3],
+    "explanation": "Se revisan los elementos 'Hechos', el PO acepta trabajo liberable y los artículos incompletos se reestiman."
+  },
+  {
+    "question": "La estructura del Scrum Diario es fija (tres preguntas: ¿qué hice ayer?, ¿qué haré hoy?, ¿impedimentos?).",
+    "type": "multiple_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "No hay estructura prescrita; otros formatos centrados en el progreso hacia el objetivo son válidos."
+  },
+  {
+    "question": "Si un inspector determina que un aspecto de un proceso se desvía de límites aceptables, ¿cuándo debe realizarse un ajuste?",
+    "type": "multiple_choice",
+    "options": ["Discutir en Daily Scrum", "Lo antes posible", "Tras aclarar con PO", "Tras aprobación del SM"],
+    "correctAnswer": [1],
+    "explanation": "Debe ajustarse lo antes posible para minimizar desviaciones adicionales."
+  },
+  {
+    "question": "Scrum no permite reuniones adicionales que no estén definidas en Scrum.",
+    "type": "multiple_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "Scrum permite reuniones adicionales si facilitan la consecución del objetivo Sprint."
+  },
+  {
+    "question": "¿Cuáles son las tres cualidades principales que el modelo de equipo en Scrum está diseñado para optimizar?",
+    "type": "multiple_choice",
+    "options": ["Agilidad", "Productividad", "Flexibilidad", "Creatividad", "Competencia", "Responsabilidad"],
+    "correctAnswer": [2, 3, 1],
+    "explanation": "El modelo está diseñado para optimizar la flexibilidad, la creatividad y la productividad."
+  },
+  {
+    "question": "El scrum se basa en:",
+    "type": "multiple_choice",
+    "options": ["Empirismo", "Crítica empírica", "Sentido común", "Sistema Kanban"],
+    "correctAnswer": [0],
+    "explanation": "Scrum se basa en la teoría empírica del control de procesos, o empirismo."
+  },
+  {
+    "question": "Otras personas además del equipo Scrum pueden asistir a la Planificación de Sprint para ofrecer asesoramiento.",
+    "type": "multiple_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "El equipo de desarrollo puede invitar a otras personas para proporcionar asesoramiento técnico o de dominio."
+  },
+  {
+    "question": "¿Cómo ayuda el Scrum Master al Product Owner?",
+    "type": "multiple_choice",
+    "options": ["Facilitar eventos", "Liderar y entrenar organización", "Introducir prácticas de vanguardia", "Encontrar técnicas para gestión del backlog", "Comprender planificación en entorno empírico"],
+    "correctAnswer": [0, 3, 4],
+    "explanation": "El SM sirve facilitando eventos, encontrando técnicas de gestión del backlog y ayudando a comprender la planificación empírica."
+  },
+  {
+    "question": "¿Qué es la Sprint Retrospective?",
+    "type": "multiple_choice",
+    "options": ["Reunión para inspeccionar el Incremento", "Sincronización de actividades", "Reunión clave para inspeccionar y adaptar", "Oportunidad para que el equipo se autoexamine y cree un plan de mejoras"],
+    "correctAnswer": [3],
+    "explanation": "Es una oportunidad para que el equipo Scrum se inspeccione a sí mismo y cree un plan para las mejoras del próximo Sprint."
+  },
+  {
+    "question": "El scrum no es un proceso ni una técnica.",
+    "type": "multiple_choice",
+    "options": ["Falso", "Cierto"],
+    "correctAnswer": [1],
+    "explanation": "No es un proceso, técnica ni método definitivo, sino un marco dentro del cual emplear diversos procesos."
+  },
+  {
+    "question": "¿Quién participa en la Planificación del Sprint?",
+    "type": "multiple_choice",
+    "options": ["Actores clave", "Product Owner", "Scrum Master", "Jefe del Equipo", "Equipo de desarrollo"],
+    "correctAnswer": [1, 2, 4],
+    "explanation": "El trabajo se planifica gracias al trabajo colaborativo de todo el equipo Scrum."
+  },
+  {
+    "question": "¿Cuál es el resultado de la Sprint Review?",
+    "type": "multiple_choice",
+    "options": ["Comprensión común del Incremento", "Comprensión común del progreso", "Un Product Backlog revisado", "Lista de mejoras"],
+    "correctAnswer": [2],
+    "explanation": "El resultado es un Backlog de Producto revisado que define los probables elementos para el siguiente Sprint."
+  },
+  {
+    "question": "¿Quién puede hacer cambios en el Product Backlog? Selecciona dos opciones.",
+    "type": "multiple_choice",
+    "options": ["El Scrum Master", "Cualquiera", "El Product Owner", "Los principales actores", "El equipo de desarrollo, pero con permiso del Product Owner"],
+    "correctAnswer": [2, 4],
+    "explanation": "El Product Owner es el único responsable, pero puede delegar parte del trabajo de gestión al equipo de desarrollo."
+  },
+  {
+    "question": "¿Quién es responsable de gestionar el Backlog de Producto?",
+    "type": "multiple_choice",
+    "options": ["Los principales actores", "El Product Owner", "El Scrum Master", "El equipo de desarrollo"],
+    "correctAnswer": [1],
+    "explanation": "El Product Owner es la única persona responsable de gestionar el Product Backlog."
+  },
+  {
+    "question": "El Sprint Backlog se crea en la Planificación de Sprints. El equipo de desarrollo prohíbe añadir nuevo trabajo al Sprint Backlog posteriormente.",
+    "type": "boolean",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "El equipo de desarrollo modifica el Backlog de Sprint a lo largo del Sprint a medida que aprende más sobre el trabajo necesario."
+  },
+  {
+    "question": "¿Podrían el Product Owner y el Scrum Master formar parte del equipo de desarrollo?",
+    "type": "boolean",
+    "options": ["Sí", "No"],
+    "correctAnswer": [0],
+    "explanation": "Scrum no lo prohíbe, aunque no es la mejor práctica por posibles conflictos de intereses."
+  },
+  {
+    "question": "Selecciona las dos reuniones en las que se permite la participación de personas fuera del Equipo Scrum.",
+    "type": "multiple_choice",
+    "options": ["La retrospectiva del sprint", "La planificación del sprint", "El Daily Scrum", "La Revisión de Sprint"],
+    "correctAnswer": [1, 3],
+    "explanation": "Se puede invitar a terceros a la Planificación del Sprint para asesoramiento y a la Revisión de Sprint para colaborar."
+  },
+  {
+    "question": "¿Quién debería encargarse de recopilar los datos del mercado para el Product Owner?",
+    "type": "multiple_choice",
+    "options": ["No importa quién haga el trabajo", "El Product Owner", "El equipo Scrum y los principales actores", "El equipo de melé"],
+    "correctAnswer": [1],
+    "explanation": "El Product Owner debe estar al tanto de los datos, aunque no necesariamente sea quien los recopile personalmente."
+  },
+  {
+    "question": "¿Quién es el principal visionario del producto?",
+    "type": "multiple_choice",
+    "options": ["El Product Owner", "El Scrum Master", "El Director de Marketing (CMO)", "El Director Ejecutivo (CEO)"],
+    "correctAnswer": [0],
+    "explanation": "El Product Owner es el principal visionario y debe articular la visión claramente."
+  },
+  {
+    "question": "¿Quién es el líder en cuanto a recibir feedback de los Actores Clave en la Revisión Sprint?",
+    "type": "multiple_choice",
+    "options": ["El equipo de desarrollo", "El equipo de melé", "El Product Owner", "El Scrum Master"],
+    "correctAnswer": [2],
+    "explanation": "El Product Owner es un líder vital para obtener retroalimentación de los actores clave."
+  },
+  {
+    "question": "¿Cómo comunica el Product Owner su conocimiento del mercado al equipo Scrum (seleccionando tres)?",
+    "type": "multiple_choice",
+    "options": ["Retrospectivas de Sprint", "Scrums diarios", "Refinamiento del retraso de productos", "Interacciones diarias ad hoc", "Análisis de Sprint"],
+    "correctAnswer": [2, 3, 4],
+    "explanation": "El conocimiento se comunica mediante interacciones diarias ad hoc, refinamiento del backlog y revisiones de Sprint."
+  },
+  {
+    "question": "Todos los equipos de desarrollo que trabajan en el mismo producto deben usar el mismo backlog de productos.",
+    "type": "boolean",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Se utiliza un único Product Backlog para describir el trabajo próximo cuando varios equipos trabajan en el mismo producto."
+  },
+  {
+    "question": "¿Cuáles son las características de un artículo de la lista de productos que está \"listo\" para ser seleccionado? (Selecciona tres)",
+    "type": "multiple_choice",
+    "options": ["Se puede \"hacer\" en un solo sprint", "Puede implementarse en un Sprint y probarse en el siguiente", "En algún lugar de la cima del catálogo", "Tiene menos detalle", "En algún lugar al final", "Bien refinado"],
+    "correctAnswer": [0, 2, 5],
+    "explanation": "Los elementos en la cima, bien refinados y que se pueden completar en un sprint, están \"listos\"."
+  },
+  {
+    "question": "¿Qué parte de la capacidad del equipo de desarrollo suele consumir el refinamiento del Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["No más del 5%", "No está autorizado", "No más del 20%", "No más del 10%"],
+    "correctAnswer": [3],
+    "explanation": "Normalmente no consume más del 10% de la capacidad del equipo."
+  },
+  {
+    "question": "¿Qué muestra el Burn-down Chart?",
+    "type": "multiple_choice",
+    "options": ["Jerarquía de tareas", "Cuánto trabajo queda hasta el final del Sprint", "Evolución de la incertidumbre", "Dependencias y horarios"],
+    "correctAnswer": [1],
+    "explanation": "Muestra la evolución del esfuerzo restante contra el tiempo."
+  },
+  {
+    "question": "¿Cuál es la esencia de Scrum?",
+    "type": "multiple_choice",
+    "options": ["Un equipo pequeño de personas, muy flexible y adaptable", "El equipo de desarrollo", "La Guía de la melé", "El Scrum Master y el Product Owner"],
+    "correctAnswer": [0],
+    "explanation": "La esencia es un equipo pequeño de personas, flexible y adaptable."
+  },
+  {
+    "question": "En la retrospectiva, el equipo identificó mejoras. ¿Qué debe hacer el equipo Scrum?",
+    "type": "multiple_choice",
+    "options": ["Asignar un responsable", "Incluir al menos una mejora de proceso en el próximo Sprint Backlog", "Incluir todas las mejoras", "Asignar responsables para cada mejora"],
+    "correctAnswer": [1],
+    "explanation": "Se debe incluir al menos una mejora de procesos de alta prioridad en el siguiente Sprint Backlog."
+  },
+  {
+    "question": "¿Quién es responsable de promover y apoyar Scrum?",
+    "type": "multiple_choice",
+    "options": ["El Scrum Master", "El equipo de melé", "El Product Owner", "El equipo de desarrollo", "El Scrum Master y el Product Owner"],
+    "correctAnswer": [0],
+    "explanation": "El Scrum Master es el responsable según la Guía Scrum."
+  },
+  {
+    "question": "¿Cuáles son los cuadros de tiempo para la Sprint Review y la Sprint Retrospective?",
+    "type": "multiple_choice",
+    "options": ["3 y 4 horas respectivamente", "4 y 3 horas respectivamente", "Caja de tiempo de 4 horas para cada una", "Caja de tiempo de 3 horas para cada una"],
+    "correctAnswer": [1],
+    "explanation": "Máximo 4 horas para la Revisión y 3 horas para la Retrospectiva (en Sprints de un mes)."
+  },
+  {
+    "question": "La práctica de refinamiento del backlog de producto se centra en los ítems de los próximos Sprints, no en el actual. ¿Verdadero o falso?",
+    "type": "boolean",
+    "options": ["Falso", "Cierto"],
+    "correctAnswer": [1],
+    "explanation": "Cierto, aunque el PO puede aportar aclaraciones sobre el Sprint actual."
+  },
+  {
+    "question": "Cada artículo de Pendiente de Producto debe ser creado personalmente por el Product Owner.",
+    "type": "boolean",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "Falso, la gestión puede delegarse completamente al equipo de desarrollo."
+  },
+  {
+    "question": "Es una mala idea cambiar la Visión de Producto o tácticas antes del próximo lanzamiento.",
+    "type": "boolean",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "Falso, el PO nunca debe temer cambiar la visión según el mercado."
+  },
+  {
+    "question": "¿Dónde se puede usar Scrum? (Revisa todos los aplicables)",
+    "type": "multiple_choice",
+    "options": ["Desarrollo de productos", "Investigación", "Desarrollo en la nube", "Gestión de organizaciones", "Software y hardware", "Casi todo"],
+    "correctAnswer": [0, 1, 2, 3, 4, 5],
+    "explanation": "Scrum se ha utilizado en una enorme variedad de entornos, desde software hasta gobierno y marketing."
+  },
+  {
+    "question": "¿Quién es responsable de todas las estimaciones en el Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["Equipo de desarrollo", "Product Owner", "Scrum Master", "Equipo de melé", "Product owner y equipo de desarrollo", "Scrum Master y Equipo de Desarrollo", "Product Owner y Scrum Master"],
+    "correctAnswer": [0],
+    "explanation": "El equipo de desarrollo realiza la estimación final."
+  },
+  {
+    "question": "¿Cuál es la mejor manera de aplicar requisitos no funcionales?",
+    "type": "multiple_choice",
+    "options": ["Nuevo artículo para cada uno", "Añadirlos al DoD", "Convertirlos en características", "No se pueden gestionar"],
+    "correctAnswer": [1],
+    "explanation": "La única forma de cumplirlos es incluirlos en la Definición de 'Hecho' (DoD)."
+  },
+  {
+    "question": "El Product Owner debe conocer de forma experta el mercado del producto.",
+    "type": "boolean",
+    "options": ["Depende", "Falso", "Cierto"],
+    "correctAnswer": [2],
+    "explanation": "Es obligatorio para maximizar el valor; desconectarse del mercado es peligroso."
+  },
+  {
+    "question": "¿Quién es responsable de hacer un seguimiento del trabajo total restante en el Sprint Backlog?",
+    "type": "multiple_choice",
+    "options": ["Product Owner", "Equipo de desarrollo", "Product Owner y equipo de desarrollo", "Equipo de melé", "Scrum Master"],
+    "correctAnswer": [1],
+    "explanation": "El equipo de desarrollo registra este trabajo al menos en cada Daily Scrum."
+  },
+  {
+    "question": "¿Cuánto tiempo dura el Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["Mientras el Producto exista", "No más de 5 años", "Hasta el lanzamiento final", "Mientras un equipo trabaje en ello"],
+    "correctAnswer": [0],
+    "explanation": "Si existe un producto, existe su lista de productos pendientes."
+  },
+  {
+    "question": "¿Quién decide si se lanza la última versión del producto?",
+    "type": "multiple_choice",
+    "options": ["Equipo de desarrollo", "Scrum Master", "Product Owner", "Product Owner y Scrum Master", "Equipo de melé"],
+    "correctAnswer": [2],
+    "explanation": "El Product Owner es la única persona que puede decidir el lanzamiento."
+  },
+  {
+    "question": "Es buena práctica tener al menos dos Product Owners en proyectos grandes.",
+    "type": "boolean",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "El Product Owner es una sola persona, no un comité."
+  },
+  {
+    "question": "¿Qué técnica debería emplearse para representar los artículos de la lista de productos pendientes?",
+    "type": "multiple_choice",
+    "options": ["Historias de usuario", "Pruebas de aceptación", "Cualquier técnica", "Casos de uso", "Escenarios"],
+    "correctAnswer": [2],
+    "explanation": "Se puede utilizar cualquier técnica, incluso una mezcla de varias."
+  },
+  {
+    "question": "¿Qué guía al equipo de desarrollo sobre por qué está construyendo el Incremento?",
+    "type": "multiple_choice",
+    "options": ["Objetivo del sprint", "Retraso en Sprint", "Scrum Master", "Product Owner"],
+    "correctAnswer": [0],
+    "explanation": "El objetivo del Sprint proporciona orientación al equipo sobre el porqué."
+  },
+  {
+    "question": "¿Quién identifica a los principales interesados?",
+    "type": "multiple_choice",
+    "options": ["Equipo de melé", "Alta dirección", "Scrum Master", "Equipo de desarrollo", "Product Owner"],
+    "correctAnswer": [4],
+    "explanation": "El PO debe identificarlos para maximizar el valor."
+  },
+  {
+    "question": "¿Quién tiene autoridad para cancelar el Sprint?",
+    "type": "multiple_choice",
+    "options": ["Principales actores", "Equipo de desarrollo", "Scrum Master", "Product Owner", "Product Owner y Scrum Master"],
+    "correctAnswer": [3],
+    "explanation": "Solo el Product Owner tiene la autoridad."
+  },
+  {
+    "question": "Refinamiento del catálogo de productos... (Selecciona tres)",
+    "type": "multiple_choice",
+    "options": ["Añadir detalles/pedidos", "Es proceso continuo", "No más del 10%", "Máximo 4 horas", "Responde cómo se logrará", "Ocurre 2-4 veces"],
+    "correctAnswer": [0, 1, 2],
+    "explanation": "Es un proceso continuo, añade detalles/estimaciones y consume máximo 10%."
+  },
+  {
+    "question": "¿Quién participa en la Planificación del Sprint? (Selecciona tres)",
+    "type": "multiple_choice",
+    "options": ["Equipo de desarrollo", "Product Owner", "Jefe de Equipo", "Principales actores", "Scrum Master"],
+    "correctAnswer": [0, 1, 4],
+    "explanation": "La planificación se crea gracias al trabajo colaborativo de todo el equipo Scrum."
+  },
+  {
+    "question": "¿Qué significa la palabra 'desarrollo' en Scrum?",
+    "type": "multiple_choice",
+    "options": ["Desarrollo de producto", "Software y hardware", "Entorno operativo", "Investigación", "Trabajo complejo"],
+    "correctAnswer": [4],
+    "explanation": "Se refiere a trabajos complejos que incluyen todas las opciones anteriores y más."
+  },
+  {
+    "question": "¿Cómo puede el Product Owner dar vida a su visión? (Selecciona 3)",
+    "type": "multiple_choice",
+    "options": ["Planificación empírica", "Aprobación dirección", "Product Backlog e iteración", "Scrum Master", "Articulación constante"],
+    "correctAnswer": [0, 2, 4],
+    "explanation": "Mediante planificación empírica, iteración con el backlog y articulación frecuente."
+  },
+  {
+    "question": "¿Qué dos atributos son opcionales para un artículo de Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["Descripciones de pruebas", "Valor", "Descripción", "Orden", "Estimación", "Dependencias"],
+    "correctAnswer": [0, 5],
+    "explanation": "Descripción, orden, estimación y valor son atributos principales; pruebas y dependencias son a menudo tratados como opcionales."
+  },
+  {
+    "question": "El equipo de desarrollo debe explicar al PO y SM cómo pretende trabajar.",
+    "type": "boolean",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Al final de la Planificación, el equipo debe ser capaz de explicar cómo trabajarán."
+  },
+  {
+    "question": "¿Qué muestra el Cone of Doubt?",
+    "type": "multiple_choice",
+    "options": ["Jerarquía de tareas", "Dependencias", "Cuánto trabajo queda", "Cuánto se sabe sobre el Producto"],
+    "correctAnswer": [3],
+    "explanation": "Describe la evolución de la cantidad de incertidumbre durante un proyecto."
+  },
+  {
+    "question": "¿Qué ocurre durante el Sprint? (Selecciona tres)",
+    "type": "multiple_choice",
+    "options": ["Objetivo cambia", "No se pone en peligro el Goal", "Alcance puede renegociarse", "Calidad no disminuye", "Alcance no puede cambiarse"],
+    "correctAnswer": [1, 2, 3],
+    "explanation": "El alcance se puede renegociar, la calidad no baja y el Sprint Goal no se pone en peligro."
+  },
+  {
+    "question": "Todos los equipos Scrum deberían tener la misma duración de Sprint.",
+    "type": "boolean",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "Scrum no requiere tener Sprints alineados para varios equipos."
+  },
+  {
+    "question": "¿Qué son las características del Product Backlog? (Selecciona tres)",
+    "type": "multiple_choice",
+    "options": ["Se descarta al final", "Es dinámico", "Podría cerrarse", "Nunca está completo", "Existe mientras exista el producto"],
+    "correctAnswer": [1, 3, 4],
+    "explanation": "Es dinámico, nunca está completo y persiste mientras exista el producto."
+  },
+  {
+    "question": "¿Cuándo se permite al equipo Scrum interactuar con los Stakeholders?",
+    "type": "multiple_choice",
+    "options": ["Revisión de Sprint", "Daily Scrum", "Siempre que sea valioso", "Retrospectiva"],
+    "correctAnswer": [2],
+    "explanation": "Pueden interactuar en cualquier momento que sea valioso para el equipo."
+  },
+  {
+    "question": "¿Cómo ayuda la definición de 'Hecho' al equipo? (Selecciona tres)",
+    "type": "multiple_choice",
+    "options": ["Calcular velocidad", "Garantiza transparencia", "Evaluar cuándo se completó trabajo", "Ayuda en inspección/adaptación", "Guía cuántos elementos seleccionar"],
+    "correctAnswer": [1, 2, 4],
+    "explanation": "Ayuda a evaluar el trabajo, guía la selección y garantiza transparencia."
+  },
+  {
+    "question": "Selecciona los cinco Valores Scrum.",
+    "type": "multiple_choice",
+    "options": ["Valor", "Respeto", "Enfoque", "Apertura", "Agilidad", "Autoorganización", "Efectividad", "Compromiso"],
+    "correctAnswer": [1, 2, 3, 7],
+    "explanation": "Los valores son compromiso, coraje, enfoque, apertura y respeto."
+  },
+  {
+    "question": "Si un elemento no puede terminarse, ¿se cancela el Sprint?",
+    "type": "boolean",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "Falso, solo se cancela si el objetivo queda obsoleto; si no, se renegocia."
+  },
+  {
+    "question": "¿Cuál es el orden de los artículos en el catálogo?",
+    "type": "multiple_choice",
+    "options": ["Menos valiosos al final", "Menos claros al inicio", "Alfabético", "Recientes al inicio"],
+    "correctAnswer": [0],
+    "explanation": "Los elementos más valiosos y claros van en la parte superior."
+  },
+  {
+    "question": "¿Quién puede participar en el Daily Scrum?",
+    "type": "multiple_choice",
+    "options": ["Scrum Master", "Equipo de desarrollo", "Principales actores", "Product Owner"],
+    "correctAnswer": [1],
+    "explanation": "Es una reunión interna exclusiva del equipo de desarrollo."
+  },
+  {
+    "question": "¿Cómo ayuda el Scrum Master al Product Owner? (Selecciona tres)",
+    "type": "multiple_choice",
+    "options": ["Prácticas de vanguardia", "Facilitar eventos", "Comprender planificación", "Técnicas de gestión de backlog", "Entrenar a la organización"],
+    "correctAnswer": [1, 2, 3],
+    "explanation": "Ayuda facilitando eventos, comprendiendo la planificación y gestionando el backlog."
+  },
+  {
+    "question": "¿Qué categorías de KVA debería considerar el Product Owner? (Selecciona tres)",
+    "type": "multiple_choice",
+    "options": ["Reducción de riesgos", "Tiempo de salida al mercado", "Capacidad para innovar", "Valor actual", "Satisfacción empleados", "Desarrollo de capacidades"],
+    "correctAnswer": [1, 2, 3],
+    "explanation": "Las categorías son valor actual, tiempo de salida al mercado y capacidad para innovar."
+  },
+  {
+    "question": "¿Quiénes son los típicos Actores Clave? (Selecciona tres)",
+    "type": "multiple_choice",
+    "options": ["Usuarios", "Pagadores", "Desarrolladores", "Decisores de financiación", "Marketing"],
+    "correctAnswer": [0, 1, 3],
+    "explanation": "Son usuarios, clientes que pagan y clientes internos/decisores de financiación."
+  },
+  {
+    "question": "El Scrum Master no debe permitir que el PO asista a la Planificación si no tiene el Objetivo. ¿Cierto o falso?",
+    "type": "boolean",
+    "options": ["Falso", "Cierto"],
+    "correctAnswer": [0],
+    "explanation": "Falso, el objetivo se elabora durante la reunión."
+  },
+  {
+    "question": "Si varios actores tienen intereses diferentes, ¿qué es mejor para el PO?",
+    "type": "multiple_choice",
+    "options": ["ROI máximo", "Escuchar a quienes financian", "Tiempo de salida al mercado", "Equilibrio inteligente"],
+    "correctAnswer": [3],
+    "explanation": "El PO debe realizar un equilibrio inteligente de intereses."
+  },
+  {
+    "question": "¿Quién puede decirle al equipo de desarrollo que trabaje según requisitos?",
+    "type": "multiple_choice",
+    "options": ["PO y SM", "Principales actores", "Product Owner", "Scrum Master", "Alta dirección"],
+    "correctAnswer": [2],
+    "explanation": "Solo el Product Owner decide; nadie más puede intervenir."
+  },
+  {
+    "question": "¿Quién participa en la Sprint Review?",
+    "type": "multiple_choice",
+    "options": ["Principales actores", "CEO", "Product Owner", "Scrum Master", "Equipo de desarrollo"],
+    "correctAnswer": [0, 2, 3, 4],
+    "explanation": "Equipo Scrum y los interesados."
+  },
+  {
+    "question": "¿Cuál es la fuente de los requisitos para cambios en el producto?",
+    "type": "multiple_choice",
+    "options": ["Retraso de productos", "CEO", "Principales actores"],
+    "correctAnswer": [0],
+    "explanation": "El Product Backlog es la única fuente de requisitos."
+  },
+  {
+    "question": "¿Quién es responsable del retraso de productos?",
+    "type": "multiple_choice",
+    "options": ["SM y Equipo", "Product Owner", "PO y Equipo", "Scrum Master", "PO y SM", "Equipo de desarrollo"],
+    "correctAnswer": [1],
+    "explanation": "El Product Owner es responsable del Backlog."
+  },
+  {
+    "question": "Deuda técnica... (Selecciona tres)",
+    "type": "multiple_choice",
+    "options": ["Falta de suministros", "Riesgo real", "Pertenece solo al equipo", "Trabajo adicional", "Calidad a largo plazo"],
+    "correctAnswer": [1, 3, 4],
+    "explanation": "Es un riesgo real, trabajo adicional y compromete la calidad."
+  },
+  {
+    "question": "¿Es buena idea que el PO haga un proxy o externalice tareas?",
+    "type": "boolean",
+    "options": ["Sí", "No"],
+    "correctAnswer": [1],
+    "explanation": "No es aceptable que el PO externalice sus funciones."
+  },
+  {
+    "question": "¿Con qué frecuencia debe el Product Owner comunicar su visión?",
+    "type": "multiple_choice",
+    "options": ["Cada Daily", "Cada retrospectiva", "Temprano y con frecuencia", "Una vez en la primera Planificación"],
+    "correctAnswer": [2],
+    "explanation": "Desde el principio y con frecuencia."
+  },
+  {
+    "question": "¿Quién puede cambiar el backlog del Sprint durante el Sprint?",
+    "type": "multiple_choice",
+    "options": ["Equipo y PO", "Scrum Master", "Product Owner", "Equipo de desarrollo", "Equipo de melé"],
+    "correctAnswer": [3],
+    "explanation": "Solo el equipo de desarrollo."
+  },
+  {
+    "question": "La Sprint Review es simplemente una demostración. ¿Estás de acuerdo?",
+    "type": "multiple_choice",
+    "options": ["No, hay más actividades", "No, debe incluir ítems anteriores", "Sí, no hay diferencia"],
+    "correctAnswer": [0],
+    "explanation": "No, hay muchas más actividades como la adaptación del backlog."
+  },
+  {
+    "question": "¿Cuánto debería durar la Planificación del Sprint?",
+    "type": "multiple_choice",
+    "options": ["10% capacidad", "4 horas", "8 horas", "Hasta descomponer todo"],
+    "correctAnswer": [2],
+    "explanation": "Limitada a un máximo de ocho horas para un sprint de un mes."
+  },
+  {
+    "question": "¿Quién es responsable de elaborar el Objetivo de Sprint?",
+    "type": "multiple_choice",
+    "options": ["Product Owner", "Scrum Master", "Equipo de melé", "Equipo de desarrollo", "Principales actores"],
+    "correctAnswer": [3],
+    "explanation": "El equipo Scrum lo elabora tras el pronóstico del equipo de desarrollo."
+  },
+  {
+    "question": "¿Qué incluye la gestión del Product Backlog? (Selecciona tres)",
+    "type": "multiple_choice",
+    "options": ["Trasladar elementos", "Optimizar valor", "Hacerlo visible/transparente", "Presentar a interesados", "Encargar artículos"],
+    "correctAnswer": [1, 2, 4],
+    "explanation": "Optimizar valor, visibilidad y encargar elementos."
+  },
+  {
+    "question": "¿Qué es el Incremento?",
+    "type": "multiple_choice",
+    "options": ["Elementos liberables", "Elementos \"Hechos\"", "Suma de completados en el Sprint", "Suma de completados en el Sprint + incrementos anteriores"],
+    "correctAnswer": [3],
+    "explanation": "Es la suma de los completados en el Sprint y el valor de los anteriores."
+  },
+  {
+    "question": "Selecciona las dos áreas de enfoque que NO se consideran en el Desarrollo Orientado al Valor del PO.",
+    "type": "multiple_choice",
+    "options": ["Toma de decisiones lanzamientos", "Visionario", "Experto en mercado", "Eliminación de obstáculos", "Facilitador interesados", "Maximizador de valor", "Entrenador en autoorganización"],
+    "correctAnswer": [3, 6],
+    "explanation": "No son funciones del PO."
+  },
+  {
+    "question": "¿Con qué frecuencia deberían producirse los lanzamientos?",
+    "type": "multiple_choice",
+    "options": ["Con frecuencia para eliminar riesgos", "Cada sprint", "3 meses", "Al final", "6 meses"],
+    "correctAnswer": [0],
+    "explanation": "Con suficiente frecuencia para eliminar riesgos de desalineación con el mercado."
+  },
+  {
+    "question": "Cuando algo en Scrum frustra al Product Owner, el PO puede delegar al Scrum Master.",
+    "type": "boolean",
+    "options": ["Falso", "Cierto"],
+    "correctAnswer": [0],
+    "explanation": "No es aceptable; debería consultar al SM para implementar Scrum efectivamente."
+  },
+  {
+    "question": "¿Quién es responsable de supervisar el progreso hacia objetivos de alto nivel?",
+    "type": "multiple_choice",
+    "options": ["Equipo de melé", "Product Owner", "Scrum Master", "SM y Equipo", "PO y Equipo", "Equipo de desarrollo"],
+    "correctAnswer": [1],
+    "explanation": "El PO registra el trabajo y evalúa el progreso."
+  },
+  {
+    "question": "Un equipo depende de un componente externo. ¿Qué debe hacer el PO?",
+    "type": "multiple_choice",
+    "options": ["Eliminar dependientes", "Nada", "Hacer visible la dependencia", "Transferir al equipo de integración"],
+    "correctAnswer": [2],
+    "explanation": "Hacer la dependencia visible."
+  },
+  {
+    "question": "¿Quién es responsable de la creación de la definición de 'hecho'?",
+    "type": "multiple_choice",
+    "options": ["Scrum Master", "Product Owner", "Equipo de desarrollo", "Equipo de melé"],
+    "correctAnswer": [2],
+    "explanation": "El equipo de desarrollo debe definirla si no hay una convención organizacional."
+  },
+  {
+    "question": "¿Cuáles son las tres características más aplicables del Product Owner?",
+    "type": "multiple_choice",
+    "options": ["Facilitador de interesados", "Maximizador de valor", "Facilitador eventos", "Evangelista", "Experto mercado"],
+    "correctAnswer": [0, 1, 4],
+    "explanation": "Son Maximizador de valor, Facilitador de interesados y Experto en mercado."
+  },
+  {
+    "question": "¿Qué son los artefactos Scrum?",
+    "type": "multiple_choice",
+    "options": ["Lista de Sprint", "Catálogo de productos", "Lista de impedimentos", "Incremento", "Objetivo del sprint"],
+    "correctAnswer": [1, 3],
+    "explanation": "Product Backlog, Sprint Backlog e Incremento."
+  },
+  {
+    "question": "¿Qué ocurre cuando se cancela un Sprint? Marque 3",
+    "type": "multiple_choice",
+    "options": ["PO acepta liberable", "Reestimar incompletos", "Reemplazar artículos", "Revisar completados", "SM determina responsable"],
+    "correctAnswer": [0, 1, 3],
+    "explanation": "Se revisan los 'Hechos', se reestiman los incompletos y el PO acepta lo liberable."
+  },
+  {
+    "question": "El equipo de melé está formado por:",
+    "type": "multiple_choice",
+    "options": ["Principales actores", "Scrum Master", "Product Owner", "Equipo de desarrollo"],
+    "correctAnswer": [1, 2, 3],
+    "explanation": "PO, equipo de desarrollo y Scrum Master."
+  },
+  {
+    "question": "¿En qué reuniones se permite la participación de los Actores Clave?",
+    "type": "multiple_choice",
+    "options": ["Retrospectiva", "Daily", "Revisión", "Planificación"],
+    "correctAnswer": [2],
+    "explanation": "Solo participan en la Revisión (aunque pueden interactuar en otros momentos)."
+  },
+  {
+    "question": "¿Qué es el Sprint Backlog?",
+    "type": "multiple_choice",
+    "options": ["Elementos seleccionados + plan", "Plan entrega", "Elementos seleccionados", "Elementos seleccionados + Team Backlog"],
+    "correctAnswer": [0],
+    "explanation": "Elementos seleccionados más el plan para entregar el incremento."
+  },
+  {
+    "question": "¿Quién tiene la 'última palabra' sobre el orden de los artículos?",
+    "type": "multiple_choice",
+    "options": ["Product Owner", "Scrum Master", "Equipo de desarrollo", "PO y SM"],
+    "correctAnswer": [0],
+    "explanation": "El Product Owner tiene la última palabra."
+  },
+  {
+    "question": "¿Qué factores debe tener en cuenta el PO en la decisión de lanzamiento? (Seleccionar cuatro)",
+    "type": "multiple_choice",
+    "options": ["Trabajo restante sprint", "Costes/beneficios", "Cumple definición Hecho", "Clientes limitados", "Clientes absorben", "Aprobación interesados", "Riesgo valor desalineado"],
+    "correctAnswer": [1, 3, 4, 6],
+    "explanation": "Riesgo de valor, absorción por clientes, limitaciones de clientes y costes/beneficios."
+  },
+  {"question": "¿Por qué debería haber un solo Product Owner para un producto? (Selecciona tres)", "type": "multiple_choice", "options": ["Facilita las cosas para el Scrum Master", "Existe una clara responsabilidad por el éxito o fracaso del producto", "Las decisiones sobre el producto pueden tomarse más rápido", "Es claro para los desarrolladores quién decide el orden de los elementos del Product Backlog", "Garantiza que todos los requisitos estén redactados en detalle por la misma persona"], "correctAnswer": [1, 2, 3], "explanation": "El Product Owner único asegura responsabilidad, agilidad y claridad en la priorización."},
+  {"question": "Las dependencias pueden afectar la forma en que el Product Owner decide ordenar artículos del Product Backlog.", "type": "boolean", "options": ["Sí", "No"], "correctAnswer": [0], "explanation": "Las dependencias son un factor crítico para el orden del backlog."},
+  {"question": "¿Cuáles son métricas que hablan del valor que el equipo Scrum está aportando? (Selecciona dos)", "type": "multiple_choice", "options": ["Velocidad de sprint", "Momento de salida al mercado", "Puntuaciones de satisfacción del cliente", "Alcance completado", "Alta productividad"], "correctAnswer": [1, 2], "explanation": "El tiempo de salida al mercado y la satisfacción del cliente son indicadores directos de valor generado."},
+  {"question": "¿Cuáles son los criterios válidos para ordenar el Product Backlog? (Selecciona tres)", "type": "multiple_choice", "options": ["Valor", "Dependencias entre elementos", "Perspectivas de la anterior Retrospectiva Sprint", "Dependencias relacionadas con otros productos", "Productividad del Scrum Master"], "correctAnswer": [0, 1, 3], "explanation": "El orden se basa principalmente en valor y dependencias (internas o externas)."},
+  {"question": "El Product Owner debe tener varios Product Backlogs cuando varios equipos trabajan en el mismo producto.", "type": "boolean", "options": ["Sí", "No"], "correctAnswer": [1], "explanation": "Un producto tiene un solo Product Backlog independientemente del número de equipos."},
+  {"question": "¿Qué aspectos podría considerar un Product Owner para asegurarse de que el producto genere valor? (Selecciona tres)", "type": "multiple_choice", "options": ["Cómo está mejorando la velocidad", "Comentarios y datos de los clientes", "Facilidad de uso para los clientes finales", "Porcentaje de funcionalidad utilizada", "Evitar cambios en el alcance del proyecto"], "correctAnswer": [1, 2, 3], "explanation": "El valor se asegura mediante feedback, usabilidad y uso real de la funcionalidad."},
+  {"question": "¿Es la Sprint Review un foro adecuado para recopilar opiniones de clientes?", "type": "boolean", "options": ["Sí", "No"], "correctAnswer": [0], "explanation": "La Sprint Review es el evento dedicado a la inspección y colaboración con los interesados."},
+  {"question": "El Product Owner es el equivalente a un Project Manager tradicional en un contexto ágil.", "type": "boolean", "options": ["Sí", "No"], "correctAnswer": [1], "explanation": "Son roles con responsabilidades y enfoques fundamentalmente distintos."},
+  {"question": "Todo el trabajo que los desarrolladores extraigan debe provenir del Product Backlog.", "type": "boolean", "options": ["Sí", "No"], "correctAnswer": [0], "explanation": "El Product Backlog es la única fuente oficial de requisitos para cualquier cambio en el producto."},
+  {"question": "¿Cuál es una señal de que el Product Owner necesita trabajar más estrechamente con el equipo Scrum?", "type": "multiple_choice", "options": ["El PO no trabaja a tiempo completo", "El incremento mostrado en la revisión no es lo que el PO esperaba", "No hay pruebas automatizadas", "Los desarrolladores duplicaron su velocidad"], "correctAnswer": [1], "explanation": "La falta de alineación en lo que se entrega indica una comunicación deficiente."},
+  {"question": "Si el Daily Scrum se celebrara cada dos días, ¿qué aspectos podrían verse afectados? (Selecciona tres)", "type": "multiple_choice", "options": ["Los impedimentos se eliminan con retraso", "El Product Owner no podrá actualizar el backlog", "El plan para el Sprint puede no ser preciso", "El Scrum Master no podrá seguir el progreso", "Se reduce la inspección y adaptación del Sprint Backlog"], "correctAnswer": [0, 2, 4], "explanation": "El Daily Scrum es diario para mantener la sincronización, el plan preciso y la resolución rápida de impedimentos."},
+  {"question": "¿Quién es responsable de maximizar el valor del producto?", "type": "multiple_choice", "options": ["Los desarrolladores", "Los actores", "El CTO", "El CEO", "El Product Owner", "El Scrum Master"], "correctAnswer": [4], "explanation": "La responsabilidad de maximizar el valor es exclusiva del Product Owner."},
+  {"question": "El Product Owner:", "type": "multiple_choice", "options": ["Dirige a los desarrolladores", "Es el guardián de la organización", "Es responsable de optimizar el valor del trabajo de los desarrolladores", "Gestiona el proyecto diariamente", "Establece la definición de Hecho"], "correctAnswer": [2], "explanation": "Su objetivo principal es la optimización del valor del trabajo realizado."},
+  {"question": "¿Con qué frecuencia debe cambiarse la composición del equipo de desarrollo?", "type": "multiple_choice", "options": ["Nunca", "Cada Sprint", "Cuando sea necesario, aunque afecte la productividad a corto plazo", "Cada tres Sprints"], "correctAnswer": [2], "explanation": "Aunque la estabilidad es preferible, a veces son necesarios cambios reconociendo el impacto temporal."},
+  {"question": "¿Quién decide la estructura y preguntas para el Daily Scrum?", "type": "multiple_choice", "options": ["El Scrum Master", "El Product Owner", "Los desarrolladores", "La dirección"], "correctAnswer": [2], "explanation": "Los desarrolladores deciden cómo estructurar su Daily Scrum para ser más efectivos."},
+  {"question": "¿Cuándo se considera implementado un artículo de Product Backlog?", "type": "multiple_choice", "options": ["Cuando los evaluadores dan el visto bueno", "En la Sprint Review", "Cuando no tiene trabajo pendiente y es potencialmente liberable", "Cuando se finalizan tareas de desarrollo", "Cuando el Scrum Master lo declara Hecho"], "correctAnswer": [2], "explanation": "Un elemento está 'Hecho' cuando cumple la definición de 'Hecho' y es potencialmente liberable."},
+  {"question": "¿Qué prácticas ayudan a reducir el desperdicio en la gestión del Product Backlog? (Selecciona dos)", "type": "multiple_choice", "options": ["Escribir elementos con años de antelación", "Nombrar a otro Product Owner", "Añadir detalles solo cuando es probable que se implementen pronto", "Eliminar elementos antiguos del Product Backlog"], "correctAnswer": [2, 3], "explanation": "El refinamiento justo a tiempo y la limpieza del backlog evitan el desperdicio de esfuerzo."},
+  {"question": "¿Quién crea la definición de 'Hecho'?", "type": "multiple_choice", "options": ["La organización", "El Scrum Master", "El Equipo Scrum (si la organización no tiene una convención)", "El Product Owner"], "correctAnswer": [2], "explanation": "El Equipo Scrum debe definirla si la organización no provee una base mínima."},
+  {"question": "Los desarrolladores son responsables de lanzar el producto más valioso posible.", "type": "boolean", "options": ["Sí", "No"], "correctAnswer": [1], "explanation": "El Product Owner es responsable del valor; los desarrolladores del incremento de calidad."},
+  {"question": "¿Cuándo actualiza el Product Owner el plan del proyecto?", "type": "multiple_choice", "options": ["En los reportes semanales", "Es trabajo del PM", "El Product Backlog es el plan y se actualiza continuamente", "Solo durante la retrospectiva"], "correctAnswer": [2], "explanation": "El Product Backlog actúa como el plan vivo que evoluciona con el aprendizaje."},
+  {"question": "El Product Backlog es: (Selecciona tres)", "type": "multiple_choice", "options": ["Gestionado por el Scrum Master", "Gestionado por el Product Owner", "Ordenado por valor, riesgo y dependencias", "Un inventario de elementos que el producto puede incluir", "Una lista finalizada de requisitos futuros"], "correctAnswer": [1, 2, 3], "explanation": "Es un inventario dinámico gestionado por el PO y ordenado por factores clave."},
+  {"question": "¿Cuáles son eventos obligatorios en Scrum? (Selecciona dos)", "type": "multiple_choice", "options": ["Scrum diario", "Planificación de lanzamiento", "Revisión de Sprint", "Gráfico de Burndown de Lanzamiento"], "correctAnswer": [0, 2], "explanation": "El Daily Scrum y la Sprint Review son eventos del framework Scrum."},
+  {"question": "¿Quién forma parte del Equipo Scrum?", "type": "multiple_choice", "options": ["Product Owner, Desarrolladores, Scrum Master", "Product Owner, PM, Desarrolladores", "Scrum Master, Clientes, Product Owner", "Stakeholders, Desarrolladores, Scrum Master"], "correctAnswer": [0], "explanation": "El Equipo Scrum está compuesto exclusivamente por el PO, los desarrolladores y el Scrum Master."},
+  {"question": "Si hay varios equipos trabajando en un producto, ¿quién debe asegurar la integración?", "type": "multiple_choice", "options": ["El Product Owner", "El Scrum Master", "Los desarrolladores de los equipos", "La oficina de gestión de proyectos"], "correctAnswer": [2], "explanation": "Es responsabilidad de los desarrolladores colaborar para producir un incremento integrado."},
+  {"question": "¿Qué resultado de la Planificación del Sprint proporciona dirección durante todo el Sprint?", "type": "multiple_choice", "options": ["Plan de Lanzamiento", "Objetivo del sprint (Sprint Goal)", "Actas de planificación", "Product Backlog"], "correctAnswer": [1], "explanation": "El Sprint Goal guía el enfoque y la flexibilidad del equipo durante el Sprint."},
+  {"question": "¿Qué aumenta la transparencia del Product Backlog? (Selecciona dos)", "type": "multiple_choice", "options": ["Mantenerlo actualizado con el feedback real", "Dimensionar todos los artículos a años vista", "Refinar los elementos superiores para que quepan en un Sprint", "Actualizarlo solo en la revisión"], "correctAnswer": [0, 2], "explanation": "La información actualizada y el refinamiento de elementos cercanos mejoran la visibilidad."},
+  {"question": "¿Quién estima los artículos del Product Backlog?", "type": "multiple_choice", "options": ["El Scrum Master", "El Product Owner", "Los desarrolladores", "El equipo de gestión"], "correctAnswer": [2], "explanation": "Los desarrolladores estiman porque son ellos quienes realizarán el trabajo."},
+  {"question": "¿Qué trabajo de Product Owner se puede delegar?", "type": "multiple_choice", "options": ["Escribir todas las historias de usuario", "El orden/priorización del Product Backlog", "La participación en la Sprint Review", "Representar a los interesados"], "correctAnswer": [1], "explanation": "La responsabilidad final es del PO, pero puede delegar las tareas tácticas de gestión del backlog."},
+  {"question": "¿Qué es el cono de incertidumbre?", "type": "multiple_choice", "options": ["Muestra que la incertidumbre disminuye conforme se avanza", "Es una herramienta de gestión de riesgos", "Muestra el esfuerzo acumulado", "Es una representación de la deuda técnica"], "correctAnswer": [0], "explanation": "Refleja la reducción de la incertidumbre a medida que el proyecto progresa."},
+  {"question": "¿Qué acciones debe realizar el Scrum Master durante el Sprint? (Selecciona dos)", "type": "multiple_choice", "options": ["Seguir el progreso detallado", "Asignar tareas", "Eliminar impedimentos", "Facilitar mejoras en el proceso"], "correctAnswer": [2, 3], "explanation": "Sus labores principales son la eliminación de impedimentos y la facilitación del proceso."},
+  {"question": "¿Quién puede actualizar el Sprint Backlog durante el Sprint?", "type": "multiple_choice", "options": ["El Product Owner", "El Scrum Master", "Los desarrolladores", "El equipo de melé"], "correctAnswer": [2], "explanation": "Solo los desarrolladores modifican el Sprint Backlog durante el Sprint."},
+  {"question": "Los equipos Scrum deberían tener un Sprint de Liberación específico.", "type": "boolean", "options": ["Sí", "No"], "correctAnswer": [1], "explanation": "No existen 'Sprints de liberación'; cada Sprint produce un incremento liberable."},
+  {"question": "Durante el Sprint 0, el Product Owner debe...", "type": "multiple_choice", "options": ["Sprint 0 no existe formalmente en Scrum", "Hacer todo el trabajo de descubrimiento", "Formar el equipo", "Elaborar un Gantt"], "correctAnswer": [0], "explanation": "No existe concepto de 'Sprint 0' dentro del marco oficial de Scrum."},
+  {"question": "Si los desarrolladores ven que han seleccionado demasiado trabajo, ¿qué deben hacer?", "type": "multiple_choice", "options": ["Hacer horas extra", "Pedir al SM que defina tareas", "Colaborar con el PO para eliminar artículos", "Acortar la definición de Hecho"], "correctAnswer": [2], "explanation": "El alcance se puede renegociar con el PO durante el Sprint."},
+  {"question": "¿Quién es responsable del trabajo necesario para cumplir la definición de 'Hecho'?", "type": "multiple_choice", "options": ["Aseguramiento de Calidad (QA)", "Product Owner", "Los desarrolladores", "Scrum Master"], "correctAnswer": [2], "explanation": "Los desarrolladores son responsables de todo el trabajo técnico necesario."},
+  {"question": "¿Es obligatorio que el PO escriba cada elemento del Backlog?", "type": "boolean", "options": ["Sí", "No"], "correctAnswer": [1], "explanation": "Es responsable de la gestión, pero no tiene que redactar todo personalmente."},
+  {"question": "Los desarrolladores tienen problemas configurando el Daily Scrum remoto, ¿qué debe hacer el SM?", "type": "multiple_choice", "options": ["Resolverlo él mismo", "Instruirles cómo hacerlo", "Fomentar que los desarrolladores resuelvan el problema", "Pedir al PO que intervenga"], "correctAnswer": [2], "explanation": "El Scrum Master fomenta la autogestión del equipo."},
+  {"question": "¿Cuál es la caja de tiempo para la Sprint Review (en un Sprint de un mes)?", "type": "multiple_choice", "options": ["4 horas", "3 horas", "1 día", "2 horas"], "correctAnswer": [0], "explanation": "El máximo para un Sprint de un mes es de 4 horas."},
+  {"question": "Si los desarrolladores no completarán la funcionalidad, el PO debería:", "type": "multiple_choice", "options": ["Exigir horas extra", "Eliminar o modificar elementos con los desarrolladores", "Despedir a los desarrolladores", "Cancelar el producto"], "correctAnswer": [1], "explanation": "La colaboración para ajustar el backlog mantiene el enfoque en el Sprint Goal."},
+  {"question": "¿Qué tamaño tiene un artículo 'listo'?", "type": "multiple_choice", "options": ["8 puntos de historia", "Un día de trabajo", "Se puede completar dentro de un Sprint", "Lo que decida el Scrum Master"], "correctAnswer": [2], "explanation": "Un elemento 'listo' debe poderse terminar en un Sprint."},
+  {"question": "El PO debe elaborar criterios de aceptación exhaustivos antes de la planificación.", "type": "boolean", "options": ["Sí", "No"], "correctAnswer": [1], "explanation": "El refinamiento es continuo y no requiere una definición total antes de empezar."},
+  {"question": "¿Por qué es necesario un Sprint Goal?", "type": "multiple_choice", "options": ["Para proporcionar enfoque y flexibilidad durante el Sprint", "No es necesario", "Para expresar toda la visión del producto", "Para que la dirección evalúe al equipo"], "correctAnswer": [0], "explanation": "El Sprint Goal ofrece un objetivo común y guía las decisiones técnicas."},
+  {"question": "¿Qué eligen los desarrolladores?", "type": "multiple_choice", "options": ["La duración del Sprint", "Cómo realizar el trabajo", "El orden del Product Backlog", "Cuándo lanzar el producto"], "correctAnswer": [1], "explanation": "Los desarrolladores deciden autónomamente cómo convertir el backlog en un incremento."},
+  {"question": "¿Con qué frecuencia se debe medir la satisfacción del cliente?", "type": "multiple_choice", "options": ["Nunca", "Anualmente", "Cada día", "Frecuentemente"], "correctAnswer": [3], "explanation": "La medición constante ayuda a validar si el producto aporta valor real."},
+  {"question": "¿Quién es responsable de crear el objetivo del producto?", "type": "multiple_choice", "options": ["Scrum Master", "Desarrolladores", "Product Owner", "Organización"], "correctAnswer": [2], "explanation": "El Product Owner es el responsable principal del Producto y sus objetivos."},
+  {"question": "¿Cuál aspecto no debería afectar el orden del Product Backlog?", "type": "multiple_choice", "options": ["Dependencias", "Valor", "Riesgo", "Herramientas de desarrollo"], "correctAnswer": [3], "explanation": "El orden debe basarse en valor, riesgo y estrategia, no en herramientas técnicas."},
+  {"question": "¿Qué actividades son habituales para el PO durante un Sprint? (Selecciona dos)", "type": "multiple_choice", "options": ["Trabajar con interesados", "Participar en cada Daily Scrum", "Analizar reportes de horas", "Refinar el Product Backlog"], "correctAnswer": [0, 3], "explanation": "El PO se enfoca en gestionar interesados y en la preparación del trabajo futuro."},
+  {"question": "¿Qué pueden ofrecer los desarrolladores en un Sprint?", "type": "multiple_choice", "options": ["Un prototipo sin probar", "Un reporte funcional", "Un incremento terminado de software funcional", "Un documento de diseño"], "correctAnswer": [2], "explanation": "El objetivo de Scrum es entregar incrementos utilizables y terminados."},
+  {"question": "¿Por qué el Daily Scrum debe ser a la misma hora y lugar?", "type": "multiple_choice", "options": ["Para comodidad del Scrum Master", "Para reducir la complejidad", "Por política de la oficina", "Para coincidir con el horario del PO"], "correctAnswer": [1], "explanation": "La consistencia reduce la carga cognitiva y organizativa del equipo."},
+  {"question": "¿Cuándo deben los desarrolladores cancelar un Sprint?", "type": "multiple_choice", "options": ["Nunca, solo el Product Owner puede", "Cuando el SM lo diga", "Cuando no tengan nivel de autoorganización", "Cuando haya impedimentos"], "correctAnswer": [0], "explanation": "La autoridad para cancelar el Sprint reside exclusivamente en el Product Owner."},
+  {
+    "question": "Para tomar decisiones de inversión, el Product Owner analiza el Coste Total de Propiedad (TCO). ¿Qué costes debe tener en cuenta?",
+    "type": "multiple_choice",
+    "options": [
+      "El coste acumulado sobre el valor ganado del producto.",
+      "El dinero invertido en el desarrollo y la entrega del producto.",
+      "Todas las inversiones necesarias para concebir, desarrollar, operar y mantener el producto."
+    ],
+    "correctAnswer": [2],
+    "explanation": "El Product Owner es responsable no solo del desarrollo, sino del coste de mantenimiento y operación durante toda la vida útil del producto."
+  },
+  {
+    "question": "¿Qué descripción encaja mejor con el rol del Product Owner?",
+    "type": "multiple_choice",
+    "options": [
+      "Protector de mira.",
+      "Analista Jefe de Negocios.",
+      "Maximizador de valor.",
+      "Recaudador de requisitos.",
+      "Gestor de Proyecto 2.0."
+    ],
+    "correctAnswer": [2],
+    "explanation": "La responsabilidad fundamental del Product Owner es maximizar el valor del producto."
+  },
+  {
+    "question": "Verdadero o falso: El valor que aporta un producto solo puede determinarse por los ingresos.",
+    "type": "boolean",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "El valor es subjetivo y varía según el producto y la organización, no se limita únicamente a ingresos monetarios."
+  },
+  {
+    "question": "¿Cuál es el valor principal de liberar el Incremento para los clientes?",
+    "type": "multiple_choice",
+    "options": [
+      "Para conocer la previsión de funcionalidad que se desarrolló.",
+      "Para validar las suposiciones hechas al crear el producto.",
+      "Para cumplir con el contrato de entrega."
+    ],
+    "correctAnswer": [1],
+    "explanation": "La liberación frecuente permite obtener feedback real y validar si las hipótesis de negocio son correctas."
+  },
+  {
+    "question": "¿Cuál de las siguientes es una métrica clave para un Product Owner al medir el valor?",
+    "type": "multiple_choice",
+    "options": [
+      "Velocidad del equipo.",
+      "Coste por historia de usuario.",
+      "Satisfacción del cliente y cuota de mercado."
+    ],
+    "correctAnswer": [2],
+    "explanation": "La satisfacción y la cuota de mercado son indicadores directos de valor de negocio, a diferencia de las métricas de eficiencia como la velocidad."
+  },
+  {
+    "question": "¿Quién tiene la autoridad para cancelar un Sprint?",
+    "type": "multiple_choice",
+    "options": ["El Scrum Master", "El Product Owner", "El equipo de desarrollo", "Los interesados"],
+    "correctAnswer": [1],
+    "explanation": "Solo el Product Owner tiene la autoridad de cancelar el Sprint si el objetivo del Sprint se vuelve obsoleto."
+  },
+  {
+    "question": "¿Qué debe hacer un Product Owner cuando los desarrolladores tienen dificultades para entender un requisito?",
+    "type": "multiple_choice",
+    "options": [
+      "Escribir una documentación más larga.",
+      "Colaborar con los desarrolladores para aclarar y refinar el elemento del backlog.",
+      "Pedir al Scrum Master que gestione la comunicación."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El refinamiento es una actividad colaborativa fundamental para asegurar que el equipo entienda el 'qué' y el 'por qué'."
+  },
+  {
+    "question": "¿Es obligatorio que el Product Backlog sea exhaustivo antes de iniciar el primer Sprint?",
+    "type": "boolean",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "No se requiere más que un equipo Scrum y suficientes ideas para iniciar el primer Sprint."
+  },
+  {
+    "question": "¿Qué debería hacer el equipo si el Product Owner no está disponible durante el Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "Esperar a que vuelva.",
+      "Pedir a la dirección que asigne un sustituto.",
+      "Tomar las mejores decisiones posibles para seguir progresando hacia el Sprint Goal."
+    ],
+    "correctAnswer": [2],
+    "explanation": "Los desarrolladores deben mantener el flujo y autogestionarse, realineándose con el PO en cuanto este regrese."
+  },
+  {
+    "question": "¿Quién es responsable de la gestión del Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["El Scrum Master", "El Product Owner", "El equipo de desarrollo", "El Project Manager"],
+    "correctAnswer": [1],
+    "explanation": "El Product Owner es la única persona responsable de la gestión del Product Backlog."
+  },
+  {
+    "question": "¿Qué significa que el Product Backlog sea 'emergente'?",
+    "type": "multiple_choice",
+    "options": [
+      "Que cambia constantemente sin control.",
+      "Que evoluciona a medida que se aprende más sobre el producto y el mercado.",
+      "Que debe ser terminado al inicio del proyecto."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El Backlog cambia a medida que obtenemos feedback y descubrimos nuevas necesidades o riesgos."
+  },
+  {
+    "question": "¿Cómo ayuda el Product Owner a los desarrolladores durante el Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "Asignando tareas específicas a cada miembro.",
+      "Estando disponible para aclarar dudas sobre los elementos del backlog.",
+      "Supervisando la asistencia al Daily Scrum."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El apoyo principal del PO es aportar claridad y contexto sobre los objetivos y elementos de trabajo."
+  },
+  {
+    "question": "¿Es el Product Owner responsable del trabajo técnico realizado por los desarrolladores?",
+    "type": "boolean",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "La responsabilidad técnica y la calidad del incremento recaen exclusivamente en los desarrolladores."
+  },
+  {
+    "question": "¿Qué impacto tiene la deuda técnica en la capacidad de entrega a largo plazo?",
+    "type": "multiple_choice",
+    "options": [
+      "Aumenta la velocidad.",
+      "No tiene impacto si se entrega funcionalidad.",
+      "Reduce la agilidad y aumenta el esfuerzo necesario para futuros cambios."
+    ],
+    "correctAnswer": [2],
+    "explanation": "La deuda técnica actúa como un interés que reduce la capacidad de entrega futura del equipo."
+  },
+  {
+    "question": "¿Qué ocurre si un elemento del Backlog no cumple con la Definición de Hecho?",
+    "type": "multiple_choice",
+    "options": [
+      "Se puede liberar de todos modos.",
+      "No se puede considerar terminado ni incluirse en el Incremento.",
+      "Se marca como terminado con una nota."
+    ],
+    "correctAnswer": [1],
+    "explanation": "La transparencia requiere que solo el trabajo terminado según la definición acordada pueda considerarse parte del Incremento."
+  },
+  {
+    "question": "¿Cuáles son tres afirmaciones incorrectas, falsas o engañosas sobre Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "Scrum es un marco para desarrollar y mantener productos complejos.",
+      "Scrum se basa en el empirismo y el pensamiento lean.",
+      "Scrum es un marco que elimina la complejidad.",
+      "Cada componente de Scrum cumple un propósito específico y es esencial.",
+      "Scrum es como los procesos tradicionales pero con autoorganización para sustituir a los Jefes de Proyecto.",
+      "Scrum es una metodología en la que puedes elegir qué partes de Scrum crees que funcionarán para tu entorno."
+    ],
+    "correctAnswer": [2, 4, 5],
+    "explanation": "Scrum no elimina la complejidad, sino que ofrece un marco para tratarla. No es una metodología para elegir partes (los eventos son obligatorios) y no sustituye simplemente a los Jefes de Proyecto."
+  },
+  {
+    "question": "Verdadero o falso: Es obligatorio que el Incremento del producto sea liberado al menos una vez al mes.",
+    "type": "boolean",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "El incremento debe estar listo para ser liberado al final de cada Sprint, pero la decisión de liberarlo comercialmente depende del Product Owner."
+  },
+  {
+    "question": "¿Qué describe mejor el Sprint Backlog?",
+    "type": "multiple_choice",
+    "options": [
+      "Es el plan de trabajo del Product Owner.",
+      "Es un plan de los desarrolladores para los desarrolladores, diseñado para alcanzar el Sprint Goal.",
+      "Es una lista de tareas que el Scrum Master debe asignar."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El Sprint Backlog pertenece exclusivamente a los desarrolladores y es su plan de ejecución."
+  },
+  {
+    "question": "¿Cuál es el propósito principal de la Sprint Review?",
+    "type": "multiple_choice",
+    "options": [
+      "Que el Scrum Master evalúe al equipo.",
+      "Inspeccionar el resultado del Sprint y adaptar el Product Backlog.",
+      "Decidir quién es el mejor trabajador del Sprint."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Es un evento de colaboración entre el Equipo Scrum y los interesados para inspeccionar el incremento y ajustar el backlog."
+  },
+  {
+    "question": "¿Quién tiene la autoridad para cancelar un Sprint?",
+    "type": "multiple_choice",
+    "options": ["El Scrum Master", "El Product Owner", "El equipo de desarrollo", "El CEO"],
+    "correctAnswer": [1],
+    "explanation": "Solo el Product Owner puede cancelar un Sprint si el objetivo se vuelve obsoleto."
+  },
+  {
+    "question": "¿Qué ocurre si el equipo de desarrollo no logra completar todo el trabajo en el Sprint?",
+    "type": "multiple_choice",
+    "options": [
+      "El equipo es sancionado.",
+      "El trabajo se reinicia desde cero.",
+      "Se debe renegociar el alcance con el Product Owner y el trabajo no terminado vuelve al Product Backlog."
+    ],
+    "correctAnswer": [2],
+    "explanation": "El alcance es flexible; el trabajo incompleto se reevalúa en el Product Backlog."
+  },
+  {
+    "question": "¿Cuándo debe llevarse a cabo la Retrospectiva del Sprint?",
+    "type": "multiple_choice",
+    "options": ["Después de la Sprint Review y antes de la siguiente Sprint Planning.", "En cualquier momento del Sprint.", "Al inicio del Sprint."],
+    "correctAnswer": [0],
+    "explanation": "La retrospectiva cierra el Sprint actual antes de planificar el siguiente."
+  },
+  {
+    "question": "¿Qué es un Incremento?",
+    "type": "multiple_choice",
+    "options": [
+      "Un prototipo que no necesita cumplir la definición de 'Hecho'.",
+      "Un paso concreto hacia el Objetivo del Producto que cumple con la Definición de 'Hecho'.",
+      "Una lista de nuevas ideas de negocio."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El incremento debe estar terminado y cumplir con la Definición de Hecho (DoD) para ser parte del producto."
+  },
+  {
+    "question": "¿Qué significa 'empirismo' en Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "Tomar decisiones basadas en la experiencia, la observación y la experimentación.",
+      "Seguir un plan detallado al pie de la letra.",
+      "Trabajar bajo presión constante."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El empirismo se basa en la transparencia, la inspección y la adaptación."
+  },
+  {
+    "question": "¿Quién es responsable de la Definición de 'Hecho'?",
+    "type": "multiple_choice",
+    "options": ["El Product Owner", "El Scrum Master", "El Equipo Scrum", "Los interesados"],
+    "correctAnswer": [2],
+    "explanation": "El Equipo Scrum es responsable de crearla si la organización no tiene una estándar."
+  },
+  {
+    "question": "¿Pueden los desarrolladores trabajar en varios productos al mismo tiempo?",
+    "type": "boolean",
+    "options": ["Sí", "No"],
+    "correctAnswer": [0],
+    "explanation": "Scrum no lo prohíbe, aunque es menos eficiente que el enfoque en un solo producto."
+  },
+  {
+    "question": "¿Qué significa que el Scrum Master sea un 'servidor líder'?",
+    "type": "multiple_choice",
+    "options": [
+      "Que debe dar órdenes a todo el equipo.",
+      "Que ayuda a eliminar impedimentos y sirve a la organización y al equipo Scrum.",
+      "Que es el jefe de los desarrolladores."
+    ],
+    "correctAnswer": [1],
+    "explanation": "Su rol es facilitar, entrenar y eliminar bloqueos, no gestionar personas."
+  },
+  {
+    "question": "¿Qué pasa si un equipo Scrum es demasiado grande?",
+    "type": "multiple_choice",
+    "options": [
+      "Se divide en varios equipos Scrum que comparten un mismo Product Backlog.",
+      "Se añaden más Scrum Masters.",
+      "Se aumentan las horas del Sprint."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Scrum recomienda equipos pequeños (típicamente 10 o menos) para mantener la agilidad."
+  },
+  {
+    "question": "¿Es el Daily Scrum una reunión de estado para el Scrum Master?",
+    "type": "boolean",
+    "options": ["Sí", "No"],
+    "correctAnswer": [1],
+    "explanation": "El Daily Scrum es una reunión de sincronización y planificación para los desarrolladores."
+  },
+  {
+    "question": "¿Qué es la 'caja temporal' (time-box) en Scrum?",
+    "type": "multiple_choice",
+    "options": [
+      "La duración máxima permitida para un evento.",
+      "El tiempo que el equipo debe dedicar a descansar.",
+      "El tiempo que el Product Owner dedica al Backlog."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Las cajas de tiempo aseguran que los eventos no se extiendan más de lo necesario."
+  },
+  {
+    "question": "¿Cómo se elige el Sprint Goal?",
+    "type": "multiple_choice",
+    "options": [
+      "Lo dicta el Product Owner.",
+      "Es el resultado de la colaboración de todo el Equipo Scrum durante la Sprint Planning.",
+      "Lo decide la dirección."
+    ],
+    "correctAnswer": [1],
+    "explanation": "El equipo Scrum debe colaborar para definir un objetivo común."
+  },
+  {
+    "question": "¿Quién participa en la Sprint Planning?",
+    "type": "multiple_choice",
+    "options": ["Solo los desarrolladores.", "Todo el equipo Scrum (PO, Desarrolladores, SM).", "El cliente y el equipo."],
+    "correctAnswer": [1],
+    "explanation": "La planificación requiere la colaboración de todo el equipo Scrum."
+  },
+  {
+    "question": "¿El Scrum Master debe estar presente en todos los eventos?",
+    "type": "boolean",
+    "options": ["Sí", "No"],
+    "correctAnswer": [1],
+    "explanation": "Debe asegurarse de que ocurran, pero no necesariamente asistir a todos si el equipo es autosuficiente."
+  },
+  {
+    "question": "¿Cuál es la responsabilidad principal de los desarrolladores?",
+    "type": "multiple_choice",
+    "options": ["Maximizar el valor del producto.", "Crear un incremento de calidad cada Sprint.", "Gestionar a los interesados."],
+    "correctAnswer": [1],
+    "explanation": "Los desarrolladores son responsables de la calidad y de producir el incremento."
+  },
+  {
+    "question": "¿Qué es el Product Backlog?",
+    "type": "multiple_choice",
+    "options": ["Una lista ordenada de todo lo que se necesita en el producto.", "Un reporte de errores.", "Un plan fijo de fechas."],
+    "correctAnswer": [0],
+    "explanation": "Es la única fuente de requisitos para el producto."
+  },
+  {
+    "question": "¿Es obligatorio usar Historias de Usuario en Scrum?",
+    "type": "boolean",
+    "options": ["Sí", "No"],
+    "correctAnswer": [1],
+    "explanation": "Las historias de usuario son una técnica común, pero no forman parte del marco oficial de Scrum."
+  },
+  {
+    "question": "¿Quién debe asistir a la Sprint Review?",
+    "type": "multiple_choice",
+    "options": ["El Equipo Scrum y los interesados.", "Solo los directivos.", "Solo el Product Owner."],
+    "correctAnswer": [0],
+    "explanation": "Es un evento de inspección abierto para colaborar con los interesados clave."
+  },
+  {
+    "question": "¿Qué sucede durante la Retrospectiva?",
+    "type": "multiple_choice",
+    "options": [
+      "Se inspeccionan personas y procesos para crear un plan de mejora.",
+      "Se presenta el producto al cliente.",
+      "Se definen los requisitos del próximo producto."
+    ],
+    "correctAnswer": [0],
+    "explanation": "El enfoque es la mejora continua del equipo y el proceso."
+  },
+  {
+    "question": "¿La gestión (management) tiene un rol oficial en Scrum?",
+    "type": "boolean",
+    "options": ["Sí", "No"],
+    "correctAnswer": [1],
+    "explanation": "Scrum solo define tres roles: Product Owner, Desarrolladores y Scrum Master."
+  },
+  {
+    "question": "¿Qué pasa si un miembro del equipo no realiza sus tareas?",
+    "type": "multiple_choice",
+    "options": [
+      "El Scrum Master debe despedirlo.",
+      "El equipo Scrum debe autogestionarse para resolver el problema.",
+      "Se cancela el Sprint."
+    ],
+    "correctAnswer": [1],
+    "explanation": "La autogestión implica que el equipo resuelve internamente sus problemas de desempeño."
+  },
+  {
+    "question": "¿Quién es responsable de la visión del producto?",
+    "type": "multiple_choice",
+    "options": ["El Product Owner", "El Scrum Master", "Los desarrolladores"],
+    "correctAnswer": [0],
+    "explanation": "La visión es parte del liderazgo del Product Owner."
+  },
+  {
+    "question": "¿Qué significa 'transparencia'?",
+    "type": "multiple_choice",
+    "options": [
+      "Que el proceso y el trabajo sean visibles para quienes son responsables del resultado.",
+      "Que todo el mundo sepa cuánto gana cada uno.",
+      "Que los documentos estén en la nube."
+    ],
+    "correctAnswer": [0],
+    "explanation": "La transparencia es uno de los pilares del empirismo."
+  },
+  {
+    "question": "¿Debe el equipo Scrum ser multifuncional?",
+    "type": "boolean",
+    "options": ["Sí", "No"],
+    "correctAnswer": [0],
+    "explanation": "Deben tener todas las competencias necesarias para crear el incremento."
+  },
+  {
+    "question": "¿Qué significa que el trabajo de desarrollo sea 'complejo'?",
+    "type": "multiple_choice",
+    "options": [
+      "Que hay mucha incertidumbre y cambio.",
+      "Que siempre es difícil programar.",
+      "Que requiere muchas horas."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Scrum es una respuesta a entornos complejos donde no se puede predecir todo al inicio."
+  },
+  {
+    "question": "¿Qué significa que un evento tenga una caja temporal?",
+    "type": "multiple_choice",
+    "options": [
+      "El evento no puede durar más de un tiempo máximo.",
+      "El evento debe ocurrir a una hora exacta.",
+      "El evento es opcional."
+    ],
+    "correctAnswer": [0],
+    "explanation": "Significa que tienen una duración máxima establecida para evitar el desperdicio."
+  },
+  {
+    "question": "¿Cuándo pueden los desarrolladores estimar los elementos del Product Backlog? (Selecciona dos)",
+    "type": "multiple_choice",
+    "options": [
+      "Scrum diario",
+      "Actividad de refinamiento del backlog",
+      "Revisión de Sprint",
+      "Planificación de sprints"
+    ],
+    "correctAnswer": [1, 3],
+    "explanation": "La estimación ocurre principalmente durante el refinamiento, pero también puede realizarse durante la planificación si es necesario."
+  },
+  {
+    "question": "Al medir el Coste Total de Propiedad (TCO), el Product Owner puede saber si el producto está entregando valor o no.",
+    "type": "multiple_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "El TCO mide costes, pero no es suficiente por sí solo para medir si el producto es exitoso o genera valor."
+  },
+  {
+    "question": "El Product Owner puede delegar la responsabilidad de gestionar el Product Backlog a personas ajenas al equipo Scrum. ¿Verdadero o falso?",
+    "type": "multiple_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "El PO puede delegar trabajo, pero sigue siendo el único responsable del resultado final."
+  },
+  {
+    "question": "El Product Owner ha recibido tres nuevas ideas para el producto. ¿Qué debería hacer a continuación?",
+    "type": "multiple_choice",
+    "options": [
+      "Informa al equipo Scrum",
+      "Añade las ideas a la lista de características del producto",
+      "Añade las ideas al Product Backlog"
+    ],
+    "correctAnswer": [2],
+    "explanation": "El Product Backlog es la única fuente de requisitos y todo cambio debe reflejarse ahí."
+  },
+  {
+    "question": "Carla, una desarrolladora, comparte preocupaciones sobre el valor de un ítem con el equipo. ¿Qué valores de Scrum demuestra? (Selecciona dos)",
+    "type": "multiple_choice",
+    "options": [
+      "Valor (Courage)",
+      "Compromiso",
+      "Apertura",
+      "Integridad",
+      "Honestidad"
+    ],
+    "correctAnswer": [0, 2],
+    "explanation": "Se requiere Valor para alzar la voz y Apertura para compartir preocupaciones con el equipo."
+  },
+  {
+    "question": "Durante el Sprint, ¿con qué artefactos de Scrum trabajan los desarrolladores? (Selecciona todos los que apliquen)",
+    "type": "multiple_choice",
+    "options": [
+      "Incremento",
+      "Gráfico de quema (Burndown)",
+      "Product Backlog",
+      "Sprint Backlog",
+      "Scrum board"
+    ],
+    "correctAnswer": [0, 2, 3],
+    "explanation": "Los artefactos oficiales de Scrum son el Incremento, el Product Backlog y el Sprint Backlog."
+  },
+  {
+    "question": "Los desarrolladores utilizan los siguientes artefactos de Scrum durante el Sprint. (Selecciona dos)",
+    "type": "multiple_choice",
+    "options": [
+      "Incremento",
+      "Plan de liberación",
+      "Scrum board",
+      "Plan de sprint",
+      "Sprint Backlog",
+      "Plan de proyecto"
+    ],
+    "correctAnswer": [0, 4],
+    "explanation": "Los artefactos oficiales son el Incremento y el Sprint Backlog."
+  },
+  {
+    "question": "¿Quién es responsable de hacer el seguimiento del trabajo restante hacia el Sprint Goal?",
+    "type": "single_choice",
+    "options": ["Los desarrolladores", "El Jefe de Proyecto", "El Product Owner", "El Scrum Master"],
+    "correctAnswer": [0],
+    "explanation": "Los desarrolladores son autogestionados y responsables de realizar el seguimiento del trabajo restante."
+  },
+  {
+    "question": "¿Cuál es el intervalo de tiempo para el evento de Planificación de Sprints en un Sprint de un mes?",
+    "type": "single_choice",
+    "options": ["Mensualmente", "Cuando se termine", "8 horas", "4 horas"],
+    "correctAnswer": [2],
+    "explanation": "Para un Sprint de un mes, el tiempo límite (timebox) es de 8 horas."
+  },
+  {
+    "question": "¿Qué prácticas ayudan al Product Owner a minimizar el desperdicio en el mantenimiento del Product Backlog?",
+    "type": "single_choice",
+    "options": ["Mantener elementos en un backlog separado", "Delegar la propiedad del backlog", "Eliminar elementos antiguos", "Describir completamente elementos solo cuando sea probable su implementación"],
+    "correctAnswer": [2],
+    "explanation": "Eliminar elementos no abordados y solo detallar los que probablemente se implementen ayuda a mantener el foco y reducir desperdicio."
+  },
+  {
+    "question": "¿Por qué los desarrolladores necesitan un Sprint Goal?",
+    "type": "single_choice",
+    "options": ["Para el Sprint 0", "No tiene valor", "Para tener un objetivo común específico", "Para asegurar que todos los elementos se implementen"],
+    "correctAnswer": [2],
+    "explanation": "El Sprint Goal proporciona un propósito compartido y ayuda a alinear los esfuerzos durante el Sprint."
+  },
+  {
+    "question": "¿Un Scrum Master cumple el mismo rol que un Project Manager tradicional?",
+    "type": "single_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "Son roles distintos; el Scrum Master es un líder servidor que facilita el marco Scrum."
+  },
+  {
+    "question": "¿Debe el Product Owner escribir todos los elementos del Product Backlog antes de entregarlos al equipo Scrum?",
+    "type": "single_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "El Product Backlog es una lista emergente que se perfecciona de forma colaborativa."
+  },
+  {
+    "question": "¿Qué debe hacer un equipo Scrum con las mejoras de procesos identificadas en la Retrospectiva?",
+    "type": "single_choice",
+    "options": ["Añadirlas al Sprint Backlog del siguiente Sprint", "Rechazarlas si todo funciona bien", "Incluirlas en el Product Backlog", "Que el Scrum Master las elija"],
+    "correctAnswer": [0],
+    "explanation": "Implementar las mejoras en el próximo Sprint es la adaptación a la inspección."
+  },
+  {
+    "question": "¿De qué es responsable un Product Owner durante un Sprint?",
+    "type": "single_choice",
+    "options": ["Responder preguntas diarias en el Daily", "Informes financieros", "Nada", "Actualizar planes diarios", "Colaborar con stakeholders", "Refinar el Product Backlog"],
+    "correctAnswer": [4],
+    "explanation": "El PO debe colaborar con los interesados y trabajar en el refinamiento del backlog."
+  },
+  {
+    "question": "¿Debe el Product Owner invitar a los interesados a la Retrospectiva de Sprint?",
+    "type": "single_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "La Retrospectiva es un evento interno exclusivo para el equipo Scrum."
+  },
+  {
+    "question": "¿Qué debe hacer el Scrum Master si un stakeholder está descontento con la calidad?",
+    "type": "single_choice",
+    "options": ["Entrenar al PO en comunicación", "Esperar a la retrospectiva", "Decir que los desarrolladores deciden", "Animar al PO a incluir especificaciones de calidad en el Backlog", "Llevar la queja a los testers"],
+    "correctAnswer": [3],
+    "explanation": "El PO debe gestionar las expectativas de calidad a través del Product Backlog."
+  },
+  {
+    "question": "¿Quién es responsable de crear un incremento valioso en cada Sprint?",
+    "type": "single_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Todo el equipo Scrum tiene la responsabilidad de crear un incremento valioso en cada Sprint."
+  },
+  {
+    "question": "¿Cuántos Product Owners puede tener un mismo producto?",
+    "type": "single_choice",
+    "options": ["Una sola persona", "Varios", "Un comité", "Es responsable de pedir el backlog"],
+    "correctAnswer": [0],
+    "explanation": "El Product Owner es una sola persona para evitar conflictos y falta de visión."
+  },
+  {
+    "question": "¿Quién es responsable de crear un incremento valioso?",
+    "type": "single_choice",
+    "options": ["Los desarrolladores", "El equipo Scrum completo", "El Scrum Master", "El Product Owner"],
+    "correctAnswer": [1],
+    "explanation": "Todo el equipo Scrum es responsable del incremento."
+  },
+  {
+    "question": "¿Qué debe tener en cuenta el Product Owner para maximizar el valor?",
+    "type": "single_choice",
+    "options": ["Investigación competitiva", "Comentarios de clientes", "Visión del producto", "Previsión y viabilidad", "Todo lo anterior"],
+    "correctAnswer": [4],
+    "explanation": "Todos estos factores son esenciales para gestionar el valor del producto."
+  },
+  {
+    "question": "¿Todo equipo Scrum debe tener un Product Owner y un Scrum Master?",
+    "type": "single_choice",
+    "options": ["Falso", "Solo si se solicita", "Verdadero"],
+    "correctAnswer": [2],
+    "explanation": "Ambos roles son esenciales y deben estar disponibles durante todo el Sprint."
+  },
+  {
+    "question": "¿Quién es el dueño del Sprint Backlog?",
+    "type": "single_choice",
+    "options": ["El Scrum Master", "El equipo Scrum", "El Product Owner", "Los desarrolladores"],
+    "correctAnswer": [3],
+    "explanation": "El Sprint Backlog es un plan propiedad de los desarrolladores."
+  },
+  {
+    "question": "¿Qué tema es el principal en una Sprint Review?",
+    "type": "single_choice",
+    "options": ["El proceso Scrum", "Prácticas de ingeniería", "El Incremento del producto", "Todo lo anterior"],
+    "correctAnswer": [2],
+    "explanation": "El foco es inspeccionar el incremento del producto."
+  },
+  {
+    "question": "¿Quién decide cuándo actualizar el Sprint Backlog?",
+    "type": "single_choice",
+    "options": ["El Jefe de Proyecto", "El equipo Scrum", "Los desarrolladores", "El Product Owner"],
+    "correctAnswer": [2],
+    "explanation": "Solo los desarrolladores pueden cambiar el contenido de su plan durante el Sprint."
+  },
+  {
+    "question": "¿Es posible cancelar un Sprint?",
+    "type": "single_choice",
+    "options": ["Sí, solo por el Product Owner", "No", "Sí, por el equipo"],
+    "correctAnswer": [0],
+    "explanation": "Solo el Product Owner tiene la autoridad de cancelar un Sprint si el objetivo queda obsoleto."
+  },
+  {
+    "question": "¿Pueden los desarrolladores cancelar un Sprint por cuenta propia?",
+    "type": "single_choice",
+    "options": ["Sí", "No"],
+    "correctAnswer": [1],
+    "explanation": "Deben colaborar para adaptarse, no cancelar por cuenta propia."
+  },
+  {
+    "question": "¿Qué ocurre si los desarrolladores tienen más trabajo del que pueden completar?",
+    "type": "single_choice",
+    "options": ["Eliminan o cambian elementos del Backlog", "Inician y supervisan", "Reclutan más", "Cancela el Sprint", "Horas extra"],
+    "correctAnswer": [0],
+    "explanation": "Deben colaborar con el PO para ajustar el alcance de forma transparente."
+  },
+  {
+    "question": "¿Es el Product Owner un Project Manager?",
+    "type": "single_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "Son roles diferentes; el PO gestiona el producto, no el proyecto."
+  },
+  {
+    "question": "¿Deben los criterios de aceptación estar completos antes de la Planificación?",
+    "type": "single_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "No son obligatorios antes de la planificación, aunque ayudan a aclarar expectativas."
+  },
+  {
+    "question": "¿Qué ventajas tiene compartir un Objetivo de Producto?",
+    "type": "single_choice",
+    "options": ["Estimar fechas", "No es obligatorio", "Ninguna ventaja", "Dirección general clara", "Mejor enfoque en decisiones"],
+    "correctAnswer": [4],
+    "explanation": "Ayuda a la dirección y al enfoque del equipo en sus decisiones."
+  },
+  {
+    "question": "¿Quién es responsable del valor de un elemento de Product Backlog?",
+    "type": "single_choice",
+    "options": ["Los desarrolladores", "El equipo Scrum", "El Product Owner", "El Scrum Master"],
+    "correctAnswer": [2],
+    "explanation": "El valor lo determina el Product Owner."
+  },
+  {
+    "question": "¿Cuándo debe realizarse el refinamiento del Backlog?",
+    "type": "single_choice",
+    "options": ["Continuamente durante el Sprint", "Solo en Sprint 0", "Lo hace el analista", "Tras cada Sprint"],
+    "correctAnswer": [0],
+    "explanation": "Es un proceso continuo que involucra a todo el equipo Scrum."
+  },
+  {
+    "question": "¿Cuál es la duración del Daily Scrum?",
+    "type": "single_choice",
+    "options": ["4 horas", "La misma hora cada día", "2 minutos por persona", "15 minutos"],
+    "correctAnswer": [3],
+    "explanation": "Es un evento de 15 minutos para sincronización."
+  },
+  {
+    "question": "¿Qué asegura la transparencia en el Product Backlog?",
+    "type": "single_choice",
+    "options": ["Está ordenado", "Está disponible para interesados", "Tiene prioridad MoSCoW", "Solo trabajo para 2 sprints"],
+    "correctAnswer": [0],
+    "explanation": "Un backlog ordenado y visible asegura la transparencia para los interesados."
+  },
+  {
+    "question": "¿Cómo se compone el Sprint Backlog?",
+    "type": "single_choice",
+    "options": ["Solo por el Product Backlog", "Solo el Objetivo de Sprint", "Objetivo, elementos seleccionados y plan", "Por lo que ordene el jefe"],
+    "correctAnswer": [2],
+    "explanation": "Incluye el porqué, el qué y el cómo."
+  },
+  {
+    "question": "¿Qué temas se debaten en una Retrospectiva?",
+    "type": "single_choice",
+    "options": ["Relaciones de equipo", "Valor del backlog", "Cómo hace el trabajo el equipo", "Definición de hecho", "Organizar el backlog"],
+    "correctAnswer": [2],
+    "explanation": "Se centra en mejorar la colaboración y los métodos de trabajo."
+  },
+  {
+    "question": "¿Qué debe hacer un Product Owner ante una oportunidad de negocio repentina?",
+    "type": "single_choice",
+    "options": ["Ignorarla", "Consultar al Scrum Master", "Evaluarla en el Product Backlog", "Añadirla inmediatamente"],
+    "correctAnswer": [2],
+    "explanation": "El PO debe gestionar el backlog priorizando el valor."
+  },
+  {
+    "question": "¿Pueden los desarrolladores trabajar en elementos no seleccionados?",
+    "type": "single_choice",
+    "options": ["Sí", "No"],
+    "correctAnswer": [1],
+    "explanation": "Deben enfocarse en el Sprint Backlog para alcanzar el objetivo."
+  },
+  {
+    "question": "¿Debe el Scrum Master resolver todos los conflictos?",
+    "type": "single_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "El Scrum Master facilita, no gestiona directamente al equipo."
+  },
+  {
+    "question": "¿Qué significa que el incremento esté Hecho?",
+    "type": "single_choice",
+    "options": ["Cumple la Definición de Hecho", "Lo probó el PO", "El cliente lo aceptó", "Está liberado"],
+    "correctAnswer": [0],
+    "explanation": "Debe cumplir estrictamente la Definición de Hecho."
+  },
+  {
+    "question": "¿Puede el Sprint Backlog cambiar durante el Sprint?",
+    "type": "single_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Es un plan que evoluciona conforme se aprende más."
+  },
+  {
+    "question": "¿Quién facilita la Sprint Review?",
+    "type": "single_choice",
+    "options": ["El PO", "El Scrum Master", "Los desarrolladores", "El stakeholder"],
+    "correctAnswer": [0],
+    "explanation": "El PO asegura que los stakeholders conozcan la evolución del incremento."
+  },
+  {
+    "question": "¿Es obligatorio el Sprint Goal?",
+    "type": "single_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Es fundamental para dar foco y propósito."
+  },
+  {
+    "question": "¿Qué sucede si la tecnología cambia durante un Sprint?",
+    "type": "single_choice",
+    "options": ["Se cancela", "Se adapta el plan", "Se ignora", "Se pide permiso al jefe"],
+    "correctAnswer": [1],
+    "explanation": "Los desarrolladores adaptan su plan de trabajo diariamente."
+  },
+  {
+    "question": "¿Quién es responsable de la calidad?",
+    "type": "single_choice",
+    "options": ["El tester", "El Scrum Master", "El equipo Scrum", "Nadie"],
+    "correctAnswer": [2],
+    "explanation": "La calidad es responsabilidad de todo el equipo."
+  },
+  {
+    "question": "¿Qué es un incremento?",
+    "type": "single_choice",
+    "options": ["Un prototipo", "La suma de elementos realizados", "La documentación", "Una reunión"],
+    "correctAnswer": [1],
+    "explanation": "Es la suma de los elementos de Product Backlog realizados."
+  },
+  {
+    "question": "¿El PO asiste al Daily Scrum?",
+    "type": "single_choice",
+    "options": ["Obligatorio", "No puede", "Opcional", "Solo si es PO"],
+    "correctAnswer": [2],
+    "explanation": "Solo es obligatorio para los desarrolladores."
+  },
+  {
+    "question": "¿Qué define la duración de un Sprint?",
+    "type": "single_choice",
+    "options": ["El Scrum Master", "El PO", "Es fija por contrato", "El equipo Scrum"],
+    "correctAnswer": [3],
+    "explanation": "La duración se establece para asegurar consistencia."
+  },
+  {
+    "question": "¿Quién refina el backlog?",
+    "type": "single_choice",
+    "options": ["El equipo Scrum", "Solo el PO", "El Scrum Master", "Un comité"],
+    "correctAnswer": [0],
+    "explanation": "Es un proceso colaborativo de todo el equipo."
+  },
+  {
+    "question": "¿Es obligatorio tener incrementos cada Sprint?",
+    "type": "single_choice",
+    "options": ["Cierto", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Es el objetivo de cada Sprint."
+  },
+  {
+    "question": "¿Puede el equipo Scrum tener varios Scrum Masters?",
+    "type": "single_choice",
+    "options": ["Sí", "No"],
+    "correctAnswer": [0],
+    "explanation": "La guía no prohíbe tener más de un SM, aunque el rol es único en responsabilidades."
+  },
+  {
+    "question": "¿Cómo se mide el progreso del Sprint?",
+    "type": "single_choice",
+    "options": ["Burn-down chart", "Horas trabajadas", "Inspección diaria", "KPIs"],
+    "correctAnswer": [2],
+    "explanation": "Mediante el Daily Scrum, los desarrolladores inspeccionan su progreso."
+  },
+  {
+    "question": "¿Qué significa autogestión?",
+    "type": "single_choice",
+    "options": ["Hacer lo que se quiere", "Organizar el propio trabajo", "No tener jefe", "Seguir órdenes"],
+    "correctAnswer": [1],
+    "explanation": "Significa que el equipo organiza y gestiona su propio trabajo."
+  },
+  {
+    "question": "Un Development Team ha estado trabajando en varios Sprint, el Product Owner comparte su plan para las próximas interacciones, este plan es de alto nivel que describe cómo es probable que crezca el producto. ¿Cuál es el artefacto al que el Product Owner se refiere?",
+    "type": "single_choice",
+    "options": ["Sprint Backlog", "Product Backlog", "Roadmap del Producto", "Project Charter"],
+    "correctAnswer": [1],
+    "explanation": "El Product Backlog es el artefacto que contiene el plan de alto nivel y la evolución esperada del producto."
+  },
+  {
+    "question": "¿Qué es importante en todos los proyectos de Scrum? 1. La Auto-organización. 2. Jerarquías claras de la empresa. 3. Comunicación. 4. Mejora continua.",
+    "type": "single_choice",
+    "options": ["1, 2, 3 y 4", "1, 3 y 4", "1, 4", "1, 2 y 3"],
+    "correctAnswer": [1],
+    "explanation": "La auto-organización, la comunicación y la mejora continua son pilares fundamentales en Scrum."
+  },
+  {
+    "question": "¿Cuál de las siguientes no es una responsabilidad del Product Owner?",
+    "type": "single_choice",
+    "options": ["Garantizar el ROI", "Ejecución de la Daily Scrum", "Reunir los PBI del Product Backlog", "La inspección del trabajo en el Sprint Review Meeting"],
+    "correctAnswer": [1],
+    "explanation": "La Daily Scrum es responsabilidad exclusiva de los desarrolladores; el PO no la ejecuta."
+  },
+  {
+    "question": "¿Cuáles son responsabilidades o actividades del Product Owner? 1. Expresar claramente los elementos del Product Backlog. 2. Ordenar los elementos en el Product Backlog. 3. Entender y practicar la agilidad.",
+    "type": "single_choice",
+    "options": ["Solo 1 y 2", "Solo 2 y 3", "Solo 1 y 3", "Todas"],
+    "correctAnswer": [3],
+    "explanation": "Todas las mencionadas son funciones críticas para la gestión efectiva del PO."
+  },
+  {
+    "question": "¿Cuál de los siguientes enunciados es CIERTO con respecto a los Project Charter en Scrum?",
+    "type": "single_choice",
+    "options": ["Es contractual fijando la triple restricción", "Establece una línea base", "No se encuentra definido en la Guía de Scrum", "Es obligatorio para iniciar el Sprint"],
+    "correctAnswer": [2],
+    "explanation": "El concepto de Project Charter no forma parte del marco de trabajo Scrum definido en su guía oficial."
+  },
+  {
+    "question": "La liberación de un producto terminado (DoD) es responsabilidad del:",
+    "type": "single_choice",
+    "options": ["Scrum Master", "Development Team", "Product Owner", "Stakeholders"],
+    "correctAnswer": [2],
+    "explanation": "El Product Owner es quien toma la decisión final sobre cuándo liberar un incremento al mercado."
+  },
+  {
+    "question": "¿En equipos pequeños, el Scrum Master puede asumir también el rol del Product Owner?",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "Los roles en Scrum son distintos y no deben ser asumidos por la misma persona para mantener la separación de responsabilidades."
+  },
+  {
+    "question": "¿Quiénes son los involucrados en la definición del Sprint Goal?",
+    "type": "single_choice",
+    "options": ["Solo el Product Owner", "El Product Owner y el Development Team", "Solo el Development Team", "El equipo Scrum completo"],
+    "correctAnswer": [1],
+    "explanation": "El Sprint Goal se define colaborativamente durante la Sprint Planning entre el PO y los desarrolladores."
+  },
+  {
+    "question": "¿Cómo deben ordenarse los elementos (PBI) en un Product Backlog?",
+    "type": "single_choice",
+    "options": ["Por fecha de creación", "Por prioridad e importancia para el negocio", "Alfabéticamente", "Por esfuerzo técnico"],
+    "correctAnswer": [1],
+    "explanation": "El orden debe basarse en el valor de negocio y la maximización del retorno de inversión."
+  },
+  {
+    "question": "La definición de terminado (DoD) y los criterios de aceptación, son:",
+    "type": "single_choice",
+    "options": ["Lo mismo", "Conceptos diferentes", "Obligatorios solo para el PO", "Parte del Sprint Goal"],
+    "correctAnswer": [1],
+    "explanation": "La DoD es una medida de calidad del incremento, mientras que los criterios de aceptación son específicos de cada PBI."
+  },
+  {
+    "question": "El Product Owner debe participar en el Daily Meeting:",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "La Daily es para los desarrolladores; el PO puede asistir pero no tiene un rol activo en ella."
+  },
+  {
+    "question": "¿Quién es responsable de mantener a los stakeholders informados sobre el progreso del desarrollo?",
+    "type": "single_choice",
+    "options": ["El Scrum Master", "El equipo de desarrollo", "El Product Owner", "El cliente"],
+    "correctAnswer": [2],
+    "explanation": "La gestión de los stakeholders y la comunicación de expectativas es una labor clave del PO."
+  },
+  {
+    "question": "En un Sprint de un mes, el Daily Standup Meeting tiene una duración máxima de:",
+    "type": "single_choice",
+    "options": ["30 minutos", "15 minutos", "1 hora", "Depende del equipo"],
+    "correctAnswer": [1],
+    "explanation": "Independientemente de la duración del Sprint, el Daily Scrum siempre está limitado a 15 minutos."
+  },
+  {
+    "question": "En un Sprint corto tiene más riesgo que un Sprint largo.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "Los Sprints cortos reducen el riesgo al permitir obtener feedback y adaptarse más rápido."
+  },
+  {
+    "question": "El Sprint Planning tiene un máximo de duración de ocho horas para un Sprint de un mes.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Es la regla establecida en la Guía de Scrum para el evento de planificación."
+  },
+  {
+    "question": "¿Cuál es la secuencia más común en un ciclo de vida de Scrum?",
+    "type": "single_choice",
+    "options": ["Sprint Planning, Daily Scrum, Sprint Review, Sprint Retrospective", "Sprint Planning, Sprint Review, Daily Scrum, Sprint Retrospective", "Daily Scrum, Sprint Planning, Sprint Retrospective, Sprint Review", "Ninguna de las anteriores"],
+    "correctAnswer": [0],
+    "explanation": "Sigue el orden lógico de planificación, ejecución diaria, revisión y reflexión."
+  },
+  {
+    "question": "El Product Owner preside el Sprint Planning Meeting.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "El PO asegura que los temas más relevantes se discutan en la planificación."
+  },
+  {
+    "question": "¿Scrum recomienda la creación de sub-equipos en el Development Team?",
+    "type": "single_choice",
+    "options": ["Sí", "No", "Solo para testing", "Solo para análisis de negocio"],
+    "correctAnswer": [1],
+    "explanation": "Scrum promueve equipos multifuncionales sin sub-equipos especializados dentro de los desarrolladores."
+  },
+  {
+    "question": "El Backlog Refinement Meeting en Sprints de un mes, suele durar:",
+    "type": "single_choice",
+    "options": ["Hasta 8 horas", "15 minutos diarios", "Entre el 8% y 10% de la capacidad del Sprint", "No tiene duración fija"],
+    "correctAnswer": [2],
+    "explanation": "Es la recomendación estándar para asegurar que el trabajo esté preparado."
+  },
+  {
+    "question": "Para un proyecto importante, ¿cuántos Product Owners se recomiendan?",
+    "type": "single_choice",
+    "options": ["Varios", "Solo uno", "Un comité", "Uno por cada stakeholder"],
+    "correctAnswer": [1],
+    "explanation": "Solo debe haber un Product Owner para tener una visión única y evitar conflictos."
+  },
+  {
+    "question": "¿Qué técnica se utiliza para estimar en Scrum?",
+    "type": "single_choice",
+    "options": ["Planning Poker", "Puntos de historia", "Ninguna técnica es obligatoria en la Guía", "T-shirt sizing"],
+    "correctAnswer": [2],
+    "explanation": "Aunque se usan técnicas como Planning Poker, Scrum no prescribe ninguna en particular."
+  },
+  {
+    "question": "Si dos Development Teams trabajan en el mismo producto, ¿tienen diferentes Product Backlogs?",
+    "type": "single_choice",
+    "options": ["Sí", "No"],
+    "correctAnswer": [1],
+    "explanation": "Un producto siempre tiene un solo Product Backlog, independientemente de cuántos equipos trabajen en él."
+  },
+  {
+    "question": "La suma de todos los Sprints Backlogs es el Product Backlog:",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "Son artefactos diferentes con propósitos distintos; el Sprint Backlog es solo un plan para el Sprint actual."
+  },
+  {
+    "question": "El Development Team participa en la Daily Scrum:",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Es el evento principal de inspección y adaptación de los desarrolladores."
+  },
+  {
+    "question": "En Scrum el Product Increment se debe entregar siempre al cliente.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "El objetivo es que el incremento esté potencialmente entregable al final de cada Sprint."
+  },
+  {
+    "question": "Las User Stories ayudan a definirlas el Product Owner.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "El PO lidera la definición, aunque el equipo Scrum colabora en los detalles."
+  },
+  {
+    "question": "El Product Owner estima las User Stories.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "Los desarrolladores son quienes estiman el esfuerzo necesario para realizar el trabajo."
+  },
+  {
+    "question": "¿Es verdad que solo el Product Owner tiene la autoridad para cancelar el Sprint?",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Aunque es la única persona con la autoridad, puede hacerlo influenciado por otros interesados."
+  },
+  {
+    "question": "El Product Backlog se suele dividir en:",
+    "type": "single_choice",
+    "options": ["Nunca está completo", "Cambia constantemente", "Evoluciona", "Todas las anteriores"],
+    "correctAnswer": [3],
+    "explanation": "Es un artefacto vivo que crece y cambia con el producto."
+  },
+  {
+    "question": "Un __________ se crea durante la primera mitad de la Sprint Planning y un __________ durante la segunda.",
+    "type": "single_choice",
+    "options": ["Sprint Goal, Sprint Backlog", "Product Backlog, Sprint Goal", "Sprint Backlog, Sprint Goal", "Release Plan, Sprint Goal"],
+    "correctAnswer": [0],
+    "explanation": "Primero se define el objetivo y luego el plan detallado para lograrlo."
+  },
+  {
+    "question": "¿Cuál es la principal diferencia entre el Product Backlog y el Sprint Backlog?",
+    "type": "single_choice",
+    "options": ["No hay diferencia", "El Sprint Backlog es un subconjunto del Product Backlog", "El Product Backlog es temporal", "El Sprint Backlog es a largo plazo"],
+    "correctAnswer": [1],
+    "explanation": "El Sprint Backlog es una extracción de trabajo del Product Backlog para el corto plazo."
+  },
+  {
+    "question": "¿Qué ocurre cuando el Sprint se cancela?",
+    "type": "single_choice",
+    "options": ["Se borra todo", "Los elementos se evalúan y regresan al Product Backlog", "Se inicia otro Sprint inmediatamente", "El equipo es despedido"],
+    "correctAnswer": [1],
+    "explanation": "Se recupera el trabajo terminado y se devuelve al backlog lo incompleto."
+  },
+  {
+    "question": "¿Quién determina cuándo es apropiado actualizar el Sprint Backlog durante un Sprint?",
+    "type": "single_choice",
+    "options": ["El PO", "El Scrum Master", "El Development Team", "Los stakeholders"],
+    "correctAnswer": [2],
+    "explanation": "Los desarrolladores son los dueños de su plan y lo adaptan diariamente."
+  },
+  {
+    "question": "El Sprint Goal se selecciona antes de crear el Sprint Backlog.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "El objetivo guía la selección del trabajo."
+  },
+  {
+    "question": "¿En cuál de los siguientes casos se podría cancelar un Sprint?",
+    "type": "single_choice",
+    "options": ["Cuando el equipo está cansado", "Si el Sprint Goal queda obsoleto", "Si el PO se va de vacaciones", "Nunca se puede"],
+    "correctAnswer": [1],
+    "explanation": "La cancelación es una medida extrema cuando el objetivo pierde sentido."
+  },
+  {
+    "question": "¿Cuáles son los eventos en Scrum?",
+    "type": "single_choice",
+    "options": ["Daily Meeting", "Sprint Retrospective", "Sprint Review y Sprint Planning", "Todas las anteriores"],
+    "correctAnswer": [3],
+    "explanation": "Todos estos constituyen los eventos definidos en el marco Scrum."
+  },
+  {
+    "question": "¿El Product Owner es la única persona responsable de gestionar el Product Backlog?",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Es la única persona responsable, aunque la actividad sea colaborativa."
+  },
+  {
+    "question": "El refinamiento consume usualmente:",
+    "type": "single_choice",
+    "options": ["No más del 10% de la capacidad del Development Team", "20%", "30%", "40%"],
+    "correctAnswer": [0],
+    "explanation": "Es una regla de oro para mantener el equilibrio entre refinamiento y entrega."
+  },
+  {
+    "question": "El propósito de cada Sprint es entregar Incrementos de funcionalidad que se ajusten a la Definición de Done.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Ese es el objetivo fundamental de la iteración en Scrum."
+  },
+  {
+    "question": "¿Cuáles son los artefactos en Scrum?",
+    "type": "single_choice",
+    "options": ["Product Backlog, Sprint Backlog y Product Increment", "Sprint Planning y Review", "Product Owner y Scrum Master", "No existen artefactos"],
+    "correctAnswer": [0],
+    "explanation": "Estos tres son los únicos artefactos definidos en la Guía de Scrum."
+  },
+  {
+    "question": "El Product Owner es una única persona, no un comité. Si un comité quiere cambiar la prioridad, debe hacerlo a través del Product Owner.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "El PO es el único responsable de la gestión del backlog y canalizador de las decisiones de prioridad."
+  },
+  {
+    "question": "La velocidad se interpreta como la cantidad de Historias de Usuario promedio que entrega un desarrollador por iteración.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [1],
+    "explanation": "La velocidad es una medida del trabajo total completado por el equipo, no una métrica individual de Historias de Usuario."
+  },
+  {
+    "question": "Toda la organización debe respetar las decisiones del Product Owner reflejadas en el contenido y priorización del Product Backlog.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "La autoridad del PO debe ser respetada para que pueda maximizar efectivamente el valor del producto."
+  },
+  {
+    "question": "La gestión del Product Backlog incluye (marque 2):",
+    "type": "multiple_choice",
+    "options": ["Asegurar que los objetivos sean entendidos por todos", "Expresar claramente los elementos y el Objetivo del Producto", "Administrar los salarios del equipo", "Redactar el código fuente"],
+    "correctAnswer": [0, 1],
+    "explanation": "El PO es responsable de la claridad y comunicación de los objetivos y elementos del producto."
+  },
+  {
+    "question": "Cuáles son los valores del Manifiesto Ágil (Marque 4):",
+    "type": "multiple_choice",
+    "options": ["Seguir un plan", "Software funcionando", "Individuos e interacciones", "Colaboración con el cliente"],
+    "correctAnswer": [0, 1, 2, 3],
+    "explanation": "El Manifiesto valora los ítems, interacciones y software por encima de los procesos y contratos."
+  },
+  {
+    "question": "Seleccione los artefactos del Framework Scrum (Marque 3):",
+    "type": "multiple_choice",
+    "options": ["Sprint Backlog", "Sprint", "Incremento", "Product Backlog"],
+    "correctAnswer": [0, 2, 3],
+    "explanation": "Los artefactos definidos en la Guía de Scrum son el Product Backlog, el Sprint Backlog y el Incremento."
+  },
+  {
+    "question": "En la reunión Sprint Planning, se debe (Marque 2):",
+    "type": "multiple_choice",
+    "options": ["Los Developers seleccionan elementos del Product Backlog", "El Product Owner propone cómo incrementar el valor", "Determinar duración y fecha de la Review", "El Scrum Master propone soluciones técnicas"],
+    "correctAnswer": [0, 1],
+    "explanation": "La planificación es una colaboración entre PO (valor) y Developers (selección del trabajo)."
+  },
+  {
+    "question": "Los tres pilares del empirismo en Scrum son (Marque 3):",
+    "type": "multiple_choice",
+    "options": ["Inspección", "Transparencia", "Adaptación", "Experimentación"],
+    "correctAnswer": [0, 1, 2],
+    "explanation": "Transparencia, inspección y adaptación son la base del control de procesos empíricos."
+  },
+  {
+    "question": "La Sprint Review consiste en inspeccionar el incremento generado y adaptar el Product Backlog si es necesario.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Es el propósito central de la revisión con los stakeholders."
+  },
+  {
+    "question": "Scrum permite el solapamiento de las fases del desarrollo en lugar de un enfoque secuencial.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Scrum favorece el desarrollo incremental y el trabajo simultáneo para evitar silos."
+  },
+  {
+    "question": "El Sprint Goal es un objetivo único para el Sprint que los Developers se comprometen a lograr.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "El Sprint Goal guía el enfoque del equipo durante el Sprint."
+  },
+  {
+    "question": "La Sprint Retrospective es el momento para que el equipo Scrum se inspeccione a sí mismo y cree un plan de mejoras.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Su objetivo es mejorar la calidad y la eficacia del equipo."
+  },
+  {
+    "question": "¿Quién es el responsable de asegurar que el Scrum Team entienda los artefactos?",
+    "type": "single_choice",
+    "options": ["Product Owner", "Scrum Master", "Stakeholders", "Development Team"],
+    "correctAnswer": [1],
+    "explanation": "El Scrum Master sirve al equipo asegurando que comprendan la teoría y práctica de Scrum."
+  },
+  {
+    "question": "El Product Increment debe estar en condición de ser liberado al final del Sprint.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Un incremento debe cumplir la Definición de Hecho (DoD) y ser utilizable."
+  },
+  {
+    "question": "El tamaño del equipo Scrum suele ser de 10 personas o menos.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Es el tamaño recomendado para mantener la agilidad y comunicación."
+  },
+  {
+    "question": "El Scrum Master es un líder servidor.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "El rol implica facilitar, eliminar impedimentos y servir al equipo y a la organización."
+  },
+  {
+    "question": "La Daily Scrum es un evento de 15 minutos para los Developers.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Es una reunión diaria para sincronizar el trabajo y planificar las siguientes 24 horas."
+  },
+  {
+    "question": "Si el Sprint Goal pierde validez, el PO puede cancelar el Sprint.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "El PO tiene la autoridad para cancelar el Sprint ante un cambio drástico de rumbo."
+  },
+  {
+    "question": "Scrum es un marco de trabajo liviano.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Es un framework ligero, fácil de entender, pero difícil de dominar."
+  },
+  {
+    "question": "El Product Backlog es una lista ordenada de todo lo que se necesita en el producto.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Es la fuente única de requisitos para cualquier cambio en el producto."
+  },
+  {
+    "question": "Los Developers deciden cuánto trabajo pueden realizar en un Sprint.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Los equipos son autogestionados y determinan su capacidad."
+  },
+  {
+    "question": "La Definición de Hecho (DoD) crea transparencia sobre el trabajo completado.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "La DoD establece un estándar de calidad compartido por todo el equipo."
+  },
+  {
+    "question": "El Scrum Master ayuda a eliminar impedimentos para el equipo.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Es una de las funciones principales del Scrum Master para proteger al equipo."
+  },
+  {
+    "question": "La Sprint Review es una demostración donde se busca feedback.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "Es una sesión colaborativa para inspeccionar el incremento y ajustar el futuro del producto."
+  },
+  {
+    "question": "El empoderamiento del equipo es esencial para la agilidad.",
+    "type": "single_choice",
+    "options": ["Verdadero", "Falso"],
+    "correctAnswer": [0],
+    "explanation": "La autogestión es vital para que un equipo Scrum sea efectivo."
+  }
+]

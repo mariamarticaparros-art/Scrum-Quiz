@@ -7,6 +7,7 @@ let incorrectCount = 0;
 let answeredCurrentQuestion = false;
 let timerInterval;
 let totalSeconds;
+let selectedStartIndex = 0; // Índice de la pregunta desde la que se empezará
 
 // Referencias a elementos del DOM
 const configScreen = document.getElementById('config-screen');
@@ -43,6 +44,20 @@ const restartButton = document.getElementById('restart-button');
 const endStatusLabel = document.getElementById('end-status-label');
 const endTitle = document.getElementById('end-title');
 const tryAgainButton = document.getElementById('try-again-button');
+const topCloseButton = document.getElementById('top-close-button'); // Nuevo botón de cierre
+
+// Nuevos elementos para la lista de preguntas
+const viewQuestionsButton = document.getElementById('view-questions-button');
+const questionsListScreen = document.getElementById('questions-list-screen');
+const questionsListContainer = document.getElementById('questions-list-container');
+const backToConfigButton = document.getElementById('back-to-config-button');
+const reviewCountInList = document.getElementById('review-count-in-list');
+const theoryButton = document.getElementById('theory-button');
+const theoryScreen = document.getElementById('theory-screen');
+const backToConfigFromTheoryButton = document.getElementById('back-to-config-from-theory-button');
+const topNavButtons = document.querySelector('.top-nav-buttons');
+
+const quizContainer = document.querySelector('.quiz-container'); // Contenedor principal
 
 // Deshabilitar inicio hasta cargar datos
 // startButton.disabled = true; // Se habilita al cargar las preguntas por defecto
@@ -59,13 +74,15 @@ function getReviewList() {
 
 function toggleReviewStatus() {
     const currentQuestion = quizQuestions[currentQuestionIndex];
-    let reviewList = getReviewList();
-    if (reviewList.includes(currentQuestion.question)) {
-        reviewList = reviewList.filter(q => q !== currentQuestion.question);
+    // Usar un Set para garantizar que no haya duplicados
+    const reviewListSet = new Set(getReviewList());
+
+    if (reviewListSet.has(currentQuestion.question)) {
+        reviewListSet.delete(currentQuestion.question);
     } else {
-        reviewList.push(currentQuestion.question);
+        reviewListSet.add(currentQuestion.question);
     }
-    localStorage.setItem('scrum_quiz_review_list', JSON.stringify(reviewList));
+    localStorage.setItem('scrum_quiz_review_list', JSON.stringify(Array.from(reviewListSet)));
     updateReviewButtonUI();
 }
 
@@ -177,8 +194,23 @@ function updateConfigUI() {
 // }
 
 // Inicialización de preguntas base desde el documento interno
+function cleanUpReviewList() {
+    const allQuestionTexts = new Set(questions.map(q => q.question));
+    let reviewList = getReviewList();
+    const originalCount = reviewList.length;
+    const cleanedList = reviewList.filter(reviewQuestionText => allQuestionTexts.has(reviewQuestionText));
+    const newCount = cleanedList.length;
+
+    if (originalCount !== newCount) {
+        localStorage.setItem('scrum_quiz_review_list', JSON.stringify(cleanedList));
+        updateConfigUI(); // Forzar actualización de la UI con el nuevo conteo
+        console.log(`Limpieza de repaso: Se eliminaron ${originalCount - newCount} preguntas de repaso obsoletas.`);
+    }
+}
+
 if (typeof defaultQuestions !== 'undefined' && defaultQuestions.length > 0) {
     questions = [...defaultQuestions];
+    cleanUpReviewList(); // Limpiar la lista de repaso con las preguntas actuales
     updateConfigUI();
     startButton.disabled = false;
     startButton.innerText = "Empezar Quiz";
@@ -199,28 +231,119 @@ function startQuiz() {
         }
     }
 
-    const count = parseInt(numQuestionsSlider.value);
+    // Si el modo es 'review', ignorar el slider y usar todas las preguntas de repaso.
+    // Si no, usar el valor del slider.
+    const count = mode === 'review' ? questionsToUse.length : parseInt(numQuestionsSlider.value);
+
     totalSeconds = parseInt(timeSlider.value) * 60;
     const order = questionOrderSelect.value; // Obtener el orden seleccionado
     
+    let startIndex = 0;
     if (order === 'random') {
-        // Barajar las preguntas si se selecciona orden aleatorio
         questionsToUse = questionsToUse.sort(() => 0.5 - Math.random());
+    } else {
+        // Si el orden es secuencial, empieza desde el índice seleccionado.
+        startIndex = selectedStartIndex;
     }
+
     // Seleccionar el número de preguntas solicitado (o todas si se pide más de las disponibles)
-    quizQuestions = questionsToUse.slice(0, Math.min(count, questionsToUse.length));
+    quizQuestions = questionsToUse.slice(startIndex, Math.min(startIndex + count, questionsToUse.length));
+    
     configScreen.classList.add('hidden');
     quizScreen.classList.remove('hidden');
+    topNavButtons.classList.add('hidden'); // Ocultar botones de navegación al empezar el quiz
     topRestartButton.classList.remove('hidden'); // Mostrar el botón de reiniciar superior
     quizEndMessage.classList.add('hidden');
-    
-    currentQuestionIndex = 0;
+    currentQuestionIndex = 0; // El quiz interno siempre empieza en 0
     correctCount = 0;
     incorrectCount = 0;
     totalQuestionsSpan.textContent = quizQuestions.length;
     
     startTimer();
     loadQuestion();
+}
+
+// --- Lógica para la pantalla de listado de preguntas ---
+
+function populateQuestionsList() {
+    questionsListContainer.innerHTML = ''; // Limpiar la lista anterior
+    const reviewList = getReviewList(); // Obtener la lista de repaso una vez
+    if (reviewCountInList) {
+        reviewCountInList.textContent = reviewList.length;
+    }
+    questions.forEach((question, index) => {
+        const questionItem = document.createElement('div');
+        questionItem.classList.add('question-list-item');
+        questionItem.dataset.index = index;
+        
+        // Contenedor para el texto de la pregunta (para que sea clickeable)
+        const questionTitle = document.createElement('div');
+        questionTitle.classList.add('question-list-title');
+        let questionText = `${index + 1}. ${question.question}`;
+
+        if (index === selectedStartIndex) {
+            questionItem.classList.add('selected-start-question');
+        }
+
+        // Crear el contenedor de detalles (respuesta y explicación), oculto por defecto
+        const detailsContainer = document.createElement('div');
+        detailsContainer.classList.add('question-details');
+
+        const correctAnswer = Array.isArray(question.correctAnswer) 
+            ? question.correctAnswer.map(i => question.options[i]).join(', ')
+            : question.options[question.correctAnswer];
+
+        detailsContainer.innerHTML = `
+            <p><strong>Respuesta Correcta:</strong> ${correctAnswer}</p>
+            <p><strong>Explicación:</strong> ${question.explanation}</p>
+        `;
+
+        questionTitle.addEventListener('click', () => {
+            selectedStartIndex = index; // Actualizar el índice de inicio
+            
+            // Quitar el resaltado anterior y aplicar el nuevo
+            const currentlySelected = document.querySelector('.selected-start-question');
+            if (currentlySelected) {
+                currentlySelected.classList.remove('selected-start-question');
+            }
+            questionItem.classList.add('selected-start-question');
+
+            // Lógica para expandir/colapsar la respuesta
+            const isExpanded = questionItem.classList.contains('expanded');
+
+            // Opcional: Colapsar cualquier otro item que esté expandido
+            document.querySelectorAll('.question-list-item.expanded').forEach(item => {
+                item.classList.remove('expanded');
+            });
+
+            // Expandir o colapsar el item actual
+            if (!isExpanded) {
+                questionItem.classList.add('expanded');
+            }
+        });
+
+        // Marcar si es una pregunta de repaso
+        if (reviewList.includes(question.question)) {
+            questionItem.classList.add('is-review-question');
+            questionText = `⭐ ${questionText}`; // Añadir estrella
+        }
+        questionTitle.textContent = questionText;
+        questionItem.appendChild(questionTitle);
+        questionItem.appendChild(detailsContainer);
+        questionsListContainer.appendChild(questionItem);
+    });
+}
+
+function restartQuiz() {
+    updateConfigUI(); // Actualizar contadores de repaso y totales al volver al menú
+    configScreen.classList.remove('hidden');
+    quizEndMessage.classList.add('hidden');
+    quizScreen.classList.add('hidden'); // Asegurarse de ocultar la pantalla del quiz
+    topRestartButton.classList.add('hidden'); // Ocultar el botón de reiniciar superior
+    topCloseButton.classList.add('hidden'); // Ocultar el botón de cierre en el menú principal
+    topNavButtons.classList.remove('hidden');
+    questionsListScreen.classList.add('hidden');
+    theoryScreen.classList.add('hidden');
 }
 
 function startTimer() {
@@ -406,23 +529,15 @@ function displayQuizEnd() {
     // Lógica de Victoria o Derrota (ej: 85% para ganar)
     if (percentage >= 85) {
         endStatusLabel.textContent = "¡GENIAL!";
-        endTitle.textContent = "¡HAS GANADO!";
+        endTitle.textContent = "¡HAS APROBADO!";
         endTitle.style.color = "#1A237E";
         tryAgainButton.classList.add('hidden');
     } else {
         endStatusLabel.textContent = "¡OH NO!";
-        endTitle.textContent = "¡HAS PERDIDO!";
+        endTitle.textContent = "OHH, HAS SUSPENDIDO. ¡VUELVE A INTENTARLO!";
         endTitle.style.color = "#D32F2F";
         tryAgainButton.classList.remove('hidden');
     }
-}
-
-function restartQuiz() {
-    updateConfigUI(); // Actualizar contadores de repaso y totales al volver al menú
-    configScreen.classList.remove('hidden');
-    quizEndMessage.classList.add('hidden');
-    quizScreen.classList.add('hidden'); // Asegurarse de ocultar la pantalla del quiz
-    topRestartButton.classList.add('hidden'); // Ocultar el botón de reiniciar superior
 }
 
 // Event Listeners
@@ -434,13 +549,97 @@ if (clearReviewButton) clearReviewButton.addEventListener('click', clearReviewLi
 if (topRestartButton) topRestartButton.addEventListener('click', restartQuiz); // Event listener para el nuevo botón
 if (restartButton) restartButton.addEventListener('click', restartQuiz);
 if (tryAgainButton) tryAgainButton.addEventListener('click', restartQuiz);
-
-const exitButton = document.getElementById('exit-button');
-if (exitButton) {
-    exitButton.addEventListener('click', () => {
-        window.location.reload();
+if (viewQuestionsButton) {
+    viewQuestionsButton.addEventListener('click', () => {
+        populateQuestionsList();
+        configScreen.classList.add('hidden');
+        theoryScreen.classList.add('hidden');
+        questionsListScreen.classList.remove('hidden');
+        topNavButtons.classList.remove('hidden');
+        topCloseButton.classList.remove('hidden');
     });
+}
+if (backToConfigButton) {
+    backToConfigButton.addEventListener('click', restartQuiz);
+}
+
+const exitButton = document.getElementById('exit-button'); // This seems to be the old close button from the end screen
+if (exitButton) { // Let's make it also restart the quiz to be consistent
+    exitButton.addEventListener('click', restartQuiz);
+}
+
+if (topCloseButton) {
+    topCloseButton.addEventListener('click', restartQuiz);
+}
+
+if (theoryButton) {
+    theoryButton.addEventListener('click', () => {
+        configScreen.classList.add('hidden');
+        questionsListScreen.classList.add('hidden');
+        theoryScreen.classList.remove('hidden');
+        topNavButtons.classList.remove('hidden');
+        topCloseButton.classList.remove('hidden');
+    });
+}
+
+if (backToConfigFromTheoryButton) {
+    backToConfigFromTheoryButton.addEventListener('click', restartQuiz);
+}
+
+function setupCollapsibleTheory() {
+    const theoryContent = document.querySelector('.theory-content');
+    if (!theoryContent) return;
+
+    const theoryContainer = document.getElementById('theory-container');
+    const nodes = Array.from(theoryContent.childNodes);
+    let currentSection = null;
+
+    nodes.forEach(node => {
+        if (node.nodeName === 'H2') {
+            // Crear un nuevo contenedor para la sección
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'theory-section';
+
+            // Crear el encabezado
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'theory-section-header';
+            headerDiv.appendChild(node); // Mover el H2 al header
+
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'theory-section-close-btn';
+            closeBtn.innerHTML = '✖';
+            headerDiv.appendChild(closeBtn); // Añadir el botón de cierre al encabezado
+            
+            // Crear el cuerpo del contenido
+            const bodyDiv = document.createElement('div');
+            bodyDiv.className = 'theory-section-body';
+
+            // Evento para el botón de cierre (evita que el clic se propague al header)
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Detener la propagación para no abrir/cerrar el panel
+                sectionDiv.classList.remove('expanded');
+            });
+
+
+            sectionDiv.appendChild(headerDiv);
+            sectionDiv.appendChild(bodyDiv);
+            theoryContainer.appendChild(sectionDiv);
+
+            currentSection = bodyDiv;
+
+            headerDiv.addEventListener('click', () => {
+                sectionDiv.classList.toggle('expanded');
+            });
+
+        } else if (currentSection && node.nodeType !== Node.COMMENT_NODE && (node.nodeType !== Node.TEXT_NODE || node.textContent.trim() !== '')) {
+            // Añadir el resto de nodos al cuerpo de la sección actual
+            currentSection.appendChild(node.cloneNode(true));
+        }
+    });
+
+    theoryContent.style.display = 'none'; // Ocultar el contenido original
 }
 
 // Cargar datos al iniciar
 // loadQuestionsFromExcel(); // Ya no es necesario
+document.addEventListener('DOMContentLoaded', setupCollapsibleTheory);
