@@ -251,7 +251,7 @@ function startQuiz() {
     
     configScreen.classList.add('hidden');
     quizScreen.classList.remove('hidden');
-    topNavButtons.classList.add('hidden'); // Ocultar botones de navegación al empezar el quiz
+    topNavButtons.style.display = 'none'; // Ocultar botones de navegación al empezar el quiz
     topRestartButton.classList.remove('hidden'); // Mostrar el botón de reiniciar superior
     quizEndMessage.classList.add('hidden');
     currentQuestionIndex = 0; // El quiz interno siempre empieza en 0
@@ -341,7 +341,7 @@ function restartQuiz() {
     quizScreen.classList.add('hidden'); // Asegurarse de ocultar la pantalla del quiz
     topRestartButton.classList.add('hidden'); // Ocultar el botón de reiniciar superior
     topCloseButton.classList.add('hidden'); // Ocultar el botón de cierre en el menú principal
-    topNavButtons.classList.remove('hidden');
+    topNavButtons.style.display = ''; // Restaurar la visibilidad de los botones de navegación
     questionsListScreen.classList.add('hidden');
     theoryScreen.classList.add('hidden');
 }
