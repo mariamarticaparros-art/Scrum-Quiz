@@ -1,4 +1,5 @@
 let questions = []; // Se llenará desde el Excel
+let questionsByTopic = []; // Para las preguntas por temática
 
 let quizQuestions = [];
 let currentQuestionIndex = 0;
@@ -7,16 +8,19 @@ let incorrectCount = 0;
 let answeredCurrentQuestion = false;
 let timerInterval;
 let totalSeconds;
-let selectedStartIndex = 0; // Índice de la pregunta desde la que se empezará
+let selectedStartIndex = 0; // Índice de la pregunta desde la que se empezará en modo secuencial
+let userAnswers = []; // Almacena las respuestas del usuario en modo examen
+let visitedQuestions = []; // Almacena las preguntas visitadas en modo examen
+let isExamMode = false;
 
 // Referencias a elementos del DOM
 const configScreen = document.getElementById('config-screen');
 const quizScreen = document.getElementById('quiz-screen');
 const numQuestionsSlider = document.getElementById('num-questions-slider');
+const questionTypeSelect = document.getElementById('question-type-select');
 const numQuestionsVal = document.getElementById('num-questions-val');
 const timeSlider = document.getElementById('time-slider');
 const timeVal = document.getElementById('time-val');
-const startButton = document.getElementById('start-quiz-button');
 const quizModeSelect = document.getElementById('quiz-mode-select');
 const questionOrderSelect = document.getElementById('question-order-select'); // Nuevo
 const clearReviewButton = document.getElementById('clear-review-button'); // Botón para vaciar repaso
@@ -44,6 +48,7 @@ const restartButton = document.getElementById('restart-button');
 const endStatusLabel = document.getElementById('end-status-label');
 const endTitle = document.getElementById('end-title');
 const tryAgainButton = document.getElementById('try-again-button');
+const reviewExamButton = document.getElementById('review-exam-button');
 const topCloseButton = document.getElementById('top-close-button'); // Nuevo botón de cierre
 
 // Nuevos elementos para la lista de preguntas
@@ -57,15 +62,44 @@ const theoryScreen = document.getElementById('theory-screen');
 const backToConfigFromTheoryButton = document.getElementById('back-to-config-from-theory-button');
 const topNavButtons = document.querySelector('.top-nav-buttons');
 
+const startPracticeButton = document.getElementById('start-practice-button');
+const examReviewScreen = document.getElementById('exam-review-screen');
+const examReviewContainer = document.getElementById('exam-review-container');
+const backToEndScreenButton = document.getElementById('back-to-end-screen-button');
+
+// Nuevos elementos para Test por Temática
+const topicTestButton = document.getElementById('topic-test-button');
+const reviewScreenTopBackButton = document.getElementById('review-screen-top-back-button');
+
+// Nuevos elementos para Filtros
+// Los botones de filtros se eliminaron del HTML, pero mantenemos las variables de la pantalla
+const filtersScreen = document.getElementById('filters-screen');
+const filtersTopicCheckboxes = document.getElementById('filters-topic-checkboxes');
+const numQuestionsSliderFilters = document.getElementById('num-questions-slider-filters');
+const numQuestionsValFilters = document.getElementById('num-questions-val-filters');
+const timeSliderFilters = document.getElementById('time-slider-filters');
+const timeValFilters = document.getElementById('time-val-filters');
+const startFilteredQuizButton = document.getElementById('start-filtered-quiz-button');
+const backToConfigFromFiltersButton = document.getElementById('back-to-config-from-filters-button');
+const categoryButtonsContainer = document.getElementById('category-buttons-container');
+
+// Nuevos elementos para el modo examen
+const startExamButton = document.getElementById('start-exam-button');
+const examNavigationBar = document.getElementById('exam-navigation-bar');
+const examNavQuestionsContainer = document.getElementById('exam-nav-questions-container');
+const finishExamButton = document.getElementById('finish-exam-button');
+const hamburgerMenu = document.getElementById('hamburger-menu');
 const quizContainer = document.querySelector('.quiz-container'); // Contenedor principal
 
 // Deshabilitar inicio hasta cargar datos
-// startButton.disabled = true; // Se habilita al cargar las preguntas por defecto
-// startButton.innerText = "Cargando preguntas...";
+// startPracticeButton.disabled = true; // Se habilita al cargar las preguntas por defecto
+// startPracticeButton.innerText = "Cargando preguntas...";
 
 // Configuración de Sliders
 numQuestionsSlider.oninput = function() { numQuestionsVal.innerHTML = this.value; }
+numQuestionsSliderFilters.oninput = function() { numQuestionsValFilters.innerHTML = this.value; }
 timeSlider.oninput = function() { timeVal.innerHTML = this.value; }
+timeSliderFilters.oninput = function() { timeValFilters.innerHTML = this.value; }
 
 // --- Lógica de Repaso (LocalStorage) ---
 function getReviewList() {
@@ -157,8 +191,8 @@ function updateReviewButtonUI() {
 //     });
 
 //     updateConfigUI();
-//     startButton.disabled = false;
-//     startButton.innerText = "Empezar Quiz";
+//     startPracticeButton.disabled = false;
+//     startPracticeButton.innerText = "Empezar Quiz";
 //     console.log("Preguntas cargadas correctamente");
 // }
 
@@ -172,7 +206,7 @@ function updateConfigUI() {
     document.getElementById('option-review').textContent = `Solo preguntas para repasar (${reviewCount})`;
 
     // Ajustar slider según modo seleccionado
-    let maxVal = quizModeSelect.value === 'review' ? reviewCount : totalQuestions;
+    let maxVal = questionTypeSelect.value === 'review' ? reviewCount : totalQuestions;
     
     numQuestionsSlider.min = maxVal > 0 ? 1 : 0; // Ajustar mínimo si hay pocas preguntas
     numQuestionsSlider.max = Math.max(1, maxVal);
@@ -211,45 +245,93 @@ function cleanUpReviewList() {
 if (typeof defaultQuestions !== 'undefined' && defaultQuestions.length > 0) {
     questions = [...defaultQuestions];
     cleanUpReviewList(); // Limpiar la lista de repaso con las preguntas actuales
-    updateConfigUI();
-    startButton.disabled = false;
-    startButton.innerText = "Empezar Quiz";
+    updateConfigUI(); startPracticeButton.disabled = false;
+    startPracticeButton.innerText = "Empezar Quiz";
     console.log("Banco interno precargado con éxito.");
 }
 
-function startQuiz() {
-    const mode = quizModeSelect.value;
-    let questionsToUse = [...questions];
+if (typeof defaultQuestionsFiltros !== 'undefined' && defaultQuestionsFiltros.length > 0) {
+    questionsByTopic = [...defaultQuestionsFiltros];
+    console.log("Banco de preguntas por temática cargado con éxito. Cantidad:", questionsByTopic.length);
+} else {
+    topicTestButton.style.display = 'none';
+    // También ocultar el botón de filtros si no hay preguntas para filtrar
+    filtersButton.style.display = 'none';
+    console.log("defaultQuestionsFiltros no está definido o está vacío. Ocultando botones de temática y filtros.");
+}
 
-    if (mode === 'review') {
+function startRealExam() {
+    isExamMode = true;
+    let questionsToUse = [...questions];
+    let count;
+
+    count = 80;
+    totalSeconds = 60 * 60; // 60 minutos
+    questionsToUse = questionsToUse.sort(() => 0.5 - Math.random()); // Siempre aleatorio en modo examen
+    quizQuestions = questionsToUse.slice(0, Math.min(count, questionsToUse.length));
+    userAnswers = new Array(quizQuestions.length).fill(null);
+    visitedQuestions = new Array(quizQuestions.length).fill(false);
+    
+    startQuizCommon();
+}
+
+function startPracticeQuiz() {
+    isExamMode = false;
+    let questionsToUse = [...questions];
+    let count;
+
+    const questionType = questionTypeSelect.value;
+    if (questionType === 'review') {
         const reviewList = getReviewList();
         questionsToUse = questionsToUse.filter(q => reviewList.includes(q.question));
-        
         if (questionsToUse.length === 0) {
             alert("No tienes preguntas marcadas para repasar. ¡Marca algunas primero durante el quiz!");
             return;
         }
     }
-
-    // Si el modo es 'review', ignorar el slider y usar todas las preguntas de repaso.
-    // Si no, usar el valor del slider.
-    const count = mode === 'review' ? questionsToUse.length : parseInt(numQuestionsSlider.value);
-
+    count = questionType === 'review' ? questionsToUse.length : parseInt(numQuestionsSlider.value);
     totalSeconds = parseInt(timeSlider.value) * 60;
-    const order = questionOrderSelect.value; // Obtener el orden seleccionado
-    
-    let startIndex = 0;
+    const order = questionOrderSelect.value;
+
     if (order === 'random') {
         questionsToUse = questionsToUse.sort(() => 0.5 - Math.random());
+        // Si es aleatorio, no tiene sentido empezar desde un índice específico.
+        quizQuestions = questionsToUse.slice(0, count);
     } else {
-        // Si el orden es secuencial, empieza desde el índice seleccionado.
-        startIndex = selectedStartIndex;
+        // Para secuencial, sí respetamos el índice de inicio.
+        quizQuestions = questionsToUse.slice(selectedStartIndex, selectedStartIndex + count);
     }
 
-    // Seleccionar el número de preguntas solicitado (o todas si se pide más de las disponibles)
-    quizQuestions = questionsToUse.slice(startIndex, Math.min(startIndex + count, questionsToUse.length));
-    
+    startQuizCommon();
+}
+
+function startFilteredQuiz() {
+    isExamMode = false;
+    const selectedTopics = [];
+    filtersTopicCheckboxes.querySelectorAll('.filter-btn.selected').forEach(button => {
+        selectedTopics.push(button.dataset.section);
+    });
+
+    if (selectedTopics.length === 0) {
+        alert("Por favor, selecciona al menos una temática para empezar el test.");
+        return;
+    }
+
+    let filteredQuestions = questionsByTopic.filter(q => selectedTopics.includes(q.section));
+    const count = parseInt(numQuestionsSliderFilters.value);
+    totalSeconds = parseInt(timeSliderFilters.value) * 60;
+
+    filteredQuestions = filteredQuestions.sort(() => 0.5 - Math.random());
+    quizQuestions = filteredQuestions.slice(0, count);
+    filtersScreen.classList.add('hidden');
+    startQuizCommon();
+}
+function startQuizCommon() {
     configScreen.classList.add('hidden');
+    questionsListScreen.classList.add('hidden');
+    theoryScreen.classList.add('hidden');
+    filtersScreen.classList.add('hidden');
+    
     quizScreen.classList.remove('hidden');
     topNavButtons.style.display = 'none'; // Ocultar botones de navegación al empezar el quiz
     topRestartButton.classList.remove('hidden'); // Mostrar el botón de reiniciar superior
@@ -258,7 +340,20 @@ function startQuiz() {
     correctCount = 0;
     incorrectCount = 0;
     totalQuestionsSpan.textContent = quizQuestions.length;
-    
+    toggleReviewButton.style.display = isExamMode ? 'inline-block' : 'inline-block'; // Siempre visible
+
+    if (isExamMode) {
+        examNavigationBar.classList.remove('hidden');
+        document.getElementById('correct-stat').classList.add('hidden');
+        document.getElementById('incorrect-stat').classList.add('hidden');
+        document.getElementById('score-stat').classList.add('hidden');
+        populateExamNav();
+    } else {
+        examNavigationBar.classList.add('hidden');
+        document.getElementById('correct-stat').classList.remove('hidden');
+        document.getElementById('incorrect-stat').classList.remove('hidden');
+        document.getElementById('score-stat').classList.remove('hidden');
+    }
     startTimer();
     loadQuestion();
 }
@@ -340,12 +435,18 @@ function restartQuiz() {
     quizEndMessage.classList.add('hidden');
     quizScreen.classList.add('hidden'); // Asegurarse de ocultar la pantalla del quiz
     topRestartButton.classList.add('hidden'); // Ocultar el botón de reiniciar superior
+    reviewExamButton.classList.add('hidden');
     topCloseButton.classList.add('hidden'); // Ocultar el botón de cierre en el menú principal
     topNavButtons.style.display = ''; // Restaurar la visibilidad de los botones de navegación
     questionsListScreen.classList.add('hidden');
+    filtersScreen.classList.add('hidden');
     theoryScreen.classList.add('hidden');
+    console.log("Reiniciando quiz. questionsByTopic:", questionsByTopic.length);
+    examReviewScreen.classList.add('hidden');
+    topNavButtons.style.display = ''; // Asegurarse de que los botones superiores sean visibles
 }
 
+// --- Lógica del Quiz ---
 function startTimer() {
     clearInterval(timerInterval);
     updateTimerDisplay();
@@ -366,12 +467,18 @@ function updateTimerDisplay() {
 }
 
 function loadQuestion() {
+    // Marcar la pregunta actual como visitada en modo examen
+    if (isExamMode) {
+        visitedQuestions[currentQuestionIndex] = true;
+    }
+    
     answeredCurrentQuestion = false;
     explanationArea.classList.add('hidden');
     nextButton.classList.add('hidden');
     answerButton.classList.remove('hidden');
-    answerButton.disabled = true; // Deshabilita el botón de responder hasta que se seleccione una opción
+    answerButton.disabled = true;
 
+    // Fin del quiz
     if (currentQuestionIndex >= quizQuestions.length) {
         displayQuizEnd();
         return;
@@ -381,7 +488,12 @@ function loadQuestion() {
     questionTextElement.textContent = question.question;
     updateReviewButtonUI();
     optionsContainer.innerHTML = ''; // Limpiar opciones anteriores
-
+    
+    if (isExamMode) {
+        answerButton.classList.add('hidden');
+        nextButton.classList.remove('hidden');
+    }
+    
     question.options.forEach((option, index) => {
         const label = document.createElement('label');
         label.classList.add('option-label');
@@ -396,7 +508,9 @@ function loadQuestion() {
         }
 
         input.addEventListener('change', () => {
-            answerButton.disabled = false; // Habilita el botón de responder al seleccionar una opción
+            if (!isExamMode) {
+                answerButton.disabled = false;
+            }
         });
 
         // Lógica para resaltar la selección del usuario
@@ -411,17 +525,64 @@ function loadQuestion() {
             } else {
                 label.classList.remove('selected');
             }
+            if (isExamMode) {
+                saveCurrentAnswer();
+                updateExamNav();
+            }
         });
-
 
         label.appendChild(input);
         label.appendChild(document.createTextNode(option));
         optionsContainer.appendChild(label);
     });
 
+    // Restaurar respuesta del usuario en modo examen
+    if (isExamMode && userAnswers[currentQuestionIndex] !== null) {
+        const savedAnswers = userAnswers[currentQuestionIndex];
+        optionsContainer.querySelectorAll('input').forEach(input => {
+            if (savedAnswers.includes(parseInt(input.value))) {
+                input.checked = true;
+                input.closest('.option-label').classList.add('selected');
+            }
+        });
+    }
+
     updateScoreBoard();
+    if (isExamMode) {
+        updateExamNav();
+    }
 }
 
+function saveCurrentAnswer() {
+    const selectedOptions = [];
+    optionsContainer.querySelectorAll('input:checked').forEach(input => {
+        selectedOptions.push(parseInt(input.value));
+    });
+    userAnswers[currentQuestionIndex] = selectedOptions.length > 0 ? selectedOptions : null;
+}
+
+function goToQuestion(index) {
+    // Guardar la respuesta de la pregunta actual ANTES de cambiar de índice
+    if (isExamMode) {
+        saveCurrentAnswer();
+    }
+
+    if (index >= 0 && index < quizQuestions.length) {
+        currentQuestionIndex = index;
+        loadQuestion();
+    }
+}
+
+function nextQuestion() {
+    // Guardar la respuesta actual ANTES de pasar a la siguiente
+    if (isExamMode) {
+        if (currentQuestionIndex < quizQuestions.length) {
+            goToQuestion(currentQuestionIndex + 1);
+        }
+    } else {
+        processNextQuestionInPractice();
+    }
+}
 function checkAnswer() {
     if (answeredCurrentQuestion) return; // Evitar responder múltiples veces
 
@@ -489,12 +650,14 @@ function checkAnswer() {
     updateScoreBoard();
 }
 
-function nextQuestion() {
+function processNextQuestionInPractice() {
     // Limpiar resaltados del marcador antes de pasar a la siguiente
     correctCountSpan.parentElement.classList.remove('highlight-correct');
     incorrectCountSpan.parentElement.classList.remove('highlight-incorrect');
 
     currentQuestionIndex++;
+    selectedStartIndex = Math.max(selectedStartIndex, currentQuestionIndex); // Para modo secuencial
+
     if (currentQuestionIndex < quizQuestions.length) {
         loadQuestion();
     } else {
@@ -506,7 +669,10 @@ function updateScoreBoard() {
     currentQuestionNumberSpan.textContent = Math.min(currentQuestionIndex + 1, quizQuestions.length);
     correctCountSpan.textContent = correctCount;
     incorrectCountSpan.textContent = incorrectCount;
+    
+    if (isExamMode) return; // No mostrar porcentaje en tiempo real en modo examen
 
+    
     // Calcular y mostrar el porcentaje actual
     const currentTotalAnswered = currentQuestionIndex + (answeredCurrentQuestion ? 1 : 0); // Considera la pregunta actual si ya fue respondida
     const currentPercentage = currentTotalAnswered > 0 ? Math.round((correctCount / currentTotalAnswered) * 100) : 0;
@@ -516,13 +682,32 @@ function updateScoreBoard() {
 function displayQuizEnd() {
     clearInterval(timerInterval);
     quizScreen.classList.add('hidden');
-    explanationArea.classList.add('hidden');
+    examNavigationBar.classList.add('hidden');
 
     topRestartButton.classList.add('hidden'); // Ocultar el botón de reiniciar superior al finalizar
     quizEndMessage.classList.remove('hidden');
+
+    if (isExamMode) {
+        // Calcular resultados finales para el modo examen
+        correctCount = 0;
+        incorrectCount = 0;
+        quizQuestions.forEach((q, index) => {
+            const userAnswer = userAnswers[index];
+            if (userAnswer !== null) {
+                const correctAnswersSet = new Set(Array.isArray(q.correctAnswer) ? q.correctAnswer : [q.correctAnswer]);
+                const selectedOptionsSet = new Set(userAnswer);
+                const isCorrect = (correctAnswersSet.size === selectedOptionsSet.size) && [...selectedOptionsSet].every(option => correctAnswersSet.has(option));
+                if (isCorrect) correctCount++;
+                else incorrectCount++;
+            } else {
+                incorrectCount++; // No respondida cuenta como incorrecta
+            }
+        });
+    }
+
     finalCorrectCountSpan.textContent = correctCount;
     finalIncorrectCountSpan.textContent = incorrectCount;
-    
+
     const percentage = quizQuestions.length > 0 ? Math.round((correctCount / quizQuestions.length) * 100) : 0;
     percentageCountSpan.textContent = percentage;
 
@@ -532,16 +717,196 @@ function displayQuizEnd() {
         endTitle.textContent = "¡HAS APROBADO!";
         endTitle.style.color = "#1A237E";
         tryAgainButton.classList.add('hidden');
+        if (isExamMode) reviewExamButton.classList.remove('hidden');
     } else {
         endStatusLabel.textContent = "¡OH NO!";
         endTitle.textContent = "OHH, HAS SUSPENDIDO. ¡VUELVE A INTENTARLO!";
         endTitle.style.color = "#D32F2F";
         tryAgainButton.classList.remove('hidden');
+        if (isExamMode) reviewExamButton.classList.remove('hidden');
     }
 }
 
+// --- Funciones para el Modo Examen ---
+
+function populateExamNav() {
+    examNavQuestionsContainer.innerHTML = '';
+    quizQuestions.forEach((_, index) => {
+        const navButton = document.createElement('button');
+        navButton.textContent = index + 1;
+        navButton.classList.add('exam-nav-btn');
+        navButton.dataset.index = index;
+        navButton.addEventListener('click', () => goToQuestion(index));
+        examNavQuestionsContainer.appendChild(navButton);
+    });
+}
+
+function updateExamNav() {
+    const reviewList = getReviewList();
+    examNavQuestionsContainer.querySelectorAll('.exam-nav-btn').forEach((btn, index) => {
+        btn.classList.remove('current', 'answered-exam', 'unanswered-visited-exam');
+
+        if (index === currentQuestionIndex) {
+            btn.classList.add('current');
+        }
+
+        if (userAnswers[index] !== null) {
+            btn.classList.add('answered-exam');
+        } else if (visitedQuestions[index]) {
+            btn.classList.add('unanswered-visited-exam');
+        }
+    });
+}
+
+function showExamReview() {
+    quizEndMessage.classList.add('hidden');
+    examReviewScreen.classList.remove('hidden');
+    const reviewNavBar = document.getElementById('exam-review-nav-bar');
+    examReviewContainer.innerHTML = '';
+    reviewNavBar.innerHTML = '';
+
+    quizQuestions.forEach((q, index) => {
+        // --- Crear el item de la pregunta en la lista de revisión ---
+        const reviewItem = document.createElement('div');
+        reviewItem.classList.add('exam-review-item');
+
+        let questionStatus = 'unanswered';
+        const userAnswer = userAnswers[index];
+        const correctAnswersSet = new Set(Array.isArray(q.correctAnswer) ? q.correctAnswer : [q.correctAnswer]);
+        let isCorrect = false;
+
+        if (userAnswer !== null) {
+            const selectedOptionsSet = new Set(userAnswer);
+            isCorrect = (correctAnswersSet.size === selectedOptionsSet.size) && [...selectedOptionsSet].every(option => correctAnswersSet.has(option));
+            questionStatus = isCorrect ? 'correct' : 'incorrect';
+        }
+        reviewItem.classList.add(questionStatus);
+        reviewItem.id = `review-q-${index}`; // Añadir un ID para el anclaje
+
+        // --- Crear el botón de navegación para la barra superior ---
+        const navButton = document.createElement('button');
+        navButton.textContent = index + 1;
+        navButton.classList.add('exam-review-nav-btn');
+        navButton.classList.add(isCorrect ? 'correct-review' : 'incorrect-review');
+        navButton.addEventListener('click', () => {
+            // Desplazarse a la pregunta correspondiente
+            const targetQuestion = document.getElementById(`review-q-${index}`);
+            if (targetQuestion) {
+                targetQuestion.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+        reviewNavBar.appendChild(navButton);
+
+
+        const questionTitle = document.createElement('h3');
+        questionTitle.textContent = `${index + 1}. ${q.question}`;
+        reviewItem.appendChild(questionTitle);
+
+        const optionsDiv = document.createElement('div');
+        optionsDiv.classList.add('options-container');
+        q.options.forEach((opt, optIndex) => {
+            const label = document.createElement('div');
+            label.classList.add('option-label');
+            
+            const isCorrectOption = correctAnswersSet.has(optIndex);
+            const isUserSelection = userAnswer && userAnswer.includes(optIndex);
+
+            if (isCorrectOption) {
+                label.classList.add('correct');
+            }
+            if (isUserSelection && !isCorrectOption) {
+                label.classList.add('incorrect');
+            }
+            if (isUserSelection) {
+                label.classList.add('selected');
+            }
+
+            label.textContent = opt;
+            optionsDiv.appendChild(label);
+        });
+        reviewItem.appendChild(optionsDiv);
+
+        const explanationDiv = document.createElement('div');
+        explanationDiv.classList.add('explanation-area');
+        explanationDiv.classList.remove('hidden');
+        explanationDiv.innerHTML = `<h3>Explicación:</h3><p>${q.explanation}</p>`;
+        reviewItem.appendChild(explanationDiv);
+
+        examReviewContainer.appendChild(reviewItem);
+    });
+}
+
+// --- Funciones para Filtros ---
+function showFiltersScreen() {
+    configScreen.classList.add('hidden');
+    questionsListScreen.classList.add('hidden');
+    theoryScreen.classList.add('hidden');
+    filtersScreen.classList.remove('hidden');
+    topNavButtons.classList.remove('hidden');
+    topCloseButton.classList.remove('hidden');
+    console.log("Mostrando pantalla de filtros. questionsByTopic:", questionsByTopic.length);
+
+    populateFilterCheckboxes(true); // Pasar true para resetear
+}
+
+function populateFilterCheckboxes() {
+    filtersTopicCheckboxes.innerHTML = '';
+    filtersTopicCheckboxes.className = 'topic-grid-container'; // Reutilizar el estilo de la cuadrícula
+    // Generar secciones dinámicamente desde el archivo de preguntas
+    const sections = [...new Set(questionsByTopic.map(q => q.section))];
+
+    sections.forEach(section => {
+        const filterButton = document.createElement('button');
+        filterButton.textContent = section;
+        filterButton.classList.add('topic-btn', 'filter-btn'); // Usar clases de botón
+        filterButton.dataset.section = section;
+
+        filterButton.addEventListener('click', () => {
+            filterButton.classList.toggle('selected'); // Activar/desactivar selección
+            updateFilteredQuestionsCount();
+        });
+
+        filtersTopicCheckboxes.appendChild(filterButton);
+    });
+    updateFilteredQuestionsCount();
+}
+
+function updateFilteredQuestionsCount(isInitialLoad = false) {
+    const selectedTopics = [];
+    filtersTopicCheckboxes.querySelectorAll('.filter-btn.selected').forEach(button => {
+        selectedTopics.push(button.dataset.section);
+    });
+    const availableQuestions = questionsByTopic.filter(q => selectedTopics.includes(q.section)).length;
+    
+    numQuestionsSliderFilters.max = availableQuestions > 0 ? availableQuestions : 1; // Evitar max < min
+    
+    if (isInitialLoad || availableQuestions === 0) {
+        numQuestionsSliderFilters.value = 0;
+    } else {
+        numQuestionsSliderFilters.value = Math.min(parseInt(numQuestionsSliderFilters.value), numQuestionsSliderFilters.max);
+        if (numQuestionsSliderFilters.value == 0 && availableQuestions > 0) numQuestionsSliderFilters.value = 1;
+    }
+    numQuestionsSliderFilters.min = availableQuestions > 0 ? 1 : 0;
+    numQuestionsValFilters.textContent = numQuestionsSliderFilters.value;
+}
+
+// El único botón que queda para filtros/temáticas es topicTestButton
+if (topicTestButton) topicTestButton.addEventListener('click', showFiltersScreen);
+if (startFilteredQuizButton) startFilteredQuizButton.addEventListener('click', startFilteredQuiz);
+if (backToConfigFromFiltersButton) backToConfigFromFiltersButton.addEventListener('click', restartQuiz);
+if (startExamButton) startExamButton.addEventListener('click', startRealExam);
+viewQuestionsButton.addEventListener('click', () => {
+    populateQuestionsList();
+    configScreen.classList.add('hidden');
+    theoryScreen.classList.add('hidden');
+    filtersScreen.classList.add('hidden'); // Asegurarse de ocultar filtros
+    questionsListScreen.classList.remove('hidden');
+    topNavButtons.classList.remove('hidden');
+    topCloseButton.classList.remove('hidden');
+});
+
 // Event Listeners
-if (startButton) startButton.addEventListener('click', startQuiz);
+if (startPracticeButton) startPracticeButton.addEventListener('click', startPracticeQuiz);
 if (answerButton) answerButton.addEventListener('click', checkAnswer);
 if (nextButton) nextButton.addEventListener('click', nextQuestion);
 if (toggleReviewButton) toggleReviewButton.addEventListener('click', toggleReviewStatus);
@@ -549,19 +914,11 @@ if (clearReviewButton) clearReviewButton.addEventListener('click', clearReviewLi
 if (topRestartButton) topRestartButton.addEventListener('click', restartQuiz); // Event listener para el nuevo botón
 if (restartButton) restartButton.addEventListener('click', restartQuiz);
 if (tryAgainButton) tryAgainButton.addEventListener('click', restartQuiz);
-if (viewQuestionsButton) {
-    viewQuestionsButton.addEventListener('click', () => {
-        populateQuestionsList();
-        configScreen.classList.add('hidden');
-        theoryScreen.classList.add('hidden');
-        questionsListScreen.classList.remove('hidden');
-        topNavButtons.classList.remove('hidden');
-        topCloseButton.classList.remove('hidden');
-    });
-}
 if (backToConfigButton) {
     backToConfigButton.addEventListener('click', restartQuiz);
 }
+
+
 
 const exitButton = document.getElementById('exit-button'); // This seems to be the old close button from the end screen
 if (exitButton) { // Let's make it also restart the quiz to be consistent
@@ -574,6 +931,7 @@ if (topCloseButton) {
 
 if (theoryButton) {
     theoryButton.addEventListener('click', () => {
+        filtersScreen.classList.add('hidden');
         configScreen.classList.add('hidden');
         questionsListScreen.classList.add('hidden');
         theoryScreen.classList.remove('hidden');
@@ -584,6 +942,37 @@ if (theoryButton) {
 
 if (backToConfigFromTheoryButton) {
     backToConfigFromTheoryButton.addEventListener('click', restartQuiz);
+}
+
+if (finishExamButton) {
+    finishExamButton.addEventListener('click', () => {
+        if (confirm("¿Estás seguro de que quieres finalizar el examen?")) {
+            displayQuizEnd();
+        }
+    });
+}
+if (reviewExamButton) reviewExamButton.addEventListener('click', showExamReview);
+if (backToEndScreenButton) backToEndScreenButton.addEventListener('click', () => {
+    examReviewScreen.classList.add('hidden');
+    quizEndMessage.classList.remove('hidden');
+});
+if (reviewScreenTopBackButton) reviewScreenTopBackButton.addEventListener('click', () => {
+    examReviewScreen.classList.add('hidden');
+    quizEndMessage.classList.remove('hidden');
+});
+
+if (hamburgerMenu) {
+    hamburgerMenu.addEventListener('click', () => {
+        const navButtons = document.getElementById('top-nav-buttons');
+        navButtons.classList.toggle('show');
+    });
+
+    // Cerrar el menú de hamburguesa al hacer clic en un botón
+    document.querySelectorAll('.top-nav-buttons button').forEach(button => {
+        button.addEventListener('click', () => {
+            document.getElementById('top-nav-buttons').classList.remove('show');
+        });
+    });
 }
 
 function setupCollapsibleTheory() {

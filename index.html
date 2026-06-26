@@ -6,14 +6,27 @@
     <title>Quiz de la Guía Scrum</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .theory-section-header h2 {
+            color: #1A237E; /* Color azul oscuro para los subtítulos */
+        }
+        .theory-section-body {
+            text-align: left; /* Alinear el texto del cuerpo a la izquierda */
+        }
+    </style>
 </head>
 <body>
     <div class="quiz-container">
 
-        <div class="top-nav-buttons">
-            <button id="theory-button" class="btn-secondary">Teoría</button>
-            <button id="view-questions-button" class="btn-secondary">Ver Preguntas</button>
-            <button id="top-close-button" class="top-close-button hidden">✖</button>
+        <div class="top-nav">
+            <button id="hamburger-menu" class="hamburger-menu">☰</button>
+            <div id="top-nav-buttons" class="top-nav-buttons">
+                <button id="theory-button" class="btn-secondary">Teoria Guia Scrum</button>
+                <button id="view-questions-button" class="btn-secondary">Ver Preguntas</button>
+                <button id="topic-test-button" class="btn-secondary">Test por Temática</button>
+                <button id="start-exam-button" class="btn-secondary">Examen Real</button>
+                <button id="top-close-button" class="top-close-button hidden">✖</button>
+            </div>
         </div>
         <!-- 1. PANTALLA DE INICIO -->
         <div id="config-screen">
@@ -25,13 +38,15 @@
             
             <div class="config-controls">
                 <div class="config-item">
-                    <label>🎮 Modo de Juego:</label>
-                    <div class="config-row">
-                        <select id="quiz-mode-select">
-                            <option value="all" id="option-all">Todas las preguntas</option>
-                            <option value="review" id="option-review">Repasar marcadas</option>
-                        </select>
-                        <button id="clear-review-button" class="nav-btn" title="Vaciar Repaso">🗑️</button>
+                    <div class="config-item-header">
+                        <label>🧠 Tipo de Preguntas:</label>
+                        <div class="config-row">
+                            <select id="question-type-select">
+                                <option value="all" id="option-all">Todas las preguntas</option>
+                                <option value="review" id="option-review">Solo preguntas para repasar</option>
+                            </select>
+                            <button id="clear-review-button" class="nav-btn" title="Vaciar Repaso">🗑️</button>
+                        </div>
                     </div>
                 </div>
                 <div class="config-item">
@@ -42,8 +57,8 @@
                     <label>⏳ Tiempo Límite (min): <span id="time-val">5</span></label>
                     <input type="range" id="time-slider" min="1" max="60" value="5">
                 </div>
-                <div class="config-item">
-                    <label>🔀 Orden de aparición:</label>
+                 <div class="config-item">
+                    <label>🔀 Orden de las preguntas:</label>
                     <div class="config-row">
                         <select id="question-order-select">
                             <option value="sequential">Secuencial</option>
@@ -52,8 +67,8 @@
                         <!-- <div class="nav-btn" style="pointer-events: none; cursor: default;">🔄</div> -->
                     </div>
                 </div>
-            </div>
-            <button id="start-quiz-button" class="btn-main">START</button>            
+           </div>
+            <button id="start-practice-button" class="btn-main">START</button>            
         </div>
 
         <!-- 2. PANTALLA DE TRIVIA -->
@@ -64,10 +79,17 @@
             <div class="score-board">
                 <div class="stat">❓ Pregunta: <span id="current-question-number">1</span>/<span id="total-questions">0</span></div>
                 <div class="stat">⏱️ Tiempo: <span id="timer-display">00:00</span></div>
-                <div class="stat">✅ Aciertos: <span id="correct-count">0</span></div>
-                <div class="stat">❌ Fallos: <span id="incorrect-count">0</span></div>
+                <div class="stat" id="correct-stat">✅ Aciertos: <span id="correct-count">0</span></div>
+                <div class="stat" id="incorrect-stat">❌ Fallos: <span id="incorrect-count">0</span></div>
                 <div class="stat" id="score-stat">📈 Porcentaje: <span id="current-percentage-count">0</span>%</div>
             </div>
+
+            <!-- Barra de navegación de preguntas (solo para modo examen) -->
+            <div id="exam-navigation-bar" class="hidden">
+                <div id="exam-nav-questions-container"></div>
+                <button id="finish-exam-button" class="btn-secondary">Finalizar Examen</button>
+            </div>
+
 
             <div class="question-area-wrapper">
                 <button id="toggle-review-button" class="review-btn">☆ Repasar</button>
@@ -82,7 +104,7 @@
                 <button id="answer-button" disabled>Responder</button>
                 <button id="next-button" class="hidden">Siguiente</button>
             </div>
-
+            
             <div id="explanation-area" class="explanation-area hidden">
                 <h3>Explicación:</h3>
                 <p id="explanation-text"></p>
@@ -101,6 +123,7 @@
             </div>
 
             <button id="try-again-button" class="btn-main hidden">INTENTAR DE NUEVO</button>
+            <button id="review-exam-button" class="btn-secondary hidden">Revisar Examen</button>
 
             <div class="nav-bar-bottom">
                 <button id="exit-button" class="nav-btn">✖</button>
@@ -117,9 +140,51 @@
             <button id="back-to-config-button" class="btn-main">Volver</button>
         </div>
 
+        <!-- 6. PANTALLA DE REVISIÓN DE EXAMEN -->
+        <div id="exam-review-screen" class="hidden">
+            <h1>Revisión del Examen</h1>
+            <button id="review-screen-top-back-button" class="top-restart-button">✖</button>
+            <div id="exam-review-nav-bar"></div>
+            <div id="exam-review-container"></div>
+            <button id="back-to-end-screen-button" class="btn-main">Volver a Resultados</button>
+        </div>
+
+        <!-- 7. PANTALLA DE SELECCIÓN DE TEMÁTICA -->
+        <div id="topic-selection-screen" class="hidden">
+            <h1>Test por Temática</h1>
+            <p>Selecciona una categoría para comenzar el test.</p>
+            <div id="topic-grid-container"></div>
+            <button id="back-to-config-from-topics-button" class="btn-main">Volver al Menú</button>
+        </div>
+
+        <!-- 8. PANTALLA DE FILTROS -->
+        <div id="filters-screen" class="hidden">
+            <h1>Test con Filtros</h1>
+            <p>Selecciona las temáticas y configura tu test.</p>
+            <div class="filter-button-container" id="category-buttons-container">
+            </div>
+            <div class="config-controls">
+                <div class="config-item">
+                    <label>Temáticas:</label>
+                    <div id="filters-topic-checkboxes"></div>
+                </div>
+                <div class="config-item">
+                    <label>📝 Cantidad de Preguntas: <span id="num-questions-val-filters">10</span></label>
+                    <input type="range" id="num-questions-slider-filters" min="1" max="50" value="10">
+                </div>
+                <div class="config-item">
+                    <label>⏳ Tiempo Límite (min): <span id="time-val-filters">5</span></label>
+                    <input type="range" id="time-slider-filters" min="1" max="60" value="5">
+                </div>
+            </div>
+            <button id="start-filtered-quiz-button" class="btn-main">Empezar Test Filtrado</button>
+            <!-- <button id="back-to-config-from-filters-button" class="btn-secondary">Volver al Menú</button> -->
+        </div>
+
         <!-- 5. PANTALLA DE TEORÍA -->
         <div id="theory-screen" class="hidden">
             <h1>GUIA SCRUM 2020</h1>
+            <div id="theory-container"></div>
             <div class="theory-content">
                 <h2>Propósito de la Guía Scrum</h2>
                 <p>
@@ -356,7 +421,7 @@
                 <p>
                     Existen varias prácticas para pronosticar el progreso, como gráficos de burn-downs, burn-ups,  o flujos 
                     acumulativos. Si bien han demostrado ser útiles, estos no sustituyen la importancia del empirismo. En 
-                    entornos complejos, se desconoce lo que sucederá. Solo lo que ya ha sucedido se puede utilizar para la 
+                    entornos complejos, se desconoce lo que sucederá. Solo lo que ya ha sucedido se puede utilizar para la
                     toma de decisiones con vistas a futuro.</p>
                 <p>
                     Un Sprint podría ser cancelado si el Objetivo del Sprint se vuelve obsoleto. Solo el Propietario del 
@@ -364,12 +429,12 @@
                 </p>
                 <h3>Planificación de Sprint</h3>
                 <p>
-                    El Sprint Planning inicia el Sprint estableciendo el trabajo que se realizará para el mismo. Este plan 
+                    El Sprint Planning inicia el Sprint estableciendo el trabajo que se realizará para el mismo. Este plan
                     resultante es creado por el trabajo colaborativo de todo el equipo de Scrum.</p>
                 <p>
-                    El propietario del producto (Product Owner)  se asegura de que los asistentes estén preparados para 
-                    discutir los elementos de trabajo pendiente de producto más importantes y cómo se asignan al objetivo 
-                    del producto. El equipo de Scrum también puede invitar a otras personas a asistir a la planificación del 
+                    El propietario del producto (Product Owner) se asegura de que los asistentes estén preparados para
+                    discutir los elementos de trabajo pendiente de producto más importantes y cómo se asignan al objetivo
+                    del producto. El equipo de Scrum también puede invitar a otras personas a asistir a la planificación del
                     Sprint para proporcionar asesoramiento.</p>
                 <p>La planificación del Sprint aborda los siguientes temas:</p>
 
@@ -377,17 +442,17 @@
                 <p>El Propietario del Producto (Product Owner) propone cómo el producto podría aumentar su valor y utilidad en el Sprint actual. A continuación, todo el equipo de Scrum colabora para definir un objetivo de Sprint que comunique por qué el Sprint es valioso para las partes interesadas. El Objetivo Sprint debe finalizarse antes del final de la Planificación de Sprint.</p>
 
                 <h4>Tema dos: ¿Qué se puede hacer este Sprint?</h4>
-                <p>A través del debate con el propietario del producto (Product Owner), los desarrolladores seleccionan los elementos del Product Backlog para incluir en el Sprint actual. El equipo de Scrum puede refinar estos elementos durante este proceso, lo que aumenta la comprensión y confianza.</p>
+                <p>A través del debate con el propietario del producto (Product Owner), los desarrolladores seleccionan los elementos del Product Backlog para incluir en el Sprint actual. El equipo de Scrum puede refinar estos elementos durante este proceso, lo que aumenta la comprensión y la confianza.</p>
                 <p>Seleccionar cuánto se puede completar dentro de un Sprint puede ser un desafío. Sin embargo, cuanto más sepan los desarrolladores sobre su rendimiento pasado, su capacidad futura y su definición de hecho, más seguro estarán en sus pronósticos de Sprint.</p>
 
                 <h4>Tema Tres: ¿Cómo se realizará el trabajo elegido?</h4>
                 <p>Para cada elemento de trabajo pendiente de producto (Product Backlog item) seleccionado, los desarrolladores planifican el trabajo necesario para crear un incremento que cumpla con la definición de hecho. Esto se hace normalmente mediante la descomposición de elementos de trabajo pendiente (Product Backlog item) del producto en elementos de trabajo más pequeños que se puedan realizar en un día o menos. La forma de hacerlo es según la discreción de los propios desarrolladores. Nadie más les dice cómo convertir los elementos de trabajo pendiente del producto en incrementos de valor.</p>
-                <p>El objetivo de Sprint (Sprint Goal), los elementos de trabajo pendiente de producto seleccionados para el Sprint, más el plan para entregarlos se conocen conjuntamente como el trabajo pendiente de Sprint (Sprint Backlog).</p>
+                <p>El objetivo de Sprint (Sprint Goal), los elementos de trabajo pendiente de producto seleccionados para el Sprint, más el plan para entregarlos se conocen conjuntamente como el trabajo pendiente de Sprint (Sprint Backlog). </p>
                 <p>El Sprint Planning tiene una duración máxima de ocho horas para un Sprint de un mes. Para sprints más cortos, el evento suele ser más corto.</p>
 
                 <h3>Scrum diario (Daily Scrum)</h3>
                 <p>El propósito del Daily Scrum es inspeccionar el progreso hacia el Objetivo Sprint y adaptar el Sprint Backlog según sea necesario, ajustando el próximo trabajo planeado.</p>
-                <p>El Daily Scrum es un evento de 15 minutos (máximo) para los desarrolladores del equipo de Scrum. Para reducir la complejidad, se lleva a cabo al mismo tiempo y lugar todos los días laborables del Sprint. Si el propietario del producto o el Scrum Master están trabajando activamente en los elementos del Trabajo pendiente de Sprint, participan como desarrolladores.</p>
+                <p>El Daily Scrum es un evento de 15 minutos (máximo) para los desarrolladores del equipo de Scrum. Para reducir la complejidad, se lleva a cabo al mismo tiempo y lugar todos los días laborables del Sprint. Si el propietario del producto o el Scrum Master están trabajando activamente en los elementos del Trabajo pendiente de Sprint, participan como desarrolladores. </p>
                 <p>Los desarrolladores pueden seleccionar cualquier estructura y técnicas que deseen, siempre y cuando su Scrum diario se centre en el progreso hacia el objetivo de Sprint y produzca un plan accionable para el día siguiente de trabajo. Esto crea enfoque y mejora la autogestión.</p>
                 <p>Los Scrums diarios (Daily Scrum) mejoran la comunicación, identifican impedimentos, promueven una rápida para la toma de decisiones, y en consecuencia, eliminan la necesidad de otras reuniones.</p>
                 <p>El Daily Scrum no es la única vez que los desarrolladores pueden ajustar su plan. Frecuentemente se reúnen durante todo el día para debatir de forma más detalladas sobre la adaptación o replanificación del resto del trabajo del Sprint.</p>
@@ -395,13 +460,13 @@
                 <h3>Revision del Sprint (Sprint Review)</h3>
                 <p>El propósito de la revisión del Sprint es inspeccionar el resultado del Sprint y determinar futuras adaptaciones. El equipo de Scrum presenta los resultados de su trabajo a las partes interesadas clave y se discute el progreso hacia el Objetivo de Producto.</p>
                 <p>Durante el evento, el equipo de Scrum y las partes interesadas revisan lo que se logró en el Sprint y lo que ha cambiado en su entorno. En base a esta información, los asistentes colaboran en qué hacer a continuación. El trabajo pendiente del producto también se puede ajustar para satisfacer nuevas oportunidades. Sprint Review es una sesión de trabajo y el equipo de Scrum debe evitar limitarla a que se convierta en una simple presentación.</p>
-                <p>La revisión de Sprint es el penúltimo evento del Sprint y se utiliza en un plazo máximo de cuatro horas para un Sprint de un mes. Para sprints más cortos, el evento suele ser más corto.</p>
+                <p>La revisión de Sprint es el penúltimo evento del Sprint y tiene un plazo máximo de cuatro horas para un Sprint de un mes. Para sprints más cortos, el evento suele ser más corto.</p>
 
                 <h3>La retrospectiva del Sprint (Sprint Retrospective)</h3>
                 <p>El propósito de la retrospectiva Sprint es planificar formas de aumentar la calidad y la eficacia.</p>
                 <p>El equipo de Scrum inspecciona cómo fue el último Sprint con respecto a individuos, interacciones, procesos, herramientas y su definición de Hecho. Los elementos inspeccionados a menudo varían según el dominio del trabajo. Las suposiciones que los desviaron se identifican y se exploran sus orígenes. El equipo de Scrum analiza qué fue bien durante el Sprint, qué problemas encontró y cómo esos problemas fueron (o no fueron) resueltos.</p>
                 <p>El equipo de Scrum identifica los cambios más útiles para mejorar su eficacia. Las mejoras más impactantes se abordan lo antes posible. Incluso se pueden agregar al Sprint Backlog para el próximo Sprint.</p>
-                <p>La retrospectiva Sprint concluye el Sprint. Se utiliza un intervalo de tiempo de hasta un máximo de tres horas para un Sprint de un mes. Para sprints más cortos, el evento suele ser más corto.</p>
+                <p>La retrospectiva Sprint concluye el Sprint. Tiene un intervalo de tiempo de hasta un máximo de tres horas para un Sprint de un mes. Para sprints más cortos, el evento suele ser más corto.</p>
 
                 <h2>Artefactos de Scrum</h2>
                 <p>Los artefactos de Scrum representan trabajo o valor. Están diseñados para maximizar la transparencia de la información clave. Por lo tanto, cada uno de los que los inspecciona tienen la misma base para la adaptación.</p>
@@ -471,8 +536,8 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="defaultQuestions.js"></script>
+    <script src="defaultQuestionsFiltros.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
